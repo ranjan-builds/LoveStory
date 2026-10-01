@@ -1,0 +1,1721 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our Unwritten Story — An Interactive Love Diary</title>
+    <meta
+      name="description"
+      content="An interactive love diary tracing the memories, conversations, and hopes behind Our Unwritten Story."
+    />
+    <meta name="application-name" content="Our Unwritten Story" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Our Story" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="favicons/apple-touch-icon.png"
+    />
+    <link rel="icon" type="image/svg+xml" href="favicons/favicon.svg" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="48x48"
+      href="favicons/favicon-48.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="favicons/favicon-32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="favicons/favicon-16.png"
+    />
+    <link rel="manifest" href="favicons/manifest.json" />
+    <link rel="mask-icon" href="favicons/favicon.svg" color="#d54d6d" />
+    <meta name="msapplication-config" content="favicons/browserconfig.xml" />
+    <meta name="msapplication-TileColor" content="#120508" />
+    <meta name="theme-color" content="#120508" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Our Unwritten Story — An Interactive Love Diary"
+    />
+    <meta
+      property="og:description"
+      content="An interactive love diary tracing the memories, conversations, and hopes behind Our Unwritten Story."
+    />
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="Our Unwritten Story — An Interactive Love Diary"
+    />
+    <meta
+      name="twitter:description"
+      content="An interactive love diary tracing the memories, conversations, and hopes behind Our Unwritten Story."
+    />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Sacramento&display=swap"
+      rel="stylesheet"
+    />
+    <!-- FontAwesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              burgundy: {
+                50: "#fdf2f4",
+                100: "#fbe5e8",
+                200: "#f7ced5",
+                300: "#f0a8b6",
+                400: "#e5778f",
+                500: "#d54d6d",
+                600: "#be3154",
+                700: "#9f2443",
+                800: "#85213b",
+                900: "#4a0e17",
+                950: "#2a050b",
+              },
+              blush: {
+                50: "#fff0f3",
+                100: "#ffe3e8",
+                200: "#fccad6",
+                300: "#f8a3b7",
+                400: "#f26d91",
+                500: "#e73e6e",
+              },
+              gold: {
+                300: "#f6e05e",
+                400: "#ecc94b",
+                500: "#d4af37",
+                600: "#b7941f",
+              },
+              velvet: "#120508",
+            },
+            fontFamily: {
+              serif: ['"Cormorant Garamond"', "Georgia", "serif"],
+              sans: ['"Plus Jakarta Sans"', "sans-serif"],
+              cursive: ['"Sacramento"', "cursive"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #120508;
+        color: #fbe5e8;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        overflow-x: hidden;
+      }
+
+      .font-serif {
+        font-family: "Cormorant Garamond", Georgia, serif;
+      }
+
+      .glass-card {
+        background: rgba(42, 5, 11, 0.55);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(240, 168, 182, 0.15);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      }
+
+      .glass-card-light {
+        background: rgba(253, 242, 244, 0.07);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .gold-gradient-text {
+        background: linear-gradient(
+          135deg,
+          #fff0f3 0%,
+          #f5d0a9 50%,
+          #d4af37 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .crimson-gradient {
+        background: linear-gradient(
+          180deg,
+          #2a050b 0%,
+          #4a0e17 50%,
+          #120508 100%
+        );
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #120508;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #4a0e17;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #85213b;
+      }
+
+      /* Envelope interactive styling */
+      .envelope-wrapper {
+        perspective: 1000px;
+      }
+      .envelope {
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Flip card styling */
+      .perspective-1000 {
+        perspective: 1000px;
+      }
+      .transform-style-3d {
+        transform-style: preserve-3d;
+      }
+      .backface-hidden {
+        backface-visibility: hidden;
+      }
+      .rotate-y-180 {
+        transform: rotateY(180deg);
+      }
+
+      /* Floating particles overlay */
+      #particleCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Soft pulsing glow */
+      @keyframes subtlePulse {
+        0%,
+        100% {
+          opacity: 0.4;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.8;
+          transform: scale(1.03);
+        }
+      }
+      .animate-pulse-glow {
+        animation: subtlePulse 4s infinite ease-in-out;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen flex flex-col selection:bg-burgundy-600 selection:text-white"
+  >
+    <!-- Background Canvas for Soft Particles & Ambiance -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Global Audio Control Bar -->
+    <div
+      id="audioBar"
+      class="fixed bottom-5 right-5 z-50 flex items-center gap-3 bg-burgundy-950/80 backdrop-blur-md px-4 py-2.5 rounded-full border border-burgundy-500/30 shadow-2xl transition-all duration-300"
+    >
+      <button
+        id="audioToggleBtn"
+        onclick="toggleAudio()"
+        class="w-10 h-10 rounded-full bg-burgundy-700 hover:bg-burgundy-600 text-gold-300 flex items-center justify-center transition-colors shadow-lg"
+        title="Play / Pause Personal Audio"
+      >
+        <i class="fa-solid fa-music" id="audioIcon"></i>
+      </button>
+      <div class="flex flex-col pr-1">
+        <span class="text-xs font-semibold text-burgundy-200"
+          >Personal Audio</span
+        >
+        <span class="text-[10px] text-burgundy-400" id="audioStatusText"
+          >udaariyan</span
+        >
+      </div>
+    </div>
+    <audio id="ambientAudio" src="candy.mp3" loop preload="none"></audio>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="relative z-10 flex-grow flex flex-col">
+      <!-- SECTION 0: CINEMATIC ENVELOPE ENTRY -->
+      <section
+        id="heroSection"
+        class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden transition-opacity duration-1000"
+      >
+        <div class="max-w-2xl w-full text-center flex flex-col items-center">
+          <div class="mb-6 space-y-2">
+            <span
+              class="text-xs uppercase tracking-[0.3em] text-gold-400/90 font-medium"
+              >A Personal Digital Love Diary</span
+            >
+            <h1
+              class="text-4xl md:text-6xl font-serif font-bold gold-gradient-text tracking-wide leading-tight"
+            >
+              Between Words & Silence
+            </h1>
+            <p
+              class="text-sm md:text-base text-burgundy-200/80 max-w-lg mx-auto font-light"
+            >
+              An honest interactive journey through our beginnings,
+              misunderstandings, longings, and hopes.
+            </p>
+          </div>
+
+          <!-- Interactive Wax Sealed Letter -->
+          <div
+            class="envelope-wrapper w-full max-w-md my-8 cursor-pointer group"
+            onclick="openEnvelope()"
+          >
+            <div
+              id="envelopeCard"
+              class="glass-card rounded-2xl p-8 border-burgundy-500/30 transform transition-all duration-500 group-hover:scale-105 group-hover:border-gold-500/50 shadow-2xl relative overflow-hidden"
+            >
+              <!-- Glowing aura -->
+              <div
+                class="absolute -top-20 -left-20 w-40 h-40 bg-burgundy-600/20 rounded-full blur-3xl pointer-events-none"
+              ></div>
+              <div
+                class="absolute -bottom-20 -right-20 w-40 h-40 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"
+              ></div>
+
+              <div class="flex flex-col items-center gap-4 relative z-10">
+                <div
+                  class="w-16 h-16 rounded-full bg-burgundy-900/90 border-2 border-gold-500/60 flex items-center justify-center text-gold-400 shadow-xl group-hover:rotate-12 transition-transform duration-500"
+                >
+                  <i class="fa-solid fa-heart text-2xl animate-pulse"></i>
+                </div>
+                <span class="font-serif italic text-2xl text-burgundy-100"
+                  >"For Anjali"</span
+                >
+                <p
+                  class="text-xs text-burgundy-300/80 leading-relaxed max-w-xs"
+                >
+                  Touch this letter to unseal our diary. A sanctuary of
+                  memories, raw thoughts, and authentic emotions.
+                </p>
+                <div
+                  class="mt-2 px-5 py-2 rounded-full bg-burgundy-800/60 border border-burgundy-400/30 text-xs text-gold-300 font-medium tracking-wider uppercase group-hover:bg-burgundy-700 transition-colors"
+                >
+                  Unseal Letter
+                  <i class="fa-solid fa-envelope-open ml-2 text-[10px]"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="text-xs text-burgundy-400/60 tracking-widest uppercase animate-bounce mt-4"
+          >
+            Scroll down or open the letter to explore
+          </div>
+        </div>
+      </section>
+
+      <!-- NAVIGATION HEADER (Visible after scrolling or opening) -->
+      <header
+        id="mainNav"
+        class="sticky top-0 z-40 bg-velvet/90 backdrop-blur-md border-b border-burgundy-900/60 transition-all duration-300"
+      >
+        <div
+          class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between"
+        >
+          <div class="flex items-center gap-3">
+            <a
+              href="#heroSection"
+              class="font-serif text-xl font-bold gold-gradient-text tracking-wide"
+              >Our Diary</a
+            >
+            <span class="hidden sm:inline-block text-xs text-burgundy-400/40"
+              >|</span
+            >
+            <span
+              id="currentChapterIndicator"
+              class="hidden sm:inline-block text-xs text-burgundy-300 font-medium"
+              >Chapter 1: The Beginning</span
+            >
+          </div>
+
+          <!-- Navigation Tabs Slider -->
+          <div
+            class="flex items-center gap-1 overflow-x-auto py-1 max-w-xs md:max-w-md lg:max-w-xl no-scrollbar"
+          >
+            <button
+              onclick="scrollToChapter('ch1')"
+              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
+            >
+              1. Questions
+            </button>
+            <button
+              onclick="scrollToChapter('ch2')"
+              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
+            >
+              2. 17 Aug PDF
+            </button>
+            <button
+              onclick="scrollToChapter('ch3')"
+              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
+            >
+              3. Apology
+            </button>
+            <button
+              onclick="scrollToChapter('ch4')"
+              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
+            >
+              4. 20 Aug
+            </button>
+            <button
+              onclick="scrollToChapter('ch5')"
+              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
+            >
+              5. Meeting Plans
+            </button>
+            <button
+              onclick="scrollToChapter('ch6')"
+              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
+            >
+              6. 9 Sept Meeting
+            </button>
+            <button
+              onclick="scrollToChapter('ch7')"
+              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
+            >
+              7. Closer
+            </button>
+            <button
+              onclick="scrollToChapter('ch8')"
+              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
+            >
+              8. Doubts
+            </button>
+            <button
+              onclick="scrollToChapter('ch9')"
+              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
+            >
+              9. Future
+            </button>
+          </div>
+        </div>
+        <!-- Dynamic Reading Progress Bar -->
+        <div class="w-full bg-burgundy-950 h-0.5">
+          <div
+            id="progressBar"
+            class="bg-gradient-to-r from-burgundy-500 via-blush-400 to-gold-400 h-0.5 w-0 transition-all duration-150"
+          ></div>
+        </div>
+      </header>
+
+      <!-- CHAPTER 1: THE BEGINNING OF MY QUESTIONS -->
+      <section
+        id="ch1"
+        class="py-20 px-4 max-w-4xl mx-auto w-full space-y-12 border-b border-burgundy-900/40"
+      >
+        <div class="text-center space-y-3">
+          <span
+            class="text-xs uppercase tracking-widest text-burgundy-400 font-semibold"
+            >Chapter 01</span
+          >
+          <h2
+            class="text-3xl md:text-5xl font-serif font-bold gold-gradient-text"
+          >
+            The Beginning of My Questions
+          </h2>
+          <div class="w-12 h-0.5 bg-burgundy-600 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div
+            class="space-y-4 text-burgundy-100/90 text-sm md:text-base leading-relaxed"
+          >
+            <p>
+              It started after 2025. When I first proposed to you, you said no.
+              I accepted that and asked you to block me because I didn't want to
+              drag myself through unreciprocated feelings. But you didn't block
+              me.
+            </p>
+            <p>
+              Instead, after some time passed, you started reaching out. Even
+              when I was emotionally distant, you called and texted me saying:
+            </p>
+            <blockquote
+              class="p-4 rounded-xl bg-burgundy-900/40 border-l-4 border-burgundy-500 italic text-burgundy-200"
+            >
+              "Tu mere se baat nai karta."<br />
+              "Tu meko bhav nai deta."
+            </blockquote>
+            <p>
+              I wondered why you were saying these things if you had rejected
+              me. I thought maybe you wanted me to stay invested. Gradually, my
+              attraction grew again, but I warned myself:
+              <em>"Can I leave?"</em> because I knew if things got deeper, I
+              would be hurt.
+            </p>
+          </div>
+
+          <!-- Interactive Chat Snapshot Box -->
+          <div
+            class="glass-card rounded-2xl p-6 space-y-4 shadow-xl border-burgundy-800/40"
+          >
+            <div
+              class="flex items-center justify-between border-b border-burgundy-800/50 pb-3"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-9 h-9 rounded-full bg-burgundy-700 flex items-center justify-center text-white text-sm font-bold"
+                >
+                  A
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-burgundy-100">Anjali</h4>
+                  <span class="text-[10px] text-burgundy-400"
+                    >Early Memories & Echoes</span
+                  >
+                </div>
+              </div>
+              <span
+                class="text-[10px] text-burgundy-400 bg-burgundy-900/60 px-2 py-1 rounded"
+                >2025-2026</span
+              >
+            </div>
+
+            <div class="space-y-3 text-xs">
+              <div class="flex flex-col items-start">
+                <div
+                  class="bg-burgundy-900/80 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-burgundy-100 space-y-1"
+                >
+                  <p>"Tu mere se baat nai karta..."</p>
+                  <span class="text-[9px] text-burgundy-400 block text-right"
+                    >Sent with tears</span
+                  >
+                </div>
+              </div>
+
+              <div class="flex flex-col items-end">
+                <div
+                  class="bg-burgundy-700/80 p-3 rounded-2xl rounded-tr-none max-w-[85%] text-white space-y-1"
+                >
+                  <p>
+                    "Can I leave permanently? Otherwise I'll get emotionally
+                    attached and regret it later."
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex flex-col items-start">
+                <div
+                  class="bg-burgundy-900/80 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-burgundy-100 space-y-1"
+                >
+                  <p>"You are talking like you never talk to me..." 😢</p>
+                  <span class="text-[9px] text-burgundy-400 block text-right"
+                    >[Sent picture crying]</span
+                  >
+                </div>
+              </div>
+
+              <div
+                class="p-3 rounded-xl bg-burgundy-950/80 border border-burgundy-700/30 text-burgundy-300 text-[11px] italic"
+              >
+                <i class="fa-solid fa-circle-info text-gold-400 mr-1"></i>
+                <strong>The Kiss ≠ Love Realization:</strong> Later, when we
+                met, I asked for a hug and was initiated into kissing. I thought
+                it meant love. But over time, I realized physical closeness and
+                genuine emotional commitment are two very different things.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reflection Note -->
+        <div
+          class="p-6 rounded-2xl bg-gradient-to-r from-burgundy-950 via-burgundy-900/50 to-burgundy-950 border border-burgundy-800/50 text-center space-y-2"
+        >
+          <h3 class="font-serif text-lg text-gold-300 italic">
+            "I never needed 24 hours of attention."
+          </h3>
+          <p
+            class="text-xs md:text-sm text-burgundy-200/90 max-w-2xl mx-auto font-light"
+          >
+            I simply wanted honest clarity. If you were busy, a simple update
+            was enough so I wouldn't spend hours waiting in uncertainty.
+          </p>
+        </div>
+      </section>
+
+      <!-- CHAPTER 2: 17 AUGUST - THE DAY I ASKED FOR THE TRUTH -->
+      <section
+        id="ch2"
+        class="py-20 px-4 max-w-4xl mx-auto w-full space-y-12 border-b border-burgundy-900/40"
+      >
+        <div class="text-center space-y-3">
+          <span
+            class="text-xs uppercase tracking-widest text-gold-400 font-semibold"
+            >Chapter 02</span
+          >
+          <h2
+            class="text-3xl md:text-5xl font-serif font-bold gold-gradient-text"
+          >
+            17 August — The Day I Asked for the Truth
+          </h2>
+          <p class="text-xs md:text-sm text-burgundy-300 max-w-xl mx-auto">
+            Sending the PDF document: Laying down all my unanswered questions,
+            boundary breaches, and hurt without anger.
+          </p>
+          <div class="w-12 h-0.5 bg-burgundy-600 mx-auto rounded-full"></div>
+        </div>
+
+        <!-- Interactive Document / Letter Reader View -->
+        <div
+          class="glass-card rounded-3xl p-6 md:p-10 border-burgundy-600/30 relative overflow-hidden shadow-2xl"
+        >
+          <div
+            class="flex items-center justify-between border-b border-burgundy-700/50 pb-4 mb-6"
+          >
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-file-pdf text-red-400 text-2xl"></i>
+              <div>
+                <h3 class="font-serif font-bold text-lg text-burgundy-100">
+                  My Story — What I Felt & What Happened.pdf
+                </h3>
+                <span class="text-xs text-burgundy-400"
+                  >Delivered on 17 August 2026</span
+                >
+              </div>
+            </div>
+            <button
+              onclick="togglePdfSummary()"
+              class="px-3 py-1.5 rounded-lg bg-burgundy-800 hover:bg-burgundy-700 text-xs text-gold-300 font-medium transition-colors"
+            >
+              <i class="fa-solid fa-book-open mr-1"></i>
+              <span id="pdfToggleText">Expand Full Excerpts</span>
+            </button>
+          </div>
+
+          <div
+            class="space-y-6 text-sm text-burgundy-100 leading-relaxed font-light"
+          >
+            <div
+              class="p-4 rounded-xl bg-burgundy-950/70 border-l-4 border-gold-500 space-y-2"
+            >
+              <h4
+                class="font-bold text-gold-300 text-xs uppercase tracking-wider"
+              >
+                The Core Question
+              </h4>
+              <p class="italic text-burgundy-200">
+                "I chose you among many other options. I closed my heart to
+                everyone else because I genuinely cared for you. But your
+                pattern—disappearing without a word, replying hours late when
+                free, making time for movies and friends while leaving me on
+                read—made me feel like a convenient option."
+              </p>
+            </div>
+
+            <p>
+              On 17 August, after observing a repeating pattern of ghosting—from
+              the Puri trip to the month-long silences, helping with your thesis
+              despite my laptop breaking, and receiving mixed signals—I reached
+              my threshold. I didn't want to insult myself by begging for
+              communication.
+            </p>
+
+            <!-- Collapsible PDF Excerpt Content -->
+            <div
+              id="pdfExcerpts"
+              class="hidden space-y-4 pt-4 border-t border-burgundy-800/40 transition-all duration-500"
+            >
+              <div class="p-4 rounded-xl bg-burgundy-900/40 space-y-2">
+                <span class="text-xs font-bold text-burgundy-300"
+                  >From Page 5-6 of the Document:</span
+                >
+                <blockquote class="italic text-xs text-burgundy-200">
+                  "You told me: 'Tu mere liye tadpata rahega but mere paas tere
+                  liye time nai hoga.' That answer explained everything to me.
+                  You were telling me that you wouldn't make time for me. I told
+                  you 'One-sided love is painful but beautiful,' and you agreed.
+                  It felt like I was trapped in a one-sided contract."
+                </blockquote>
+              </div>
+
+              <div class="p-4 rounded-xl bg-burgundy-900/40 space-y-2">
+                <span class="text-xs font-bold text-burgundy-300"
+                  >The 17 August Chat Moment:</span
+                >
+                <blockquote class="italic text-xs text-burgundy-200">
+                  "Gradually I'm losing trust and interest from you... If you
+                  don't have enough time, then it is better not to chat with me.
+                  Chat only if you have time."
+                </blockquote>
+              </div>
+            </div>
+
+            <div
+              class="p-5 rounded-2xl bg-burgundy-900/80 border border-burgundy-600/40 text-center space-y-3"
+            >
+              <p class="text-sm font-semibold text-gold-200">
+                "If you love someone else, tell me. I will step back
+                respectfully and never stand between you two. I just wanted the
+                truth, even if it hurt."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHAPTER 3: HER APOLOGY AND PROMISE -->
+      <section
+        id="ch3"
+        class="py-20 px-4 max-w-4xl mx-auto w-full space-y-10 border-b border-burgundy-900/40"
+      >
+        <div class="text-center space-y-3">
+          <span
+            class="text-xs uppercase tracking-widest text-blush-300 font-semibold"
+            >Chapter 03</span
+          >
+          <h2
+            class="text-3xl md:text-5xl font-serif font-bold gold-gradient-text"
+          >
+            Her Apology & The Three Days of Hope
+          </h2>
+          <div class="w-12 h-0.5 bg-burgundy-600 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div
+            class="space-y-4 text-sm md:text-base text-burgundy-100 leading-relaxed"
+          >
+            <p>
+              After reading the PDF document on 17 August, something shifted.
+              She acknowledged that she had genuinely done wrong by me and
+              apologized for the pain her inconsistent communication had caused.
+            </p>
+            <p>
+              She promised that she would prove her love through her actions.
+              For the next three days, I experienced the warmth and consistent
+              communication I had been longing for.
+            </p>
+            <div
+              class="p-4 rounded-xl bg-burgundy-900/40 border border-blush-400/30 text-xs text-blush-200 italic"
+            >
+              <i class="fa-solid fa-sun text-gold-400 mr-2"></i>
+              Those three days felt like a sudden ray of light after months of
+              fog. It proved to me that my hopes weren't foolish, and that
+              effort was possible.
+            </div>
+          </div>
+
+          <!-- Visual Card of Hope -->
+          <div
+            class="glass-card rounded-2xl p-6 text-center space-y-4 border-blush-400/30 relative overflow-hidden shadow-xl"
+          >
+            <div
+              class="w-16 h-16 rounded-full bg-blush-500/20 border border-blush-400/50 flex items-center justify-center mx-auto text-blush-300 text-2xl"
+            >
+              <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
+            <h4 class="font-serif text-xl font-bold text-burgundy-100">
+              A Moment of Relief
+            </h4>
+            <p class="text-xs text-burgundy-200/80 leading-relaxed">
+              Her apology gave me hope. I wanted to believe that our bond was
+              capable of healing, and that we could rebuild trust through mutual
+              care.
+            </p>
+            <span
+              class="inline-block px-3 py-1 rounded-full bg-burgundy-800/80 text-[10px] text-gold-300 font-medium"
+            >
+              17 August — 19 August 2026
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHAPTER 4: 20 AUGUST - WHEN THINGS BECAME UNCERTAIN AGAIN -->
+      <section
+        id="ch4"
+        class="py-20 px-4 max-w-4xl mx-auto w-full space-y-10 border-b border-burgundy-900/40"
+      >
+        <div class="text-center space-y-3">
+          <span
+            class="text-xs uppercase tracking-widest text-burgundy-400 font-semibold"
+            >Chapter 04</span
+          >
+          <h2
+            class="text-3xl md:text-5xl font-serif font-bold gold-gradient-text"
+          >
+            20 August — Navigating Communication & Health
+          </h2>
+          <div class="w-12 h-0.5 bg-burgundy-600 mx-auto rounded-full"></div>
+        </div>
+
+        <div
+          class="glass-card rounded-3xl p-6 md:p-8 space-y-6 border-burgundy-800/50"
+        >
+          <p
+            class="text-sm md:text-base text-burgundy-100 leading-relaxed font-light"
+          >
+            On 20 August, her menstrual period began, and she became less
+            available once again. I understood that physical discomfort and
+            emotional exhaustion during this time naturally take a toll on
+            anyone.
+          </p>
+
+          <!-- Comparison / Understanding Box -->
+          <div class="grid md:grid-cols-2 gap-4">
+            <div
+              class="p-5 rounded-2xl bg-burgundy-950/80 border border-burgundy-800/60 space-y-2"
+            >
+              <div
+                class="flex items-center gap-2 text-gold-400 font-semibold text-xs uppercase tracking-wider"
+              >
+                <i class="fa-solid fa-heart-pulse"></i> Empathetic Care
+              </div>
+              <p class="text-xs text-burgundy-200 leading-relaxed">
+                I deeply cared for her health and comfort. I never expected her
+                to strain herself or ignore her physical well-being.
+              </p>
+            </div>
+
+            <div
+              class="p-5 rounded-2xl bg-burgundy-950/80 border border-burgundy-800/60 space-y-2"
+            >
+              <div
+                class="flex items-center gap-2 text-blush-300 font-semibold text-xs uppercase tracking-wider"
+              >
+                <i class="fa-solid fa-comments"></i> The Need for Clarity
+              </div>
+              <p class="text-xs text-burgundy-200 leading-relaxed">
+                At the same time, I hoped for small reassuring updates so I
+                wouldn't mistake health-related silence for a return of the old
+                ghosting pattern.
+              </p>
+            </div>
+          </div>
+
+          <p class="text-xs text-burgundy-300 italic text-center">
+            "It was a delicate balance between caring for her condition and
+            holding onto the reassurance I needed."
+          </p>
+        </div>
+      </section>
+
+      <!-- CHAPTER 5: THE PLANS TO MEET -->
+      <section
+        id="ch5"
+        class="py-20 px-4 max-w-4xl mx-auto w-full space-y-12 border-b border-burgundy-900/40"
+      >
+        <div class="text-center space-y-3">
+          <span
+            class="text-xs uppercase tracking-widest text-gold-400 font-semibold"
+            >Chapter 05</span
+          >
+          <h2
+            class="text-3xl md:text-5xl font-serif font-bold gold-gradient-text"
+          >
+            Anticipation & Postponed Promises
+          </h2>
+          <p class="text-xs md:text-sm text-burgundy-300">
+            The journey of planning our face-to-face meeting.
+          </p>
+          <div class="w-12 h-0.5 bg-burgundy-600 mx-auto rounded-full"></div>
+        </div>
+
+        <!-- Interactive Timeline Steps -->
+        <div
+          class="relative border-l-2 border-burgundy-700/60 ml-4 md:ml-32 space-y-8"
+        >
+          <!-- Step 1: First Attempt -->
+          <div class="relative pl-6 md:pl-10 group">
+            <div
+              class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-burgundy-900 border-2 border-burgundy-500 group-hover:bg-gold-400 transition-colors"
+            ></div>
+            <div
+              class="glass-card rounded-2xl p-5 space-y-2 border-burgundy-800/40"
+            >
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gold-400"
+                  >3 September 2026</span
+                >
+                <span
+                  class="px-2 py-0.5 rounded bg-red-950 text-red-300 text-[10px] font-semibold"
+                  >Cancelled (Health Issues)</span
+                >
+              </div>
+              <h4 class="font-serif text-base font-bold text-burgundy-100">
+                The First Planned Meeting
+              </h4>
+              <p class="text-xs text-burgundy-200/90 leading-relaxed">
+                We arranged to meet on 3 September. I looked forward to it with
+                quiet hope, but it had to be cancelled due to her health
+                condition. A familiar sting of disappointment, though
+                understandable.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2: Second Attempt -->
+          <div class="relative pl-6 md:pl-10 group">
+            <div
+              class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-burgundy-900 border-2 border-burgundy-500 group-hover:bg-gold-400 transition-colors"
+            ></div>
+            <div
+              class="glass-card rounded-2xl p-5 space-y-2 border-burgundy-800/40"
+            >
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gold-400"
+                  >Early September</span
+                >
+                <span
+                  class="px-2 py-0.5 rounded bg-red-950 text-red-300 text-[10px] font-semibold"
+                  >Postponed</span
+                >
+              </div>
+              <h4 class="font-serif text-base font-bold text-burgundy-100">
+                The Second Attempt
+              </h4>
+              <p class="text-xs text-burgundy-200/90 leading-relaxed">
+                A second date was set shortly after, but unexpected
+                circumstances again required us to reschedule. Doubts quietly
+                whispered, but hope held firm.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3: 9 September Final Confirmation -->
+          <div class="relative pl-6 md:pl-10 group">
+            <div
+              class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full bg-gold-500 border-2 border-gold-300 shadow-lg animate-ping"
+            ></div>
+            <div
+              class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full bg-gold-400 border-2 border-gold-200 shadow-lg"
+            ></div>
+            <div
+              class="glass-card rounded-2xl p-5 space-y-2 border-gold-500/50 bg-burgundy-900/60 shadow-2xl"
+            >
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gold-300"
+                  >9 September 2026</span
+                >
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 text-[10px] font-bold uppercase tracking-wider"
+                  >Confirmed & Fulfilled</span
+                >
+              </div>
+              <h4 class="font-serif text-lg font-bold gold-gradient-text">
+                The Day We Finally Met
+              </h4>
+              <p class="text-xs text-burgundy-100 leading-relaxed">
+                Finally, all uncertainties gave way to reality. She made the
+                journey from Korba to Champa to meet me.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHAPTER 6: 9 SEPTEMBER - THE DAY WE FINALLY MET -->
+      <section
+        id="ch6"
+        class="py-20 px-4 max-w-5xl mx-auto w-full space-y-12 border-b border-burgundy-900/40"
+      >
+        <div class="text-center space-y-3">
+          <span
+            class="text-xs uppercase tracking-widest text-gold-400 font-semibold"
+            >Chapter 06</span
+          >
+          <h2
+            class="text-3xl md:text-5xl font-serif font-bold gold-gradient-text"
+          >
+            9 September — The Journey & Nagargda Waterfall
+          </h2>
+          <p class="text-xs md:text-sm text-burgundy-200 max-w-xl mx-auto">
+            From Korba to Champa, parking my bike, and riding together on her
+            scooty towards Nagargda Waterfall.
+          </p>
+          <div class="w-12 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
+        </div>
+
+        <!-- Interactive Canvas Journey Experience -->
+        <div
+          class="glass-card rounded-3xl p-6 md:p-8 space-y-6 border-gold-500/30 relative overflow-hidden shadow-2xl"
+        >
+          <div
+            class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-burgundy-800/60 pb-4"
+          >
+            <div>
+              <h3 class="font-serif font-bold text-xl text-gold-200">
+                Interactive Memory Map: Korba ➔ Champa ➔ Nagargda
+              </h3>
+              <p class="text-xs text-burgundy-300">
+                Click controls below to animate our ride through scenic nature
+              </p>
+            </div>
+            <button
+              id="scootyAnimBtn"
+              onclick="toggleScootyAnimation()"
+              class="px-4 py-2 rounded-xl bg-burgundy-800 hover:bg-burgundy-700 text-gold-300 text-xs font-semibold flex items-center gap-2 border border-gold-500/30 transition-all shadow-lg"
+            >
+              <i class="fa-solid fa-motorcycle text-base"></i>
+              <span id="scootyBtnText">Start Journey Animation</span>
+            </button>
+          </div>
+
+          <!-- Canvas Visual Simulation -->
+          <div
+            class="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden bg-burgundy-950 border border-burgundy-800 shadow-inner"
+          >
+            <canvas id="journeyCanvas" class="w-full h-full block"></canvas>
+
+            <!-- Overlay Badge -->
+            <div
+              class="absolute top-4 left-4 bg-burgundy-950/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-gold-500/20 text-[11px] text-gold-300 font-medium"
+            >
+              <i class="fa-solid fa-location-dot text-red-400 mr-1.5"></i>
+              <span id="locationLabel">Korba to Champa Route</span>
+            </div>
+          </div>
+
+          <!-- Memory Log Scrapbook Cards -->
+          <div class="grid md:grid-cols-3 gap-4 pt-2">
+            <div
+              class="p-4 rounded-xl bg-burgundy-900/40 border border-burgundy-800 space-y-2"
+            >
+              <div
+                class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-route"></i> The Journey
+              </div>
+              <p class="text-xs text-burgundy-200 leading-relaxed">
+                She travelled all the way from Korba to Champa. Seeing her
+                arrive was a wave of pure happiness. I parked my bike, and we
+                embarked together on her scooty.
+              </p>
+            </div>
+
+            <div
+              class="p-4 rounded-xl bg-burgundy-900/40 border border-burgundy-800 space-y-2"
+            >
+              <div
+                class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-water"></i> Nagargda Waterfall
+              </div>
+              <p class="text-xs text-burgundy-200 leading-relaxed">
+                Surrounded by lush greenery, flowing water, and soft ambient
+                breeze. We spent peaceful, untroubled time listening to the
+                waterfall and sharing smiles.
+              </p>
+            </div>
+
+            <div
+              class="p-4 rounded-xl bg-burgundy-900/40 border border-burgundy-800 space-y-2"
+            >
+              <div
+                class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-camera"></i> Digital Memory Card
+              </div>
+              <p class="text-xs text-burgundy-200 leading-relaxed">
+                No camera trick or exaggerated story can match the simple warmth
+                of sitting by the water together on 9 September 2026.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHAPTER 7: GROWING CLOSER -->
+      <section
+        id="ch7"
+        class="py-20 px-4 max-w-4xl mx-auto w-full space-y-12 border-b border-burgundy-900/40"
+      >
+        <div class="text-center space-y-3">
+          <span
+            class="text-xs uppercase tracking-widest text-blush-300 font-semibold"
+            >Chapter 07</span
+          >
+          <h2
+            class="text-3xl md:text-5xl font-serif font-bold gold-gradient-text"
+          >
+            Growing Closer & The Unspoken Curiosity
+          </h2>
+          <div class="w-12 h-0.5 bg-burgundy-600 mx-auto rounded-full"></div>
+        </div>
+
+        <!-- Perspective Switcher Tabs -->
+        <div
+          class="glass-card rounded-3xl p-6 md:p-8 space-y-6 border-burgundy-800/50"
+        >
+          <div
+            class="flex items-center justify-center gap-3 bg-burgundy-950/80 p-1.5 rounded-2xl max-w-md mx-auto border border-burgundy-800/60"
+          >
+            <button
+              id="tabMyPerspectiveBtn"
+              onclick="switchPerspective('my')"
+              class="flex-1 py-2 px-4 rounded-xl text-xs font-bold transition-all bg-burgundy-800 text-gold-300 shadow"
+            >
+              My Perspective
+            </button>
+            <button
+              id="tabUnknownPerspectiveBtn"
+              onclick="switchPerspective('unknown')"
+              class="flex-1 py-2 px-4 rounded-xl text-xs font-bold text-burgundy-300 transition-all hover:text-white"
+            >
+              What Remains Unknown
+            </button>
+          </div>
+
+          <!-- Tab Content: My Perspective -->
+          <div
+            id="perspectiveMy"
+            class="space-y-4 text-sm text-burgundy-100 leading-relaxed"
+          >
+            <p>
+              After meeting on 9 September, our emotional investment deepened.
+              Our conversations became far more personal, touching on intimate
+              aspects of life and future thoughts.
+            </p>
+            <p>
+              She shared vulnerable details about her past with me. I deeply
+              appreciated her trust and willingness to open her heart. It made
+              me feel valued as a safe space for her.
+            </p>
+          </div>
+
+          <!-- Tab Content: What Remains Unknown -->
+          <div
+            id="perspectiveUnknown"
+            class="hidden space-y-4 text-sm text-burgundy-100 leading-relaxed"
+          >
+            <p>
+              Yet, I noticed a quiet asymmetry: while she shared her past, she
+              rarely asked about my past or showed curiosity about my personal
+              life experiences.
+            </p>
+            <p>
+              I do not claim to know her reasons. Perhaps she assumes she
+              already knows me, or perhaps her mind is preoccupied. I simply
+              long for mutual curiosity—a bond where both people hold equal
+              desire to know each other's inner worlds.
+            </p>
+          </div>
+
+          <div
+            class="p-4 rounded-xl bg-burgundy-900/30 border border-burgundy-800/40 text-center text-xs text-burgundy-300 italic"
+          >
+            <i class="fa-solid fa-scale-balanced mr-1.5 text-gold-400"></i>
+            A healthy relationship is built when two people listen with equal
+            wonder and ask about each other's dreams.
+          </div>
+        </div>
+      </section>
+
+      <!-- CHAPTER 8: THE QUESTIONS I STILL CARRY -->
+      <section
+        id="ch8"
+        class="py-20 px-4 max-w-5xl mx-auto w-full space-y-12 border-b border-burgundy-900/40"
+      >
+        <div class="text-center space-y-3">
+          <span
+            class="text-xs uppercase tracking-widest text-gold-400 font-semibold"
+            >Chapter 08</span
+          >
+          <h2
+            class="text-3xl md:text-5xl font-serif font-bold gold-gradient-text"
+          >
+            The Questions I Still Carry
+          </h2>
+          <p class="text-xs md:text-sm text-burgundy-300 max-w-xl mx-auto">
+            Interactive reflection cards exploring the delicate balance between
+            love, trust, and emotional security.
+          </p>
+          <div class="w-12 h-0.5 bg-burgundy-600 mx-auto rounded-full"></div>
+        </div>
+
+        <!-- Interactive Reflection Flip Cards Grid -->
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Card 1: Honesty -->
+          <div
+            class="perspective-1000 h-56 cursor-pointer group"
+            onclick="flipCard(this)"
+          >
+            <div
+              class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700"
+            >
+              <!-- Front -->
+              <div
+                class="absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 backface-hidden border-burgundy-700/50 group-hover:border-gold-500/50"
+              >
+                <div
+                  class="w-12 h-12 rounded-full bg-burgundy-900/80 flex items-center justify-center text-gold-400 text-xl"
+                >
+                  <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h4 class="font-serif font-bold text-lg text-burgundy-100">
+                  Honesty vs Silence
+                </h4>
+                <span class="text-[10px] text-burgundy-400"
+                  >Click to reveal reflection</span
+                >
+              </div>
+              <!-- Back -->
+              <div
+                class="absolute inset-0 glass-card rounded-2xl p-5 flex flex-col justify-center text-center space-y-2 backface-hidden rotate-y-180 bg-burgundy-950/90 border-gold-500/40"
+              >
+                <h5
+                  class="text-xs font-bold text-gold-300 uppercase tracking-wider"
+                >
+                  Honesty
+                </h5>
+                <p class="text-xs text-burgundy-100 leading-relaxed">
+                  Silence breeds doubts, but honest communication brings peace
+                  even when the truth is difficult to speak.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Trust -->
+          <div
+            class="perspective-1000 h-56 cursor-pointer group"
+            onclick="flipCard(this)"
+          >
+            <div
+              class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700"
+            >
+              <!-- Front -->
+              <div
+                class="absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 backface-hidden border-burgundy-700/50 group-hover:border-gold-500/50"
+              >
+                <div
+                  class="w-12 h-12 rounded-full bg-burgundy-900/80 flex items-center justify-center text-gold-400 text-xl"
+                >
+                  <i class="fa-solid fa-key"></i>
+                </div>
+                <h4 class="font-serif font-bold text-lg text-burgundy-100">
+                  Trust & Reassurance
+                </h4>
+                <span class="text-[10px] text-burgundy-400"
+                  >Click to reveal reflection</span
+                >
+              </div>
+              <!-- Back -->
+              <div
+                class="absolute inset-0 glass-card rounded-2xl p-5 flex flex-col justify-center text-center space-y-2 backface-hidden rotate-y-180 bg-burgundy-950/90 border-gold-500/40"
+              >
+                <h5
+                  class="text-xs font-bold text-gold-300 uppercase tracking-wider"
+                >
+                  Trust
+                </h5>
+                <p class="text-xs text-burgundy-100 leading-relaxed">
+                  Trust isn't built in a single day or proven by words alone; it
+                  is nurtured through steady, predictable actions.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Effort -->
+          <div
+            class="perspective-1000 h-56 cursor-pointer group"
+            onclick="flipCard(this)"
+          >
+            <div
+              class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700"
+            >
+              <!-- Front -->
+              <div
+                class="absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 backface-hidden border-burgundy-700/50 group-hover:border-gold-500/50"
+              >
+                <div
+                  class="w-12 h-12 rounded-full bg-burgundy-900/80 flex items-center justify-center text-gold-400 text-xl"
+                >
+                  <i class="fa-solid fa-handshake"></i>
+                </div>
+                <h4 class="font-serif font-bold text-lg text-burgundy-100">
+                  Mutual Effort
+                </h4>
+                <span class="text-[10px] text-burgundy-400"
+                  >Click to reveal reflection</span
+                >
+              </div>
+              <!-- Back -->
+              <div
+                class="absolute inset-0 glass-card rounded-2xl p-5 flex flex-col justify-center text-center space-y-2 backface-hidden rotate-y-180 bg-burgundy-950/90 border-gold-500/40"
+              >
+                <h5
+                  class="text-xs font-bold text-gold-300 uppercase tracking-wider"
+                >
+                  Mutual Effort
+                </h5>
+                <p class="text-xs text-burgundy-100 leading-relaxed">
+                  One-sided efforts tire the soul. True connection requires two
+                  people walking toward each other equally.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Emotional Security -->
+          <div
+            class="perspective-1000 h-56 cursor-pointer group"
+            onclick="flipCard(this)"
+          >
+            <div
+              class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700"
+            >
+              <!-- Front -->
+              <div
+                class="absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 backface-hidden border-burgundy-700/50 group-hover:border-gold-500/50"
+              >
+                <div
+                  class="w-12 h-12 rounded-full bg-burgundy-900/80 flex items-center justify-center text-gold-400 text-xl"
+                >
+                  <i class="fa-solid fa-anchor"></i>
+                </div>
+                <h4 class="font-serif font-bold text-lg text-burgundy-100">
+                  Emotional Security
+                </h4>
+                <span class="text-[10px] text-burgundy-400"
+                  >Click to reveal reflection</span
+                >
+              </div>
+              <!-- Back -->
+              <div
+                class="absolute inset-0 glass-card rounded-2xl p-5 flex flex-col justify-center text-center space-y-2 backface-hidden rotate-y-180 bg-burgundy-950/90 border-gold-500/40"
+              >
+                <h5
+                  class="text-xs font-bold text-gold-300 uppercase tracking-wider"
+                >
+                  Security
+                </h5>
+                <p class="text-xs text-burgundy-100 leading-relaxed">
+                  Security means feeling chosen consistently, not just when life
+                  gets quiet or stressful elsewhere.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHAPTER 9: AN UNWRITTEN FUTURE -->
+      <section
+        id="ch9"
+        class="py-24 px-4 max-w-4xl mx-auto w-full text-center space-y-10 relative overflow-hidden"
+      >
+        <div class="space-y-4 relative z-10">
+          <span
+            class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
+            >Chapter 09</span
+          >
+          <h2
+            class="text-4xl md:text-6xl font-serif font-bold gold-gradient-text"
+          >
+            An Unwritten Future
+          </h2>
+          <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
+        </div>
+
+        <!-- Cinematic Ending Letter Container -->
+        <div
+          class="glass-card rounded-3xl p-8 md:p-12 border-gold-500/30 max-w-2xl mx-auto space-y-6 shadow-2xl relative z-10"
+        >
+          <p
+            id="typewriterText"
+            class="font-serif text-lg md:text-2xl text-burgundy-100 leading-relaxed italic font-light"
+          >
+            <!-- Typing animation target -->
+          </p>
+
+          <div
+            class="pt-6 border-t border-burgundy-800/60 flex flex-col items-center gap-4"
+          >
+            <span class="font-cursive text-3xl text-gold-300"
+              >With hope & authenticity,</span
+            >
+            <span class="text-xs text-burgundy-300 tracking-widest uppercase"
+              >Ranjan</span
+            >
+
+            <button
+              onclick="replayStory()"
+              class="mt-4 px-6 py-3 rounded-full bg-burgundy-800 hover:bg-burgundy-700 text-gold-300 text-xs font-bold uppercase tracking-wider border border-gold-500/40 transition-all hover:scale-105 shadow-xl flex items-center gap-2"
+            >
+              <i class="fa-solid fa-rotate-right"></i> Experience Our Story
+              Again
+            </button>
+          </div>
+        </div>
+
+        <!-- Subtle background aesthetic glowing orb -->
+        <div
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-burgundy-600/10 rounded-full blur-3xl pointer-events-none"
+        ></div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer
+        class="py-8 text-center text-xs text-burgundy-400/60 border-t border-burgundy-900/40"
+      >
+        <p>Crafted as an authentic personal love diary — Ranjan & Anjali</p>
+      </footer>
+    </div>
+
+    <script>
+      // Global App State
+      let isAudioPlaying = false;
+      let isScootyAnimating = false;
+      let scootyAnimationFrame = null;
+
+      async function toggleAudio() {
+        const audio = document.getElementById("ambientAudio");
+        const icon = document.getElementById("audioIcon");
+        const statusText = document.getElementById("audioStatusText");
+
+        if (isAudioPlaying) {
+          audio.pause();
+          isAudioPlaying = false;
+          icon.className = "fa-solid fa-music";
+          statusText.innerText = "Music Paused";
+        } else {
+          try {
+            await audio.play();
+            isAudioPlaying = true;
+            icon.className = "fa-solid fa-pause";
+            statusText.innerText = "Playing Personal Audio";
+          } catch {
+            isAudioPlaying = false;
+            icon.className = "fa-solid fa-music";
+            statusText.innerText = "Add audio/ambient.mp3 to enable";
+          }
+        }
+      }
+
+      // Canvas Particle System for Atmosphere
+      const particleCanvas = document.getElementById("particleCanvas");
+      const pCtx = particleCanvas.getContext("2d");
+      let particles = [];
+
+      function resizeParticleCanvas() {
+        particleCanvas.width = window.innerWidth;
+        particleCanvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resizeParticleCanvas);
+      resizeParticleCanvas();
+
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = Math.random() * particleCanvas.width;
+          this.y = Math.random() * particleCanvas.height;
+          this.size = Math.random() * 2 + 0.5;
+          this.speedX = (Math.random() - 0.5) * 0.3;
+          this.speedY = -Math.random() * 0.4 - 0.1;
+          this.opacity = Math.random() * 0.5 + 0.2;
+        }
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          if (this.y < 0 || this.x < 0 || this.x > particleCanvas.width) {
+            this.reset();
+            this.y = particleCanvas.height;
+          }
+        }
+        draw() {
+          pCtx.fillStyle = `rgba(240, 168, 182, ${this.opacity})`;
+          pCtx.beginPath();
+          pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          pCtx.fill();
+        }
+      }
+
+      for (let i = 0; i < 40; i++) {
+        particles.push(new Particle());
+      }
+
+      function animateParticles() {
+        pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+        particles.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animateParticles);
+      }
+      animateParticles();
+
+      function openEnvelope() {
+        const card = document.getElementById("envelopeCard");
+        card.style.transform = "scale(0.95) rotateY(180deg)";
+        card.style.opacity = "0";
+        setTimeout(() => {
+          scrollToChapter("ch1");
+        }, 500);
+      }
+
+      function scrollToChapter(chapterId) {
+        const target = document.getElementById(chapterId);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+
+      // Scroll Progress Bar & Navigation Indicator update
+      window.addEventListener("scroll", () => {
+        const winScroll =
+          document.body.scrollTop || document.documentElement.scrollTop;
+        const height =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById("progressBar").style.width = scrolled + "%";
+
+        // Active Chapter Detection
+        const chapters = [
+          "ch1",
+          "ch2",
+          "ch3",
+          "ch4",
+          "ch5",
+          "ch6",
+          "ch7",
+          "ch8",
+          "ch9",
+        ];
+        const names = [
+          "Chapter 1: The Beginning",
+          "Chapter 2: 17 Aug PDF",
+          "Chapter 3: Her Apology",
+          "Chapter 4: 20 August",
+          "Chapter 5: Meeting Plans",
+          "Chapter 6: 9 Sept Meeting",
+          "Chapter 7: Growing Closer",
+          "Chapter 8: Doubts & Questions",
+          "Chapter 9: Unwritten Future",
+        ];
+
+        for (let i = chapters.length - 1; i >= 0; i--) {
+          const el = document.getElementById(chapters[i]);
+          if (el && el.getBoundingClientRect().top <= 200) {
+            document.getElementById("currentChapterIndicator").innerText =
+              names[i];
+            break;
+          }
+        }
+      });
+
+      function togglePdfSummary() {
+        const excerpts = document.getElementById("pdfExcerpts");
+        const text = document.getElementById("pdfToggleText");
+        if (excerpts.classList.contains("hidden")) {
+          excerpts.classList.remove("hidden");
+          text.innerText = "Hide Excerpts";
+        } else {
+          excerpts.classList.add("hidden");
+          text.innerText = "Expand Full Excerpts";
+        }
+      }
+
+      function switchPerspective(type) {
+        const myTab = document.getElementById("perspectiveMy");
+        const unknownTab = document.getElementById("perspectiveUnknown");
+        const myBtn = document.getElementById("tabMyPerspectiveBtn");
+        const unknownBtn = document.getElementById("tabUnknownPerspectiveBtn");
+
+        if (type === "my") {
+          myTab.classList.remove("hidden");
+          unknownTab.classList.add("hidden");
+          myBtn.className =
+            "flex-1 py-2 px-4 rounded-xl text-xs font-bold transition-all bg-burgundy-800 text-gold-300 shadow";
+          unknownBtn.className =
+            "flex-1 py-2 px-4 rounded-xl text-xs font-bold text-burgundy-300 transition-all hover:text-white";
+        } else {
+          myTab.classList.add("hidden");
+          unknownTab.classList.remove("hidden");
+          unknownBtn.className =
+            "flex-1 py-2 px-4 rounded-xl text-xs font-bold transition-all bg-burgundy-800 text-gold-300 shadow";
+          myBtn.className =
+            "flex-1 py-2 px-4 rounded-xl text-xs font-bold text-burgundy-300 transition-all hover:text-white";
+        }
+      }
+
+      function flipCard(cardEl) {
+        const inner = cardEl.querySelector(".card-inner");
+        inner.classList.toggle("rotate-y-180");
+      }
+
+      const jCanvas = document.getElementById("journeyCanvas");
+      const jCtx = jCanvas.getContext("2d");
+      let scootyProgress = 0;
+
+      function renderJourneyCanvas() {
+        jCanvas.width = jCanvas.offsetWidth;
+        jCanvas.height = jCanvas.offsetHeight;
+
+        const w = jCanvas.width;
+        const h = jCanvas.height;
+
+        // Background Scenic Gradient
+        const skyGrad = jCtx.createLinearGradient(0, 0, 0, h);
+        skyGrad.addColorStop(0, "#1a050d");
+        skyGrad.addColorStop(0.6, "#380a14");
+        skyGrad.addColorStop(1, "#0e0306");
+        jCtx.fillStyle = skyGrad;
+        jCtx.fillRect(0, 0, w, h);
+
+        // Winding Road path
+        jCtx.beginPath();
+        jCtx.moveTo(40, h / 2);
+        jCtx.bezierCurveTo(w * 0.3, h * 0.2, w * 0.6, h * 0.8, w - 50, h / 2);
+        jCtx.strokeStyle = "rgba(212, 175, 55, 0.4)";
+        jCtx.lineWidth = 12;
+        jCtx.stroke();
+
+        // Location Nodes (Korba & Nagargda Waterfall)
+        // Node 1: Korba
+        jCtx.fillStyle = "#be3154";
+        jCtx.beginPath();
+        jCtx.arc(40, h / 2, 8, 0, Math.PI * 2);
+        jCtx.fill();
+        jCtx.fillStyle = "#fbe5e8";
+        jCtx.font = "10px Plus Jakarta Sans";
+        jCtx.fillText("Korba", 25, h / 2 - 15);
+
+        // Node 2: Champa
+        jCtx.fillStyle = "#d4af37";
+        jCtx.beginPath();
+        jCtx.arc(w * 0.45, h * 0.52, 6, 0, Math.PI * 2);
+        jCtx.fill();
+        jCtx.fillStyle = "#fbe5e8";
+        jCtx.fillText("Champa", w * 0.45 - 18, h * 0.52 - 12);
+
+        // Node 3: Nagargda Waterfall
+        jCtx.fillStyle = "#38bdf8";
+        jCtx.beginPath();
+        jCtx.arc(w - 50, h / 2, 10, 0, Math.PI * 2);
+        jCtx.fill();
+        jCtx.fillStyle = "#38bdf8";
+        jCtx.fillText("Nagargda Waterfall", w - 90, h / 2 - 18);
+
+        // Calculate Scooty Position along Curve
+        const t = scootyProgress;
+        const px =
+          (1 - t) * (1 - t) * 40 +
+          2 * (1 - t) * t * (w * 0.5) +
+          t * t * (w - 50);
+        const py =
+          (1 - t) * (1 - t) * (h / 2) +
+          2 * (1 - t) * t * (h * 0.7) +
+          t * t * (h / 2);
+
+        // Draw Scooty Icon / Marker
+        jCtx.fillStyle = "#f6e05e";
+        jCtx.shadowColor = "#d4af37";
+        jCtx.shadowBlur = 10;
+        jCtx.beginPath();
+        jCtx.arc(px, py, 7, 0, Math.PI * 2);
+        jCtx.fill();
+        jCtx.shadowBlur = 0;
+
+        // Update Label text depending on position
+        const locLabel = document.getElementById("locationLabel");
+        if (t < 0.4) {
+          locLabel.innerText = "Departing Korba towards Champa...";
+        } else if (t < 0.8) {
+          locLabel.innerText =
+            "Riding together on scooty through scenic greenery...";
+        } else {
+          locLabel.innerText = "Arrived at Nagargda Waterfall (9 Sept Memory)";
+        }
+      }
+
+      function toggleScootyAnimation() {
+        isScootyAnimating = !isScootyAnimating;
+        const btnText = document.getElementById("scootyBtnText");
+
+        if (isScootyAnimating) {
+          btnText.innerText = "Pause Journey";
+          function loop() {
+            scootyProgress += 0.003;
+            if (scootyProgress > 1) scootyProgress = 0;
+            renderJourneyCanvas();
+            if (isScootyAnimating) {
+              scootyAnimationFrame = requestAnimationFrame(loop);
+            }
+          }
+          loop();
+        } else {
+          btnText.innerText = "Resume Journey Animation";
+          cancelAnimationFrame(scootyAnimationFrame);
+        }
+      }
+      renderJourneyCanvas();
+
+      const endingText =
+        "Our story is still being written. We don't know what tomorrow holds, but every honest conversation, every effort, every shared smile, and every moment of understanding becomes a part of our journey. Perhaps the most beautiful part of our story is not knowing exactly how it ends, but discovering how we choose to write it together.";
+
+      let typewriterIndex = 0;
+      function typeWriter() {
+        const container = document.getElementById("typewriterText");
+        if (typewriterIndex < endingText.length) {
+          container.innerHTML += endingText.charAt(typewriterIndex);
+          typewriterIndex++;
+          setTimeout(typeWriter, 35);
+        }
+      }
+
+      // Trigger Typewriter when Chapter 9 comes into view
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && typewriterIndex === 0) {
+              typeWriter();
+            }
+          });
+        },
+        { threshold: 0.3 },
+      );
+
+      observer.observe(document.getElementById("ch9"));
+
+      function replayStory() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        typewriterIndex = 0;
+        document.getElementById("typewriterText").innerHTML = "";
+      }
+    </script>
+  </body>
+</html>
