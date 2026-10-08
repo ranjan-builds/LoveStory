@@ -237,6 +237,123 @@
       .animate-pulse-glow {
         animation: subtlePulse 4s infinite ease-in-out;
       }
+
+      /* Memory Box + conversation styling */
+      .chat-bubble {
+        padding: 0.7rem 0.9rem;
+        border-radius: 1rem;
+        max-width: 92%;
+        border: 1px solid rgba(133, 33, 59, 0.35);
+      }
+      .chat-bubble.her {
+        background: rgba(74, 14, 23, 0.52);
+        margin-right: auto;
+        border-bottom-left-radius: 0.35rem;
+      }
+      .chat-bubble.me {
+        background: rgba(159, 36, 67, 0.28);
+        margin-left: auto;
+        border-bottom-right-radius: 0.35rem;
+        text-align: right;
+      }
+      .memory-slot {
+        min-height: 125px;
+        padding: 1rem 0.7rem;
+        border-radius: 1.25rem;
+        border: 1px dashed rgba(212, 175, 55, 0.28);
+        background: rgba(42, 5, 11, 0.42);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        transition:
+          transform 0.25s ease,
+          border-color 0.25s ease,
+          background 0.25s ease;
+      }
+      .memory-slot:hover {
+        transform: translateY(-3px);
+        border-color: rgba(212, 175, 55, 0.55);
+        background: rgba(74, 14, 23, 0.52);
+      }
+      .memory-slot i {
+        font-size: 1.25rem;
+        color: #d4af37;
+      }
+      .memory-slot span {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.15rem;
+        color: #f7ced5;
+      }
+      .memory-slot small {
+        font-size: 9px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(240, 168, 182, 0.48);
+      }
+      .memory-pill {
+        padding: 0.55rem 0.8rem;
+        border-radius: 999px;
+        border: 1px solid rgba(133, 33, 59, 0.5);
+        background: rgba(42, 5, 11, 0.55);
+        color: rgba(247, 206, 213, 0.65);
+        font-size: 10px;
+      }
+      .memory-pill i {
+        color: #d4af37;
+        margin-right: 0.35rem;
+      }
+      @media (max-width: 640px) {
+        #musicPlayer {
+          bottom: 0.75rem;
+          right: 0.75rem;
+          width: calc(100vw - 1.5rem);
+        }
+        #musicPlayer > div:last-child button {
+          width: 46px;
+          height: 46px;
+        }
+        .conversation-card {
+          padding: 1.1rem;
+        }
+      }
+
+      .conversation-extra {
+        display: none;
+      }
+      .conversation-extra.is-visible {
+        display: block;
+        animation: conversationReveal 0.55s ease both;
+      }
+      .conversation-date {
+        display: block;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        opacity: 0.45;
+        margin-bottom: 3px;
+      }
+      @keyframes conversationReveal {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @media (max-width: 640px) {
+        #ch11 .conversation-card {
+          padding: 1rem;
+        }
+        #revealConversationsBtn {
+          width: 100%;
+          justify-content: center;
+          font-size: 10px;
+        }
+      }
     </style>
   </head>
   <body
@@ -245,29 +362,98 @@
     <!-- Background Canvas for Soft Particles & Ambiance -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- Global Audio Control Bar -->
+    <!-- GLOBAL MINI PLAYLIST -->
     <div
-      id="audioBar"
-      class="fixed bottom-5 right-5 z-50 flex items-center gap-3 bg-burgundy-950/80 backdrop-blur-md px-4 py-2.5 rounded-full border border-burgundy-500/30 shadow-2xl transition-all duration-300"
+      id="musicPlayer"
+      class="fixed bottom-4 right-4 z-50 w-[calc(100vw-2rem)] max-w-sm"
     >
-      <button
-        id="audioToggleBtn"
-        onclick="toggleAudio()"
-        class="w-10 h-10 rounded-full bg-burgundy-700 hover:bg-burgundy-600 text-gold-300 flex items-center justify-center transition-colors shadow-lg"
-        title="Play / Pause Personal Audio"
+      <div
+        id="playlistPanel"
+        class="hidden mb-3 glass-card rounded-3xl p-4 border-gold-500/20 shadow-2xl"
       >
-        <i class="fa-solid fa-music" id="audioIcon"></i>
-      </button>
-      <div class="flex flex-col pr-1">
-        <span class="text-xs font-semibold text-burgundy-200"
-          >Personal Audio</span
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <p
+              class="text-[10px] uppercase tracking-[0.25em] text-gold-400 font-bold"
+            >
+              Our Soundtrack
+            </p>
+            <h3 class="font-serif text-xl text-burgundy-100">
+              Songs that feel like us
+            </h3>
+          </div>
+          <button
+            onclick="togglePlaylist()"
+            class="w-8 h-8 rounded-full bg-burgundy-900/80 text-burgundy-200 hover:text-gold-300"
+            aria-label="Close playlist"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div id="playlistItems" class="space-y-2">
+          <button
+            onclick="playPlaylistSong(0)"
+            data-song-index="0"
+            class="playlist-item w-full text-left flex items-center gap-3 p-3 rounded-2xl bg-burgundy-900/60 border border-gold-500/20 hover:border-gold-500/50 transition-all"
+          >
+            <span
+              class="w-10 h-10 rounded-xl bg-burgundy-800 flex items-center justify-center text-gold-300 shrink-0"
+              ><i class="fa-solid fa-heart"></i
+            ></span>
+            <span class="min-w-0 flex-1">
+              <span
+                class="block text-sm text-burgundy-100 font-semibold truncate"
+                >The song that reminds me of you</span
+              >
+              <span class="block text-[10px] text-burgundy-400 mt-0.5"
+                >Tap to play · candy.mp3</span
+              >
+            </span>
+            <i class="fa-solid fa-play text-gold-400 text-xs"></i>
+          </button>
+          <div
+            class="p-3 rounded-2xl border border-dashed border-burgundy-700/60 text-center text-[10px] text-burgundy-400"
+          >
+            More songs can be added here later.
+          </div>
+        </div>
+
+        <div
+          class="mt-3 pt-3 border-t border-burgundy-800/60 flex items-center gap-3"
         >
-        <span class="text-[10px] text-burgundy-400" id="audioStatusText"
-          >udaariyan</span
+          <button
+            onclick="toggleAudio()"
+            class="w-9 h-9 rounded-full bg-burgundy-700 text-gold-300 flex items-center justify-center"
+            aria-label="Play or pause song"
+          >
+            <i class="fa-solid fa-play" id="audioIcon"></i>
+          </button>
+          <div class="min-w-0">
+            <span
+              class="block text-[10px] uppercase tracking-wider text-burgundy-400"
+              >Now playing</span
+            >
+            <span
+              id="audioStatusText"
+              class="block text-xs text-burgundy-100 truncate"
+              >Nothing playing</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <button
+          onclick="togglePlaylist()"
+          class="w-12 h-12 rounded-full bg-burgundy-800/95 backdrop-blur-md border border-gold-500/30 text-gold-300 flex items-center justify-center shadow-2xl hover:scale-105 transition-transform"
+          aria-label="Open our soundtrack"
         >
+          <i class="fa-solid fa-music"></i>
+        </button>
       </div>
     </div>
-    <audio id="ambientAudio" src="candy.mp3" loop preload="none"></audio>
+    <audio id="ambientAudio" src="candy.mp3" preload="none"></audio>
 
     <!-- MAIN APP CONTAINER -->
     <div class="relative z-10 flex-grow flex flex-col">
@@ -425,7 +611,13 @@
               onclick="scrollToChapter('ch9')"
               class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
             >
-              9. Future
+              9. Letter
+            </button>
+            <button
+              onclick="scrollToChapter('ch10')"
+              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
+            >
+              10. Future
             </button>
           </div>
         </div>
@@ -1332,15 +1524,1081 @@
         </div>
       </section>
 
-      <!-- CHAPTER 9: AN UNWRITTEN FUTURE -->
+      <!-- CHAPTER 9: A LETTER FOR YOU -->
       <section
         id="ch9"
-        class="py-24 px-4 max-w-4xl mx-auto w-full text-center space-y-10 relative overflow-hidden"
+        class="py-24 px-4 max-w-5xl mx-auto w-full text-center space-y-10 relative overflow-hidden"
       >
         <div class="space-y-4 relative z-10">
           <span
             class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
             >Chapter 09</span
+          >
+          <h2
+            class="text-4xl md:text-6xl font-serif font-bold gold-gradient-text"
+          >
+            A Letter I Wanted You to Keep
+          </h2>
+          <p
+            class="text-sm md:text-base text-burgundy-200/80 max-w-xl mx-auto font-light"
+          >
+            Some feelings are better written by hand.
+          </p>
+          <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
+        </div>
+
+        <!-- Handwritten Love Letter -->
+        <div class="relative z-10 max-w-3xl mx-auto">
+          <button
+            type="button"
+            onclick="openLetter()"
+            aria-label="Open handwritten love letter"
+            class="group relative w-full cursor-zoom-in"
+          >
+            <!-- Soft romantic glow -->
+            <div
+              class="absolute inset-8 bg-burgundy-500/20 rounded-[2rem] blur-3xl opacity-60 group-hover:opacity-90 transition-opacity duration-500"
+            ></div>
+
+            <div
+              class="relative glass-card rounded-3xl p-4 md:p-6 border-gold-500/30 shadow-2xl transition-all duration-500 group-hover:scale-[1.015] group-hover:border-gold-400/60"
+            >
+              <div class="absolute top-4 left-4 text-gold-400/60">
+                <i class="fa-solid fa-heart"></i>
+              </div>
+              <div class="absolute top-4 right-4 text-gold-400/60">
+                <i class="fa-solid fa-heart"></i>
+              </div>
+
+              <img
+                src="letter.png"
+                alt="Handwritten love letter"
+                class="w-full max-h-[75vh] object-contain rounded-2xl shadow-xl bg-[#f8eee4] transition-transform duration-500 group-hover:scale-[1.01]"
+                loading="lazy"
+              />
+
+              <div class="pt-5 flex flex-col items-center gap-2">
+                <span
+                  class="px-4 py-2 rounded-full bg-burgundy-900/70 border border-gold-500/30 text-xs text-gold-300 font-medium tracking-wider uppercase"
+                >
+                  <i class="fa-solid fa-expand mr-2"></i>
+                  Tap to read full letter
+                </span>
+                <span class="text-xs text-burgundy-400/70 italic">
+                  Written by Ranjan, for Anjali
+                </span>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        <p
+          class="relative z-10 font-cursive text-3xl md:text-4xl text-gold-300"
+        >
+          For the words I couldn't say aloud.
+        </p>
+
+        <!-- Fullscreen Letter Viewer -->
+        <div
+          id="letterModal"
+          class="hidden fixed inset-0 z-[100] bg-black/90 backdrop-blur-md p-4 md:p-8 items-center justify-center"
+          onclick="closeLetter(event)"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Full handwritten love letter"
+        >
+          <button
+            type="button"
+            onclick="closeLetter()"
+            class="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-burgundy-900/90 border border-gold-500/40 text-gold-300 hover:bg-burgundy-800 transition-colors"
+            aria-label="Close letter"
+          >
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+
+          <img
+            src="letter.png"
+            alt="Handwritten love letter enlarged"
+            class="max-w-full max-h-[92vh] object-contain rounded-xl shadow-2xl"
+          />
+        </div>
+
+        <div
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gold-500/5 rounded-full blur-3xl pointer-events-none"
+        ></div>
+      </section>
+
+      <!-- CHAPTER 11: TOP CONVERSATIONS -->
+      <!-- CHAPTER 11: OUR CONVERSATIONS -->
+      <section
+        id="ch11"
+        class="py-24 px-4 max-w-6xl mx-auto w-full space-y-10 relative overflow-hidden border-t border-burgundy-900/40"
+      >
+        <div class="text-center space-y-3 relative z-10">
+          <span
+            class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
+            >Chapter 11</span
+          >
+          <h2
+            class="text-4xl md:text-5xl font-serif font-bold gold-gradient-text"
+          >
+            Our Conversations
+          </h2>
+          <p
+            class="max-w-2xl mx-auto text-sm text-burgundy-300 leading-relaxed"
+          >
+            Not every memory was a big moment. Some were just a few words from
+            you that I wanted to keep.
+          </p>
+          <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-5 relative z-10">
+          <article
+            class="conversation-card glass-card rounded-3xl p-6 border-burgundy-800/50"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-heart"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  19 September
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  I want to talk
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">“I want to talk” 🥺</div>
+              <div class="chat-bubble me">“I love you more..”</div>
+              <div class="chat-bubble her">“I love you” 🧿🫂</div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-6 border-burgundy-800/50"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-face-smile-wink"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  16 September
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  The “I hate you” joke
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble me">“But I love you”</div>
+              <div class="chat-bubble her">“But I love you too” 🥺</div>
+              <div class="chat-bubble her">“I hate you 🌝♥️”</div>
+              <div class="chat-bubble me">“I hate you tooo 😄❤️”</div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-6 border-burgundy-800/50"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-location-heart"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  25 September
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  The distance
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">“I want to stay with u”</div>
+              <div class="chat-bubble her">“Not far away from u” 🥺</div>
+              <div class="chat-bubble me">
+                “I just want a little care, little love.”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-6 border-burgundy-800/50"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-infinity"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  11 September
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">Just us</h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble me">“I love you ❤️”</div>
+              <div class="chat-bubble her">“I love you too baby 😘”</div>
+              <div class="chat-bubble me">“Aur du… mn bhara? 😅”</div>
+              <div class="chat-bubble her">“Ha ji”</div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="1"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-heart"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 01
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  The little things
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">22/09/26</span> “Because u love
+                me bahut sara + your respect your loyalty your har chij I love
+                the most ........love is small word for u how can I describe the
+                actual love it&#x27;s a feeling emotion our bond our 🥺♥️🫂🧿”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">05/10/26</span> “Love you ji
+                ♥️💋🫂🧿”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">03/10/26</span>
+                “🥺🤌...it&#x27;s only for me babe..acooring to me you made this
+                for me 🧿♥️🫂”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">05/10/26</span> “Long short se
+                frk ni prta. Your feeling your emotions your care your support
+                matter to me.......”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">24/09/26</span> “Love care
+                support trust loyal”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="2"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-heart-circle-bolt"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 02
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Love, in her words
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">02/10/26</span> “I trust you my
+                boy 🥺♥️🧿”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">05/10/26</span> “♾️ ♥️🧿&gt;love
+                matter to me”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">11/09/26</span> “I love you
+                ranjan ♥️🫂”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">11/09/26</span> “I love you too
+                baby 😘”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">24/09/26</span> “Sun n tumne
+                Mera ego hurt kr diya ab ...next time mil toh teko n
+                💋♥️🧿🫦👄👅”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="3"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-face-smile-wink"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 03
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Us being us
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">28/09/26</span>
+                “🥺🧿........teko pata hai mai bhut jada guseel hu bhut gussa
+                any time rhta hai gusa ekdam....kaam kr vjh se or gusaaaaaa jati
+                hu mai &lt;This message was edited&gt;”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">29/09/26</span> “That kind of
+                support of yours 🧿🫠♥️🫂love you more my baby ha ye
+                imperfections toh bahut hai pr ab main....apne problem me ni
+                solution me focus karungi baby...ab mai teko perfect banke
+                dikhaungi..ache se...............sun na tu chor ke jayega bhi na
+                toh mai tere piche piche aa jaungi haa 😏🧿♥️ &lt;This message
+                was edited&gt;”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">05/10/26</span> “Your
+                unconditional love”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">05/10/26</span> “Sex with you
+                🌝🧿♥️”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">11/09/26</span> “I love you my
+                baby boy”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="4"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-infinity"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 04
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Things I kept
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">16/09/26</span> “Because you
+                love you give respect, loyalty+”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">19/09/26</span> “I love you too
+                babe”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">22/09/26</span> “🥺🫂♥️🧿”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">26/09/26</span> “Love you 🥺”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">02/10/26</span> “Thik h jaha
+                teko Khushi mile tu.......free h mere side se. ...mai teko band
+                ke thodi rakhungi 😔😓.....teri khushi me hi meri khushi h tu bs
+                khush rhe 🥺🤌”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="5"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-message"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 05
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  The soft side
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">03/10/26</span> “Love you babe”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">05/10/26</span> “Love you my
+                baby”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">07/10/26</span> “Good morning
+                babe 🥲🤌🧿”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">16/09/26</span> “Aji cheating
+                mtlb maine bola tha ki mai reasoning ke bad milungi complete
+                krne ke badd toh maine kaha ki mai reasoning complete krne se
+                phle bhi mil sakti hu ....vo chelating hua na maine juban di ki
+                reasoning ke bad hi ab mera mn badal gay na reasoning se pehle
+                bhi toh mil sakti hu 🌝♥️”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">16/09/26</span> “Love you too
+                babe”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="6"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-star"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 06
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Little reminders
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">17/09/26</span> “Love you baby”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">22/09/26</span> “Ab toh ajjaa tu
+                kahi se 😩♥️🧿🥺🥲”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">22/09/26</span> “Meko toh pata h
+                🥺🧿🫂”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">25/09/26</span> “I also feel as
+                you...mujhe ek bhi acha ni lag rha ..ekdam upset type lag rha
+                even meko ekdam rona aa rha kuch acha ni lag rha kisi chij ke mn
+                ni lag rha ekdam bekar lag rha .....aisa kio ho rha ...ranjan
+                🥺...”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">25/09/26</span> “Why are you
+                upset with me 🥺........ And hum kya kr saktey hai
+                batao......tum hi”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="7"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-sparkles"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 07
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Her kind of love
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">27/09/26</span> “Expensive model
+                in world 🌎♥️🫠💋💋🫂🧿”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">28/09/26</span> “Ni ni ni you
+                are wrong.....galat baat aisa thodi hota hai bhayyyy ki sirf
+                kaam ke time auu ni meko tu cahiye permanent vo bhi ..mai ni
+                janti tu Aisa galat decision mt liya kr vrna ek jhapd de dungi
+                haa sun le bada aya 🥺😩🧿”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">02/10/26</span> “🧿🫠🫂♥️”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">02/10/26</span> “🫂🧿♥️”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">03/10/26</span> “I love you
+                literally bhat sara bhut jyada”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="8"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-heart-pulse"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 08
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Messages I replay
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">03/10/26</span> “🫂♥️🧿”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">03/10/26</span> “Teko kal
+                youtube bheji thi na”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">04/10/26</span> “🧿🫂🤌♥️”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">05/10/26</span> “Sweetheart
+                ♥️🧿”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">05/10/26</span> “🌝🧿♥️”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="9"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-heart"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 09
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  The little things
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">07/10/26</span> “🌝♥️🧿”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">07/10/26</span> “🫠🧿🌝♥️”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">07/10/26</span> “🧿🌝♥️”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">11/09/26</span> “Meko sirf yhi
+                chaiye ki financial stable ho jau papa mummy proud kre kioki
+                bhut jaruri h babe ..sunny k hona n hona ek hi barabar h parents
+                trust me I din&#x27;t want to break their trust”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">11/09/26</span> “Love you bahut
+                sara”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="10"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-heart-circle-bolt"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 10
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Love, in her words
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">12/09/26</span> “🌝🫂🫠♥️🥹”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">16/09/26</span> “I hate you
+                🌝♥️”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">16/09/26</span> “It Mean i love
+                you more more”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">16/09/26</span> “I love you more
+                than you”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">16/09/26</span> “🌝♥️🫂”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="11"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-face-smile-wink"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 11
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Us being us
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">19/09/26</span> “🌝🥲🫂🧿”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">20/08/26</span> “😅♥️🫂💋”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">20/09/26</span> “I love you more
+                more”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">22/09/26</span> “I wanna talk to
+                you babe”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">22/09/26</span> “♥️🫂🧿”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="12"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-infinity"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 12
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Things I kept
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">23/08/26</span> “Us love bite ko
+                keshu or mai milke khaa gye 🤣🤣”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">23/09/26</span> “Tab bhi feeling
+                ati hogi teko”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">23/09/26</span> “Ye thik hai
+                🌝🧿😅”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">24/08/26</span> “🫠🫠😍♥️🌝”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">24/09/26</span> “Fuck you
+                🌝💋♥️”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="13"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-message"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 13
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  The soft side
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">25/08/26</span> “😅♥️🫂”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">26/09/26</span> “🥺🧿♥️”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">28/09/26</span> “I really love
+                you very very much”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">29/09/26</span> “🧿🫂♥️”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">29/09/26</span> “🥺🤌🧿♥️”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="14"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-star"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 14
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Little reminders
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">02/10/26</span> “I love you
+                ranjan”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">03/10/26</span> “Love you”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">06/10/26</span> “I love you too”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">10/09/26</span> “I love you”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">11/09/26</span> “You love me”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="15"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-sparkles"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 15
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Her kind of love
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">12/09/26</span> “Love + you=”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">12/09/26</span> “Love you more”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">16/09/26</span> “You are
+                allergetic from almond 🥹........but I am the one who eat
+                chochlate with full of happy happy 😌♥️ because you gave that
+                chochlate to me that&#x27;s why I ate chochlate 😌♥️”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">20/09/26</span> “You block me u
+                leave me 🥺”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">20/09/26</span> “🫂🥺 &lt;This
+                message was edited&gt;”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="16"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-heart-pulse"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 16
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Messages I replay
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">20/09/26</span> “Teri ijjat utar
+                du 🌝♥️🫦💋💋👅”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">22/09/26</span> “I&#x27;ll come
+                to you 🧿😗”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">22/09/26</span> “I love you
+                more”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">27/09/26</span> “Love you I”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">27/09/26</span> “I love you
+                rajsaab”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="17"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-heart"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 17
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  The little things
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">28/09/26</span>
+                “🧿🥹🤌🌎baby...............mai perfect ni hu kisi angel se meri
+                harkatey se toh mere parents bhi pareshan rehty hai bar bar
+                datey rhety hai har ek chij ke liye”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">02/10/26</span> “Good morning
+                babe.............”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">02/10/26</span> “I Love u bahut
+                sara”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">02/10/26</span> “😌♥️🧿”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">03/10/26</span> “I 🌝♥️”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="18"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-heart-circle-bolt"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 18
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Love, in her words
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">03/10/26</span> “🧿🫂😩🌎”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">06/10/26</span> “If 1 girl boy
+                not love each other&#x27;s &lt;This message was edited&gt;”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">06/10/26</span> “Love exists
+                without list”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">07/10/26</span> “Or especially
+                dushre ke matter se dur rho”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">07/10/26</span> “Pr mai teko
+                khush rkhne ke bajaye”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="19"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-face-smile-wink"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 19
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Us being us
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">07/10/26</span> “Haye 🥹♥️🧿”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">07/10/26</span> “🌝♥️💋”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">10/09/26</span> “Good night take
+                care”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">10/09/26</span> “🌝💋♥️”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">12/09/26</span> “🫠🥹🫂♥️”
+              </div>
+            </div>
+          </article>
+          <article
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
+            data-conversation="20"
+          >
+            <div class="flex items-center gap-3 mb-5">
+              <span
+                class="w-10 h-10 rounded-full bg-burgundy-800 flex items-center justify-center text-gold-300"
+                ><i class="fa-solid fa-infinity"></i
+              ></span>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gold-400">
+                  Top Pick · 20
+                </p>
+                <h3 class="font-serif text-xl text-burgundy-100">
+                  Things I kept
+                </h3>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed">
+              <div class="chat-bubble her">
+                <span class="conversation-date">12/09/26</span> “🫠♥️😍”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">12/09/26</span> “🫠😍♥️”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">15/09/26</span> “Photo bhej dena
+                tumhare side kr ganesh ji k”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">17/08/26</span> “I am not
+                blaming you I am not flaming you I am just believe on you and
+                believe on myself first and I have to take a stand for myself
+                because it is very very important to me”
+              </div>
+              <div class="chat-bubble her">
+                <span class="conversation-date">17/08/26</span> “Your each and
+                every boat your entire sentences matter to me”
+              </div>
+            </div>
+          </article>
+          <div class="relative z-10 mt-8 text-center">
+            <button
+              id="revealConversationsBtn"
+              onclick="revealMoreConversations()"
+              class="px-7 py-3.5 rounded-full bg-burgundy-800/80 hover:bg-burgundy-700 text-gold-300 text-xs font-bold uppercase tracking-[0.18em] border border-gold-500/30 transition-all hover:scale-105 shadow-xl inline-flex items-center gap-2"
+            >
+              <i class="fa-solid fa-book-open"></i> Reveal More Conversations
+              <span id="conversationCount" class="opacity-70">20 / 100</span>
+            </button>
+            <p
+              id="conversationHint"
+              class="mt-3 text-[10px] uppercase tracking-[0.2em] text-burgundy-400"
+            >
+              There are more little pieces of us hidden below.
+            </p>
+          </div>
+        </div>
+
+        <p
+          class="text-center font-cursive text-3xl text-gold-300 relative z-10"
+        >
+          Some conversations are too small to call milestones — but too precious
+          to forget.
+        </p>
+      </section>
+
+      <!-- CHAPTER 10: AN UNWRITTEN FUTURE -->
+
+      <section
+        id="ch10"
+        class="py-24 px-4 max-w-4xl mx-auto w-full text-center space-y-10 relative overflow-hidden"
+      >
+        <div class="space-y-4 relative z-10">
+          <span
+            class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
+            >Chapter 10</span
           >
           <h2
             class="text-4xl md:text-6xl font-serif font-bold gold-gradient-text"
@@ -1387,11 +2645,118 @@
         ></div>
       </section>
 
+      <!-- CHAPTER 12: THE MEMORY BOX -->
+      <section
+        id="ch12"
+        class="py-28 px-4 max-w-5xl mx-auto w-full text-center space-y-10 relative overflow-hidden border-t border-burgundy-900/40"
+      >
+        <div class="relative z-10 space-y-4">
+          <span
+            class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
+            >Chapter 12 · Final Memory Box</span
+          >
+          <h2
+            class="text-4xl md:text-6xl font-serif font-bold gold-gradient-text"
+          >
+            The Memory Box
+          </h2>
+          <p class="max-w-xl mx-auto text-sm text-burgundy-300 leading-relaxed">
+            Empty for now — because some memories deserve to be added when they
+            actually happen.
+          </p>
+          <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
+        </div>
+
+        <div
+          class="memory-box glass-card rounded-[2rem] p-7 md:p-12 max-w-4xl mx-auto relative z-10 border-gold-500/20 shadow-2xl"
+        >
+          <div class="memory-box-lid mx-auto mb-8">
+            <div
+              class="w-20 h-20 rounded-3xl bg-burgundy-900/80 border border-gold-500/30 flex items-center justify-center text-4xl text-gold-300 shadow-inner"
+            >
+              <i class="fa-solid fa-box-open"></i>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <div class="memory-slot">
+              <i class="fa-solid fa-image"></i><span>Photos</span
+              ><small>Coming later</small>
+            </div>
+            <div class="memory-slot">
+              <i class="fa-solid fa-map-location-dot"></i><span>Places</span
+              ><small>Coming later</small>
+            </div>
+            <div class="memory-slot">
+              <i class="fa-solid fa-music"></i><span>Songs</span
+              ><small>Coming later</small>
+            </div>
+            <div class="memory-slot">
+              <i class="fa-solid fa-ticket"></i><span>Little Things</span
+              ><small>Coming later</small>
+            </div>
+          </div>
+
+          <div
+            class="mt-7 p-5 rounded-2xl bg-burgundy-950/60 border border-burgundy-800/50"
+          >
+            <p class="font-serif text-xl md:text-2xl text-burgundy-100 italic">
+              “Not everything has happened yet. That is exactly why this box is
+              still open.”
+            </p>
+            <p
+              class="mt-3 text-[10px] uppercase tracking-[0.2em] text-gold-400/80"
+            >
+              Ranjan ♥ Anjali
+            </p>
+          </div>
+        </div>
+
+        <div class="relative z-10 flex flex-wrap justify-center gap-3">
+          <span class="memory-pill"
+            ><i class="fa-regular fa-image"></i> Add photos later</span
+          >
+          <span class="memory-pill"
+            ><i class="fa-solid fa-location-dot"></i> Add places later</span
+          >
+          <span class="memory-pill"
+            ><i class="fa-solid fa-headphones"></i> Add songs later</span
+          >
+        </div>
+      </section>
+
       <!-- FOOTER -->
       <footer
-        class="py-8 text-center text-xs text-burgundy-400/60 border-t border-burgundy-900/40"
+        class="relative z-20 py-10 px-5 sm:py-12 border-t border-burgundy-900/40 bg-velvet/60 backdrop-blur-sm"
       >
-        <p>Crafted as an authentic personal love diary — Ranjan & Anjali</p>
+        <div class="max-w-2xl mx-auto text-center">
+          <!-- Small decorative heart -->
+          <div class="flex items-center justify-center gap-3 mb-4">
+            <span class="h-px w-10 sm:w-16 bg-burgundy-700/60"></span>
+
+            <i class="fa-solid fa-heart text-gold-400/70 text-xs"></i>
+
+            <span class="h-px w-10 sm:w-16 bg-burgundy-700/60"></span>
+          </div>
+
+          <!-- Main footer text -->
+          <p
+            class="font-serif text-base sm:text-lg text-burgundy-200/80 italic leading-relaxed"
+          >
+            Crafted with love, memories & a little bit of courage.
+          </p>
+
+          <p
+            class="mt-2 text-[10px] sm:text-xs text-burgundy-400/60 tracking-[0.18em] uppercase"
+          >
+            Ranjan <span class="text-gold-400/60">♥</span> Anjali
+          </p>
+
+          <!-- Closing line -->
+          <p class="mt-5 text-[9px] sm:text-[10px] text-burgundy-500/50">
+            Our Unwritten Story · Still being written
+          </p>
+        </div>
       </footer>
     </div>
 
@@ -1401,29 +2766,62 @@
       let isScootyAnimating = false;
       let scootyAnimationFrame = null;
 
-      async function toggleAudio() {
+      const playlist = [
+        { title: "The song that reminds me of you", file: "candy.mp3" },
+      ];
+      let currentSongIndex = 0;
+
+      function togglePlaylist() {
+        document.getElementById("playlistPanel").classList.toggle("hidden");
+      }
+
+      async function playPlaylistSong(index) {
         const audio = document.getElementById("ambientAudio");
         const icon = document.getElementById("audioIcon");
         const statusText = document.getElementById("audioStatusText");
+        const song = playlist[index];
+        currentSongIndex = index;
+        audio.src = song.file;
 
-        if (isAudioPlaying) {
-          audio.pause();
-          isAudioPlaying = false;
-          icon.className = "fa-solid fa-music";
-          statusText.innerText = "Music Paused";
-        } else {
-          try {
-            await audio.play();
-            isAudioPlaying = true;
-            icon.className = "fa-solid fa-pause";
-            statusText.innerText = "Playing Personal Audio";
-          } catch {
+        try {
+          if (isAudioPlaying && currentSongIndex === index) {
+            audio.pause();
             isAudioPlaying = false;
-            icon.className = "fa-solid fa-music";
-            statusText.innerText = "Add audio/ambient.mp3 to enable";
+            icon.className = "fa-solid fa-play";
+            statusText.innerText = "Paused · " + song.title;
+            return;
           }
+          await audio.play();
+          isAudioPlaying = true;
+          icon.className = "fa-solid fa-pause";
+          statusText.innerText = song.title;
+          document
+            .querySelectorAll(".playlist-item")
+            .forEach((item, i) => item.classList.toggle("ring-1", i === index));
+        } catch {
+          isAudioPlaying = false;
+          icon.className = "fa-solid fa-play";
+          statusText.innerText = "Add " + song.file + " to enable";
         }
       }
+
+      async function toggleAudio() {
+        const audio = document.getElementById("ambientAudio");
+        if (!isAudioPlaying) {
+          await playPlaylistSong(currentSongIndex);
+        } else {
+          audio.pause();
+          isAudioPlaying = false;
+          document.getElementById("audioIcon").className = "fa-solid fa-play";
+          document.getElementById("audioStatusText").innerText = "Music Paused";
+        }
+      }
+
+      document.getElementById("ambientAudio").addEventListener("ended", () => {
+        isAudioPlaying = false;
+        document.getElementById("audioIcon").className = "fa-solid fa-play";
+        document.getElementById("audioStatusText").innerText = "Song finished";
+      });
 
       // Canvas Particle System for Atmosphere
       const particleCanvas = document.getElementById("particleCanvas");
@@ -1516,6 +2914,7 @@
           "ch7",
           "ch8",
           "ch9",
+          "ch10",
         ];
         const names = [
           "Chapter 1: The Beginning",
@@ -1526,7 +2925,8 @@
           "Chapter 6: 9 Sept Meeting",
           "Chapter 7: Growing Closer",
           "Chapter 8: Doubts & Questions",
-          "Chapter 9: Unwritten Future",
+          "Chapter 9: Love Letter",
+          "Chapter 10: Unwritten Future",
         ];
 
         for (let i = chapters.length - 1; i >= 0; i--) {
@@ -1699,7 +3099,7 @@
         }
       }
 
-      // Trigger Typewriter when Chapter 9 comes into view
+      // Trigger Typewriter when Chapter 10 comes into view
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -1711,12 +3111,60 @@
         { threshold: 0.3 },
       );
 
-      observer.observe(document.getElementById("ch9"));
+      observer.observe(document.getElementById("ch10"));
+
+      function openLetter() {
+        const modal = document.getElementById("letterModal");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLetter(event) {
+        // Close only when clicking the backdrop or close button.
+        if (event && event.target !== event.currentTarget) return;
+
+        const modal = document.getElementById("letterModal");
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+        document.body.style.overflow = "";
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          const modal = document.getElementById("letterModal");
+          if (modal && !modal.classList.contains("hidden")) {
+            closeLetter();
+          }
+        }
+      });
 
       function replayStory() {
         window.scrollTo({ top: 0, behavior: "smooth" });
         typewriterIndex = 0;
         document.getElementById("typewriterText").innerHTML = "";
+      }
+
+      let revealedConversations = 0;
+      function revealMoreConversations() {
+        const cards = [...document.querySelectorAll(".conversation-extra")];
+        const next = Math.min(revealedConversations + 4, cards.length);
+        cards
+          .slice(revealedConversations, next)
+          .forEach((card) => card.classList.add("is-visible"));
+        revealedConversations = next;
+        const count = document.getElementById("conversationCount");
+        const btn = document.getElementById("revealConversationsBtn");
+        const hint = document.getElementById("conversationHint");
+        count.textContent = `${revealedConversations + 20} / 100`;
+        if (revealedConversations >= cards.length) {
+          btn.innerHTML =
+            '<i class="fa-solid fa-heart"></i> All Our Top Picks Revealed';
+          btn.disabled = true;
+          btn.classList.add("opacity-60", "cursor-default");
+          hint.textContent =
+            "100 little pieces of our conversations — kept here for us.";
+        }
       }
     </script>
   </body>
