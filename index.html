@@ -354,11 +354,668 @@
           font-size: 10px;
         }
       }
+
+      /* ================= PASSWORD GATE ================= */
+      body.site-locked {
+        overflow: hidden !important;
+      }
+
+      body.site-locked > *:not(#passwordGate) {
+        visibility: hidden !important;
+        pointer-events: none !important;
+        user-select: none !important;
+      }
+
+      #passwordGate {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+        overflow: auto;
+        background:
+          radial-gradient(
+            circle at 50% 35%,
+            rgba(133, 33, 59, 0.28),
+            transparent 42%
+          ),
+          linear-gradient(180deg, #2a050b 0%, #120508 55%, #090204 100%);
+        transition:
+          opacity 0.65s ease,
+          visibility 0.65s ease;
+      }
+
+      #passwordGate.is-unlocking {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .password-gate-card {
+        position: relative;
+        width: min(100%, 430px);
+        padding: clamp(1.5rem, 6vw, 2.5rem);
+        border: 1px solid rgba(212, 175, 55, 0.24);
+        border-radius: 2rem;
+        background: rgba(42, 5, 11, 0.72);
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.55);
+        text-align: center;
+      }
+
+      .password-heart {
+        width: 68px;
+        height: 68px;
+        margin: 0 auto 1.2rem;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: #d4af37;
+        background: rgba(74, 14, 23, 0.9);
+        border: 1px solid rgba(212, 175, 55, 0.45);
+        box-shadow: 0 0 35px rgba(212, 175, 55, 0.13);
+        animation: passwordHeartPulse 3s ease-in-out infinite;
+      }
+
+      @keyframes passwordHeartPulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .password-input-wrap {
+        position: relative;
+        margin-top: 1.35rem;
+      }
+
+      #diaryPassword {
+        width: 100%;
+        height: 52px;
+        padding: 0 3.25rem 0 1rem;
+        border-radius: 1rem;
+        outline: none;
+        color: #fbe5e8;
+        background: rgba(18, 5, 8, 0.88);
+        border: 1px solid rgba(240, 168, 182, 0.18);
+        font:
+          500 14px "Plus Jakarta Sans",
+          sans-serif;
+        transition:
+          border-color 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+
+      #diaryPassword::placeholder {
+        color: rgba(240, 168, 182, 0.38);
+      }
+
+      #diaryPassword:focus {
+        border-color: rgba(212, 175, 55, 0.65);
+        box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.08);
+      }
+
+      #togglePasswordVisibility {
+        position: absolute;
+        top: 50%;
+        right: 8px;
+        width: 38px;
+        height: 38px;
+        transform: translateY(-50%);
+        border: 0;
+        border-radius: 0.75rem;
+        color: #d4af37;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      #unlockDiaryBtn {
+        width: 100%;
+        min-height: 52px;
+        margin-top: 0.8rem;
+        border: 1px solid rgba(212, 175, 55, 0.38);
+        border-radius: 1rem;
+        color: #fff0f3;
+        background: linear-gradient(135deg, #9f2443, #6f162d);
+        font:
+          700 12px "Plus Jakarta Sans",
+          sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 12px 30px rgba(74, 14, 23, 0.35);
+        transition:
+          transform 0.2s ease,
+          filter 0.2s ease;
+      }
+
+      #unlockDiaryBtn:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.12);
+      }
+
+      #unlockDiaryBtn:active {
+        transform: translateY(0);
+      }
+
+      #passwordError {
+        min-height: 18px;
+        margin-top: 0.7rem;
+        font-size: 11px;
+        color: #f0a8b6;
+      }
+
+      #passwordGate.shake .password-gate-card {
+        animation: passwordShake 0.42s ease;
+      }
+
+      @keyframes passwordShake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20% {
+          transform: translateX(-8px);
+        }
+        40% {
+          transform: translateX(8px);
+        }
+        60% {
+          transform: translateX(-6px);
+        }
+        80% {
+          transform: translateX(6px);
+        }
+      }
+
+      @media (max-width: 640px) {
+        #passwordGate {
+          align-items: center;
+          padding: 1rem;
+        }
+
+        .password-gate-card {
+          border-radius: 1.5rem;
+        }
+      }
+
+      /* =========================================================
+         CHAPTER 12 — MEMORY BOX
+         Dedicated layout so it does not depend on Tailwind for
+         card internals, media sizing, filters, or the viewer.
+      ========================================================= */
+
+      #ch12 {
+        scroll-margin-top: 84px;
+      }
+
+      .memory-box {
+        isolation: isolate;
+      }
+
+      .memory-box-lid {
+        position: relative;
+        display: grid;
+        place-items: center;
+      }
+
+      .memory-box-lid::before,
+      .memory-box-lid::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        pointer-events: none;
+      }
+
+      .memory-box-lid::before {
+        width: 110px;
+        height: 110px;
+        border: 1px solid rgba(212, 175, 55, 0.12);
+        box-shadow: 0 0 45px rgba(212, 175, 55, 0.08);
+      }
+
+      .memory-box-lid::after {
+        width: 145px;
+        height: 145px;
+        border: 1px dashed rgba(240, 168, 182, 0.08);
+      }
+
+      #memoryFilters {
+        scrollbar-width: none;
+      }
+
+      #memoryFilters::-webkit-scrollbar {
+        display: none;
+      }
+
+      .memory-filter {
+        min-height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.55rem 0.9rem;
+        border-radius: 999px;
+        border: 1px solid rgba(133, 33, 59, 0.55);
+        background: rgba(42, 5, 11, 0.58);
+        color: rgba(247, 206, 213, 0.72);
+        font:
+          600 10px "Plus Jakarta Sans",
+          sans-serif;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        cursor: pointer;
+        transition:
+          transform 0.2s ease,
+          background 0.2s ease,
+          border-color 0.2s ease,
+          color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .memory-filter i {
+        color: #d4af37;
+        font-size: 11px;
+      }
+
+      .memory-filter:hover {
+        transform: translateY(-1px);
+        color: #fff0f3;
+        border-color: rgba(212, 175, 55, 0.45);
+        background: rgba(74, 14, 23, 0.72);
+      }
+
+      .memory-filter.active {
+        color: #fff0f3;
+        border-color: rgba(212, 175, 55, 0.62);
+        background: linear-gradient(
+          135deg,
+          rgba(159, 36, 67, 0.78),
+          rgba(74, 14, 23, 0.86)
+        );
+        box-shadow: 0 8px 24px rgba(42, 5, 11, 0.35);
+      }
+
+      .memory-filter:focus-visible,
+      .memory-card-button:focus-visible,
+      .memory-viewer-close:focus-visible {
+        outline: 2px solid rgba(212, 175, 55, 0.75);
+        outline-offset: 3px;
+      }
+
+      #memoryCount {
+        min-height: 16px;
+      }
+
+      .memory-card {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid rgba(133, 33, 59, 0.48);
+        border-radius: 1.5rem;
+        background: linear-gradient(
+          180deg,
+          rgba(74, 14, 23, 0.52),
+          rgba(18, 5, 8, 0.72)
+        );
+        box-shadow: 0 14px 35px rgba(0, 0, 0, 0.24);
+        transition:
+          transform 0.25s ease,
+          border-color 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+
+      .memory-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(212, 175, 55, 0.38);
+        box-shadow: 0 20px 42px rgba(0, 0, 0, 0.34);
+      }
+
+      .memory-card.is-hidden {
+        display: none;
+      }
+
+      .memory-card-media,
+      .memory-video {
+        width: 100%;
+        height: 190px;
+        display: block;
+        object-fit: cover;
+        background: #18070b;
+      }
+
+      .memory-card-media {
+        border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+      }
+
+      .memory-video {
+        border: 0;
+      }
+
+      .memory-place-media,
+      .memory-file-icon {
+        width: 100%;
+        height: 190px;
+        display: grid;
+        place-items: center;
+        color: #d4af37;
+        font-size: 2.25rem;
+        background:
+          radial-gradient(
+            circle at 50% 35%,
+            rgba(212, 175, 55, 0.13),
+            transparent 35%
+          ),
+          linear-gradient(145deg, rgba(74, 14, 23, 0.92), rgba(18, 5, 8, 0.95));
+        border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+      }
+
+      .memory-note {
+        min-height: 190px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        color: #f7ced5;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 1.25rem;
+        line-height: 1.6;
+        text-align: center;
+        background:
+          radial-gradient(
+            circle at 50% 30%,
+            rgba(212, 175, 55, 0.1),
+            transparent 45%
+          ),
+          rgba(42, 5, 11, 0.72);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+      }
+
+      .memory-card-body {
+        min-width: 0;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        padding: 1rem 1rem 1.05rem;
+        text-align: left;
+      }
+
+      .memory-card-type {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        width: fit-content;
+        color: #d4af37;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        line-height: 1.2;
+        text-transform: uppercase;
+      }
+
+      .memory-card-title {
+        margin-top: 0.45rem;
+        color: #fbe5e8;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 1.35rem;
+        font-weight: 700;
+        line-height: 1.12;
+        overflow-wrap: anywhere;
+      }
+
+      .memory-card-date {
+        margin-top: 0.35rem;
+        color: rgba(240, 168, 182, 0.55);
+        font-size: 9px;
+        letter-spacing: 0.06em;
+      }
+
+      .memory-card-caption {
+        margin-top: 0.6rem;
+        color: rgba(247, 206, 213, 0.68);
+        font-size: 11px;
+        line-height: 1.55;
+        overflow-wrap: anywhere;
+      }
+
+      .memory-card-button {
+        width: 100%;
+        min-height: 40px;
+        margin-top: auto;
+        padding: 0.65rem 0.8rem;
+        border: 1px solid rgba(212, 175, 55, 0.25);
+        border-radius: 0.85rem;
+        background: rgba(42, 5, 11, 0.68);
+        color: #f6e05e;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          border-color 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .memory-card-button:hover {
+        transform: translateY(-1px);
+        background: rgba(133, 33, 59, 0.62);
+        border-color: rgba(212, 175, 55, 0.5);
+      }
+
+      .memory-audio {
+        width: 100%;
+        margin-top: 0.8rem;
+        height: 40px;
+      }
+
+      .memory-viewer {
+        position: fixed;
+        inset: 0;
+        z-index: 99990;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        background: rgba(9, 2, 4, 0.92);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+      }
+
+      .memory-viewer-close {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 2;
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(212, 175, 55, 0.35);
+        border-radius: 50%;
+        background: rgba(42, 5, 11, 0.88);
+        color: #f6e05e;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      }
+
+      .memory-viewer-content {
+        width: min(100%, 1050px);
+        max-height: calc(100vh - 2rem);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: auto;
+      }
+
+      .memory-viewer-content img,
+      .memory-viewer-content video {
+        max-width: 100%;
+        max-height: calc(100vh - 4rem);
+        border-radius: 1.25rem;
+        object-fit: contain;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+      }
+
+      .memory-viewer-content audio {
+        width: min(100%, 560px);
+      }
+
+      .memory-viewer-content iframe {
+        width: min(100%, 900px);
+        height: min(78vh, 760px);
+        border: 1px solid rgba(212, 175, 55, 0.18);
+        border-radius: 1rem;
+        background: #120508;
+      }
+
+      .memory-note-view {
+        width: min(100%, 700px);
+        padding: clamp(1.5rem, 5vw, 3rem);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 1.5rem;
+        background: rgba(42, 5, 11, 0.82);
+        color: #f7ced5;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: clamp(1.35rem, 3vw, 2rem);
+        line-height: 1.6;
+        text-align: center;
+      }
+
+      @media (min-width: 768px) {
+        .memory-card-media,
+        .memory-video,
+        .memory-place-media,
+        .memory-file-icon,
+        .memory-note {
+          height: 205px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        #ch12 {
+          padding-top: 5rem;
+          padding-bottom: 5rem;
+        }
+
+        #memoryFilters {
+          justify-content: flex-start;
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          padding: 0.25rem 0.1rem 0.5rem;
+          scroll-snap-type: x proximity;
+        }
+
+        .memory-filter {
+          flex: 0 0 auto;
+          scroll-snap-align: start;
+          padding-inline: 0.78rem;
+        }
+
+        .memory-card {
+          border-radius: 1.25rem;
+        }
+
+        .memory-card-media,
+        .memory-video,
+        .memory-place-media,
+        .memory-file-icon,
+        .memory-note {
+          height: 180px;
+        }
+
+        .memory-viewer {
+          padding: 0.75rem;
+        }
+
+        .memory-viewer-close {
+          top: 0.7rem;
+          right: 0.7rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .memory-card,
+        .memory-filter,
+        .memory-card-button {
+          transition: none;
+        }
+      }
     </style>
   </head>
   <body
-    class="min-h-screen flex flex-col selection:bg-burgundy-600 selection:text-white"
+    class="min-h-screen flex flex-col selection:bg-burgundy-600 selection:text-white site-locked"
   >
+    <!-- PASSWORD PROTECTION -->
+    <div
+      id="passwordGate"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="passwordGateTitle"
+    >
+      <div class="password-gate-card">
+        <div class="password-heart" aria-hidden="true">
+          <i class="fa-solid fa-lock text-2xl"></i>
+        </div>
+        <p
+          class="text-[10px] uppercase tracking-[0.28em] text-gold-400 font-bold"
+        >
+          Private Memory
+        </p>
+        <h2
+          id="passwordGateTitle"
+          class="mt-2 font-serif text-3xl md:text-4xl font-bold gold-gradient-text"
+        >
+          Our Unwritten Story
+        </h2>
+        <p class="mt-2 text-xs md:text-sm text-burgundy-200/75 leading-relaxed">
+          This diary contains private memories, conversations, and feelings.
+          Enter the password to unseal it.
+        </p>
+
+        <form id="passwordForm" autocomplete="off">
+          <div class="password-input-wrap">
+            <label for="diaryPassword" class="sr-only">Diary password</label>
+            <input
+              id="diaryPassword"
+              type="password"
+              placeholder="Enter our secret password"
+              autocomplete="current-password"
+              spellcheck="false"
+              autocapitalize="none"
+              required
+            />
+            <button
+              id="togglePasswordVisibility"
+              type="button"
+              aria-label="Show password"
+            >
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+          <button id="unlockDiaryBtn" type="submit">
+            <i class="fa-solid fa-key mr-2"></i> Unseal Our Diary
+          </button>
+          <p id="passwordError" aria-live="polite"></p>
+        </form>
+
+        <p
+          class="mt-3 text-[9px] uppercase tracking-[0.14em] text-burgundy-400/45"
+        >
+          A little door to a private world ❤️
+        </p>
+      </div>
+    </div>
     <!-- Background Canvas for Soft Particles & Ambiance -->
     <canvas id="particleCanvas"></canvas>
 
@@ -505,7 +1162,7 @@
                   <i class="fa-solid fa-heart text-2xl animate-pulse"></i>
                 </div>
                 <span class="font-serif italic text-2xl text-burgundy-100"
-                  >"For Candy"</span
+                  >"For Anjali"</span
                 >
                 <p
                   class="text-xs text-burgundy-300/80 leading-relaxed max-w-xs"
@@ -618,6 +1275,18 @@
               class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
             >
               10. Future
+            </button>
+            <button
+              onclick="scrollToChapter('ch11')"
+              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
+            >
+              11. Conversations
+            </button>
+            <button
+              onclick="scrollToChapter('ch12')"
+              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
+            >
+              12. Memory Box
             </button>
           </div>
         </div>
@@ -1585,7 +2254,7 @@
                   Tap to read full letter
                 </span>
                 <span class="text-xs text-burgundy-400/70 italic">
-                  Written by Ranjan, for Candy
+                  Written by Ranjan, for Anjali
                 </span>
               </div>
             </div>
@@ -2645,85 +3314,229 @@
         ></div>
       </section>
 
-      <!-- CHAPTER 12: THE MEMORY BOX -->
+      <!-- =========================================================
+           CHAPTER 12 — THE MEMORY BOX
+      ========================================================= -->
       <section
         id="ch12"
-        class="py-28 px-4 max-w-5xl mx-auto w-full text-center space-y-10 relative overflow-hidden border-t border-burgundy-900/40"
+        class="py-28 px-4 max-w-6xl mx-auto w-full relative overflow-hidden border-t border-burgundy-900/40"
       >
-        <div class="relative z-10 space-y-4">
-          <span
-            class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
-            >Chapter 12 · Final Memory Box</span
-          >
-          <h2
-            class="text-4xl md:text-6xl font-serif font-bold gold-gradient-text"
-          >
-            The Memory Box
-          </h2>
-          <p class="max-w-xl mx-auto text-sm text-burgundy-300 leading-relaxed">
-            Empty for now — because some memories deserve to be added when they
-            actually happen.
-          </p>
-          <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
-        </div>
-
-        <div
-          class="memory-box glass-card rounded-[2rem] p-7 md:p-12 max-w-4xl mx-auto relative z-10 border-gold-500/20 shadow-2xl"
-        >
-          <div class="memory-box-lid mx-auto mb-8">
-            <div
-              class="w-20 h-20 rounded-3xl bg-burgundy-900/80 border border-gold-500/30 flex items-center justify-center text-4xl text-gold-300 shadow-inner"
+        <div class="relative z-10 max-w-5xl mx-auto">
+          <!-- Heading -->
+          <div class="text-center space-y-4 mb-10 md:mb-12">
+            <span
+              class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
             >
-              <i class="fa-solid fa-box-open"></i>
-            </div>
-          </div>
+              Chapter 12 · Final Memory Box
+            </span>
 
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            <div class="memory-slot">
-              <i class="fa-solid fa-image"></i><span>Photos</span
-              ><small>Coming later</small>
-            </div>
-            <div class="memory-slot">
-              <i class="fa-solid fa-map-location-dot"></i><span>Places</span
-              ><small>Coming later</small>
-            </div>
-            <div class="memory-slot">
-              <i class="fa-solid fa-music"></i><span>Songs</span
-              ><small>Coming later</small>
-            </div>
-            <div class="memory-slot">
-              <i class="fa-solid fa-ticket"></i><span>Little Things</span
-              ><small>Coming later</small>
-            </div>
-          </div>
+            <h2
+              class="text-4xl md:text-6xl font-serif font-bold gold-gradient-text"
+            >
+              The Memory Box
+            </h2>
 
-          <div
-            class="mt-7 p-5 rounded-2xl bg-burgundy-950/60 border border-burgundy-800/50"
-          >
-            <p class="font-serif text-xl md:text-2xl text-burgundy-100 italic">
-              “Not everything has happened yet. That is exactly why this box is
-              still open.”
-            </p>
             <p
-              class="mt-3 text-[10px] uppercase tracking-[0.2em] text-gold-400/80"
+              class="max-w-xl mx-auto text-sm text-burgundy-300 leading-relaxed"
             >
-              Ranjan ♥ Candy
+              A little place for the memories we collect along the way.
             </p>
-          </div>
-        </div>
 
-        <div class="relative z-10 flex flex-wrap justify-center gap-3">
-          <span class="memory-pill"
-            ><i class="fa-regular fa-image"></i> Add photos later</span
+            <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
+          </div>
+
+          <!-- Memory shelf -->
+          <div
+            class="memory-box glass-card rounded-[2rem] p-4 sm:p-6 md:p-9 relative border border-gold-500/20 shadow-2xl"
           >
-          <span class="memory-pill"
-            ><i class="fa-solid fa-location-dot"></i> Add places later</span
-          >
-          <span class="memory-pill"
-            ><i class="fa-solid fa-headphones"></i> Add songs later</span
-          >
+            <!-- Decorative box emblem -->
+            <div class="flex justify-center mb-7">
+              <div class="memory-box-lid">
+                <div
+                  class="w-20 h-20 rounded-3xl bg-burgundy-900/80 border border-gold-500/30 flex items-center justify-center text-4xl text-gold-300 shadow-inner relative z-10"
+                >
+                  <i class="fa-solid fa-box-open"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center max-w-2xl mx-auto mb-8">
+              <h3 class="font-serif text-2xl md:text-3xl text-burgundy-100">
+                Memories we haven't made yet...
+              </h3>
+              <p
+                class="mt-2 text-xs md:text-sm text-burgundy-400 leading-relaxed"
+              >
+                Photos, places, songs, little documents and moments — everything
+                that becomes part of our story can live here.
+              </p>
+            </div>
+
+            <!-- Filter toolbar -->
+            <div
+              class="rounded-2xl border border-burgundy-800/50 bg-burgundy-950/35 p-3 sm:p-4 mb-7"
+            >
+              <div
+                id="memoryFilters"
+                class="flex flex-wrap justify-center gap-2"
+              >
+                <button
+                  type="button"
+                  class="memory-filter active"
+                  data-memory-filter="all"
+                  aria-pressed="true"
+                >
+                  <i class="fa-solid fa-layer-group"></i><span>All</span>
+                </button>
+                <button
+                  type="button"
+                  class="memory-filter"
+                  data-memory-filter="image"
+                  aria-pressed="false"
+                >
+                  <i class="fa-regular fa-image"></i><span>Photos</span>
+                </button>
+                <button
+                  type="button"
+                  class="memory-filter"
+                  data-memory-filter="place"
+                  aria-pressed="false"
+                >
+                  <i class="fa-solid fa-location-dot"></i><span>Places</span>
+                </button>
+                <button
+                  type="button"
+                  class="memory-filter"
+                  data-memory-filter="audio"
+                  aria-pressed="false"
+                >
+                  <i class="fa-solid fa-headphones"></i><span>Songs</span>
+                </button>
+                <button
+                  type="button"
+                  class="memory-filter"
+                  data-memory-filter="video"
+                  aria-pressed="false"
+                >
+                  <i class="fa-solid fa-video"></i><span>Videos</span>
+                </button>
+                <button
+                  type="button"
+                  class="memory-filter"
+                  data-memory-filter="file"
+                  aria-pressed="false"
+                >
+                  <i class="fa-solid fa-file"></i><span>Files</span>
+                </button>
+                <button
+                  type="button"
+                  class="memory-filter"
+                  data-memory-filter="note"
+                  aria-pressed="false"
+                >
+                  <i class="fa-solid fa-note-sticky"></i><span>Notes</span>
+                </button>
+              </div>
+
+              <div
+                class="mt-4 pt-3 border-t border-burgundy-800/40 text-center"
+              >
+                <span
+                  id="memoryCount"
+                  class="text-[10px] uppercase tracking-[0.2em] text-gold-400/70"
+                >
+                  0 memories
+                </span>
+              </div>
+            </div>
+
+            <!-- Memory cards -->
+            <div
+              id="memoryGrid"
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 text-left"
+              aria-live="polite"
+            ></div>
+
+            <!-- Empty / filtered state -->
+            <div id="memoryEmpty" class="hidden py-14 text-center">
+              <div
+                class="w-16 h-16 mx-auto rounded-2xl bg-burgundy-900/70 border border-gold-500/20 flex items-center justify-center text-2xl text-gold-300 mb-4"
+              >
+                <i class="fa-solid fa-heart"></i>
+              </div>
+              <h3
+                id="memoryEmptyTitle"
+                class="font-serif text-2xl text-burgundy-100"
+              >
+                The box is still waiting
+              </h3>
+              <p id="memoryEmptyText" class="mt-2 text-xs text-burgundy-400">
+                Add the first memory whenever it happens.
+              </p>
+            </div>
+
+            <!-- Closing quote -->
+            <div
+              class="mt-8 p-5 md:p-7 rounded-2xl bg-burgundy-950/60 border border-burgundy-800/50 text-center"
+            >
+              <p
+                class="font-serif text-xl md:text-2xl text-burgundy-100 italic leading-relaxed"
+              >
+                “Not everything has happened yet. That is exactly why this box
+                is still open.”
+              </p>
+              <p
+                class="mt-4 text-[10px] uppercase tracking-[0.2em] text-gold-400/80"
+              >
+                Ranjan ♥ Anjali
+              </p>
+            </div>
+          </div>
+
+          <div class="relative z-10 flex flex-wrap justify-center gap-2.5 mt-7">
+            <span class="memory-pill"
+              ><i class="fa-regular fa-image"></i> Images</span
+            >
+            <span class="memory-pill"
+              ><i class="fa-solid fa-location-dot"></i> Places</span
+            >
+            <span class="memory-pill"
+              ><i class="fa-solid fa-headphones"></i> Audio</span
+            >
+            <span class="memory-pill"
+              ><i class="fa-solid fa-file"></i> Files</span
+            >
+            <span class="memory-pill"
+              ><i class="fa-solid fa-video"></i> Videos</span
+            >
+            <span class="memory-pill"
+              ><i class="fa-solid fa-note-sticky"></i> Notes</span
+            >
+          </div>
         </div>
       </section>
+
+      <!-- =========================================================
+     MEMORY VIEWER
+========================================================= -->
+      <div
+        id="memoryViewer"
+        class="memory-viewer hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Memory viewer"
+      >
+        <button
+          type="button"
+          class="memory-viewer-close"
+          onclick="closeMemoryViewer()"
+          aria-label="Close memory viewer"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div id="memoryViewerContent" class="memory-viewer-content"></div>
+      </div>
 
       <!-- FOOTER -->
       <footer
@@ -2749,7 +3562,7 @@
           <p
             class="mt-2 text-[10px] sm:text-xs text-burgundy-400/60 tracking-[0.18em] uppercase"
           >
-            Ranjan <span class="text-gold-400/60">♥</span> Candy
+            Ranjan <span class="text-gold-400/60">♥</span> Anjali
           </p>
 
           <!-- Closing line -->
@@ -2760,412 +3573,6 @@
       </footer>
     </div>
 
-    <script>
-      // Global App State
-      let isAudioPlaying = false;
-      let isScootyAnimating = false;
-      let scootyAnimationFrame = null;
-
-      const playlist = [
-        { title: "The song that reminds me of you", file: "candy.mp3" },
-      ];
-      let currentSongIndex = 0;
-
-      function togglePlaylist() {
-        document.getElementById("playlistPanel").classList.toggle("hidden");
-      }
-
-      async function playPlaylistSong(index) {
-        const audio = document.getElementById("ambientAudio");
-        const icon = document.getElementById("audioIcon");
-        const statusText = document.getElementById("audioStatusText");
-        const song = playlist[index];
-        currentSongIndex = index;
-        audio.src = song.file;
-
-        try {
-          if (isAudioPlaying && currentSongIndex === index) {
-            audio.pause();
-            isAudioPlaying = false;
-            icon.className = "fa-solid fa-play";
-            statusText.innerText = "Paused · " + song.title;
-            return;
-          }
-          await audio.play();
-          isAudioPlaying = true;
-          icon.className = "fa-solid fa-pause";
-          statusText.innerText = song.title;
-          document
-            .querySelectorAll(".playlist-item")
-            .forEach((item, i) => item.classList.toggle("ring-1", i === index));
-        } catch {
-          isAudioPlaying = false;
-          icon.className = "fa-solid fa-play";
-          statusText.innerText = "Add " + song.file + " to enable";
-        }
-      }
-
-      async function toggleAudio() {
-        const audio = document.getElementById("ambientAudio");
-        if (!isAudioPlaying) {
-          await playPlaylistSong(currentSongIndex);
-        } else {
-          audio.pause();
-          isAudioPlaying = false;
-          document.getElementById("audioIcon").className = "fa-solid fa-play";
-          document.getElementById("audioStatusText").innerText = "Music Paused";
-        }
-      }
-
-      document.getElementById("ambientAudio").addEventListener("ended", () => {
-        isAudioPlaying = false;
-        document.getElementById("audioIcon").className = "fa-solid fa-play";
-        document.getElementById("audioStatusText").innerText = "Song finished";
-      });
-
-      // Canvas Particle System for Atmosphere
-      const particleCanvas = document.getElementById("particleCanvas");
-      const pCtx = particleCanvas.getContext("2d");
-      let particles = [];
-
-      function resizeParticleCanvas() {
-        particleCanvas.width = window.innerWidth;
-        particleCanvas.height = window.innerHeight;
-      }
-      window.addEventListener("resize", resizeParticleCanvas);
-      resizeParticleCanvas();
-
-      class Particle {
-        constructor() {
-          this.reset();
-        }
-        reset() {
-          this.x = Math.random() * particleCanvas.width;
-          this.y = Math.random() * particleCanvas.height;
-          this.size = Math.random() * 2 + 0.5;
-          this.speedX = (Math.random() - 0.5) * 0.3;
-          this.speedY = -Math.random() * 0.4 - 0.1;
-          this.opacity = Math.random() * 0.5 + 0.2;
-        }
-        update() {
-          this.x += this.speedX;
-          this.y += this.speedY;
-          if (this.y < 0 || this.x < 0 || this.x > particleCanvas.width) {
-            this.reset();
-            this.y = particleCanvas.height;
-          }
-        }
-        draw() {
-          pCtx.fillStyle = `rgba(240, 168, 182, ${this.opacity})`;
-          pCtx.beginPath();
-          pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-          pCtx.fill();
-        }
-      }
-
-      for (let i = 0; i < 40; i++) {
-        particles.push(new Particle());
-      }
-
-      function animateParticles() {
-        pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-        particles.forEach((p) => {
-          p.update();
-          p.draw();
-        });
-        requestAnimationFrame(animateParticles);
-      }
-      animateParticles();
-
-      function openEnvelope() {
-        const card = document.getElementById("envelopeCard");
-        card.style.transform = "scale(0.95) rotateY(180deg)";
-        card.style.opacity = "0";
-        setTimeout(() => {
-          scrollToChapter("ch1");
-        }, 500);
-      }
-
-      function scrollToChapter(chapterId) {
-        const target = document.getElementById(chapterId);
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth" });
-        }
-      }
-
-      // Scroll Progress Bar & Navigation Indicator update
-      window.addEventListener("scroll", () => {
-        const winScroll =
-          document.body.scrollTop || document.documentElement.scrollTop;
-        const height =
-          document.documentElement.scrollHeight -
-          document.documentElement.clientHeight;
-        const scrolled = (winScroll / height) * 100;
-        document.getElementById("progressBar").style.width = scrolled + "%";
-
-        // Active Chapter Detection
-        const chapters = [
-          "ch1",
-          "ch2",
-          "ch3",
-          "ch4",
-          "ch5",
-          "ch6",
-          "ch7",
-          "ch8",
-          "ch9",
-          "ch10",
-        ];
-        const names = [
-          "Chapter 1: The Beginning",
-          "Chapter 2: 17 Aug PDF",
-          "Chapter 3: Her Apology",
-          "Chapter 4: 20 August",
-          "Chapter 5: Meeting Plans",
-          "Chapter 6: 9 Sept Meeting",
-          "Chapter 7: Growing Closer",
-          "Chapter 8: Doubts & Questions",
-          "Chapter 9: Love Letter",
-          "Chapter 10: Unwritten Future",
-        ];
-
-        for (let i = chapters.length - 1; i >= 0; i--) {
-          const el = document.getElementById(chapters[i]);
-          if (el && el.getBoundingClientRect().top <= 200) {
-            document.getElementById("currentChapterIndicator").innerText =
-              names[i];
-            break;
-          }
-        }
-      });
-
-      function togglePdfSummary() {
-        const excerpts = document.getElementById("pdfExcerpts");
-        const text = document.getElementById("pdfToggleText");
-        if (excerpts.classList.contains("hidden")) {
-          excerpts.classList.remove("hidden");
-          text.innerText = "Hide Excerpts";
-        } else {
-          excerpts.classList.add("hidden");
-          text.innerText = "Expand Full Excerpts";
-        }
-      }
-
-      function switchPerspective(type) {
-        const myTab = document.getElementById("perspectiveMy");
-        const unknownTab = document.getElementById("perspectiveUnknown");
-        const myBtn = document.getElementById("tabMyPerspectiveBtn");
-        const unknownBtn = document.getElementById("tabUnknownPerspectiveBtn");
-
-        if (type === "my") {
-          myTab.classList.remove("hidden");
-          unknownTab.classList.add("hidden");
-          myBtn.className =
-            "flex-1 py-2 px-4 rounded-xl text-xs font-bold transition-all bg-burgundy-800 text-gold-300 shadow";
-          unknownBtn.className =
-            "flex-1 py-2 px-4 rounded-xl text-xs font-bold text-burgundy-300 transition-all hover:text-white";
-        } else {
-          myTab.classList.add("hidden");
-          unknownTab.classList.remove("hidden");
-          unknownBtn.className =
-            "flex-1 py-2 px-4 rounded-xl text-xs font-bold transition-all bg-burgundy-800 text-gold-300 shadow";
-          myBtn.className =
-            "flex-1 py-2 px-4 rounded-xl text-xs font-bold text-burgundy-300 transition-all hover:text-white";
-        }
-      }
-
-      function flipCard(cardEl) {
-        const inner = cardEl.querySelector(".card-inner");
-        inner.classList.toggle("rotate-y-180");
-      }
-
-      const jCanvas = document.getElementById("journeyCanvas");
-      const jCtx = jCanvas.getContext("2d");
-      let scootyProgress = 0;
-
-      function renderJourneyCanvas() {
-        jCanvas.width = jCanvas.offsetWidth;
-        jCanvas.height = jCanvas.offsetHeight;
-
-        const w = jCanvas.width;
-        const h = jCanvas.height;
-
-        // Background Scenic Gradient
-        const skyGrad = jCtx.createLinearGradient(0, 0, 0, h);
-        skyGrad.addColorStop(0, "#1a050d");
-        skyGrad.addColorStop(0.6, "#380a14");
-        skyGrad.addColorStop(1, "#0e0306");
-        jCtx.fillStyle = skyGrad;
-        jCtx.fillRect(0, 0, w, h);
-
-        // Winding Road path
-        jCtx.beginPath();
-        jCtx.moveTo(40, h / 2);
-        jCtx.bezierCurveTo(w * 0.3, h * 0.2, w * 0.6, h * 0.8, w - 50, h / 2);
-        jCtx.strokeStyle = "rgba(212, 175, 55, 0.4)";
-        jCtx.lineWidth = 12;
-        jCtx.stroke();
-
-        // Location Nodes (Korba & Nagargda Waterfall)
-        // Node 1: Korba
-        jCtx.fillStyle = "#be3154";
-        jCtx.beginPath();
-        jCtx.arc(40, h / 2, 8, 0, Math.PI * 2);
-        jCtx.fill();
-        jCtx.fillStyle = "#fbe5e8";
-        jCtx.font = "10px Plus Jakarta Sans";
-        jCtx.fillText("Korba", 25, h / 2 - 15);
-
-        // Node 2: Champa
-        jCtx.fillStyle = "#d4af37";
-        jCtx.beginPath();
-        jCtx.arc(w * 0.45, h * 0.52, 6, 0, Math.PI * 2);
-        jCtx.fill();
-        jCtx.fillStyle = "#fbe5e8";
-        jCtx.fillText("Champa", w * 0.45 - 18, h * 0.52 - 12);
-
-        // Node 3: Nagargda Waterfall
-        jCtx.fillStyle = "#38bdf8";
-        jCtx.beginPath();
-        jCtx.arc(w - 50, h / 2, 10, 0, Math.PI * 2);
-        jCtx.fill();
-        jCtx.fillStyle = "#38bdf8";
-        jCtx.fillText("Nagargda Waterfall", w - 90, h / 2 - 18);
-
-        // Calculate Scooty Position along Curve
-        const t = scootyProgress;
-        const px =
-          (1 - t) * (1 - t) * 40 +
-          2 * (1 - t) * t * (w * 0.5) +
-          t * t * (w - 50);
-        const py =
-          (1 - t) * (1 - t) * (h / 2) +
-          2 * (1 - t) * t * (h * 0.7) +
-          t * t * (h / 2);
-
-        // Draw Scooty Icon / Marker
-        jCtx.fillStyle = "#f6e05e";
-        jCtx.shadowColor = "#d4af37";
-        jCtx.shadowBlur = 10;
-        jCtx.beginPath();
-        jCtx.arc(px, py, 7, 0, Math.PI * 2);
-        jCtx.fill();
-        jCtx.shadowBlur = 0;
-
-        // Update Label text depending on position
-        const locLabel = document.getElementById("locationLabel");
-        if (t < 0.4) {
-          locLabel.innerText = "Departing Korba towards Champa...";
-        } else if (t < 0.8) {
-          locLabel.innerText =
-            "Riding together on scooty through scenic greenery...";
-        } else {
-          locLabel.innerText = "Arrived at Nagargda Waterfall (9 Sept Memory)";
-        }
-      }
-
-      function toggleScootyAnimation() {
-        isScootyAnimating = !isScootyAnimating;
-        const btnText = document.getElementById("scootyBtnText");
-
-        if (isScootyAnimating) {
-          btnText.innerText = "Pause Journey";
-          function loop() {
-            scootyProgress += 0.003;
-            if (scootyProgress > 1) scootyProgress = 0;
-            renderJourneyCanvas();
-            if (isScootyAnimating) {
-              scootyAnimationFrame = requestAnimationFrame(loop);
-            }
-          }
-          loop();
-        } else {
-          btnText.innerText = "Resume Journey Animation";
-          cancelAnimationFrame(scootyAnimationFrame);
-        }
-      }
-      renderJourneyCanvas();
-
-      const endingText =
-        "Our story is still being written. We don't know what tomorrow holds, but every honest conversation, every effort, every shared smile, and every moment of understanding becomes a part of our journey. Perhaps the most beautiful part of our story is not knowing exactly how it ends, but discovering how we choose to write it together.";
-
-      let typewriterIndex = 0;
-      function typeWriter() {
-        const container = document.getElementById("typewriterText");
-        if (typewriterIndex < endingText.length) {
-          container.innerHTML += endingText.charAt(typewriterIndex);
-          typewriterIndex++;
-          setTimeout(typeWriter, 35);
-        }
-      }
-
-      // Trigger Typewriter when Chapter 10 comes into view
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting && typewriterIndex === 0) {
-              typeWriter();
-            }
-          });
-        },
-        { threshold: 0.3 },
-      );
-
-      observer.observe(document.getElementById("ch10"));
-
-      function openLetter() {
-        const modal = document.getElementById("letterModal");
-        modal.classList.remove("hidden");
-        modal.classList.add("flex");
-        document.body.style.overflow = "hidden";
-      }
-
-      function closeLetter(event) {
-        // Close only when clicking the backdrop or close button.
-        if (event && event.target !== event.currentTarget) return;
-
-        const modal = document.getElementById("letterModal");
-        modal.classList.add("hidden");
-        modal.classList.remove("flex");
-        document.body.style.overflow = "";
-      }
-
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-          const modal = document.getElementById("letterModal");
-          if (modal && !modal.classList.contains("hidden")) {
-            closeLetter();
-          }
-        }
-      });
-
-      function replayStory() {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        typewriterIndex = 0;
-        document.getElementById("typewriterText").innerHTML = "";
-      }
-
-      let revealedConversations = 0;
-      function revealMoreConversations() {
-        const cards = [...document.querySelectorAll(".conversation-extra")];
-        const next = Math.min(revealedConversations + 4, cards.length);
-        cards
-          .slice(revealedConversations, next)
-          .forEach((card) => card.classList.add("is-visible"));
-        revealedConversations = next;
-        const count = document.getElementById("conversationCount");
-        const btn = document.getElementById("revealConversationsBtn");
-        const hint = document.getElementById("conversationHint");
-        count.textContent = `${revealedConversations + 20} / 100`;
-        if (revealedConversations >= cards.length) {
-          btn.innerHTML =
-            '<i class="fa-solid fa-heart"></i> All Our Top Picks Revealed';
-          btn.disabled = true;
-          btn.classList.add("opacity-60", "cursor-default");
-          hint.textContent =
-            "100 little pieces of our conversations — kept here for us.";
-        }
-      }
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
