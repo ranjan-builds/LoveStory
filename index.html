@@ -238,23 +238,105 @@
         animation: subtlePulse 4s infinite ease-in-out;
       }
 
-      /* Memory Box + conversation styling */
+      /* Conversation excerpts: a calmer, more believable chat interface */
+      #ch11 .conversation-card {
+        position: relative;
+        overflow: hidden;
+        padding: 1.1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1.35rem;
+        background-color: #111b21;
+        background-image:
+          linear-gradient(rgba(10, 18, 22, 0.28), rgba(10, 18, 22, 0.38)),
+          url("chatBg.png");
+        background-position: center;
+        background-size: cover;
+        box-shadow: 0 14px 36px rgba(0, 0, 0, 0.2);
+      }
+      #ch11 .conversation-card > .flex.items-center {
+        position: relative;
+        z-index: 1;
+        margin: -1.1rem -1.1rem 0.9rem;
+        padding: 1rem 1.1rem;
+        background: rgba(32, 44, 51, 0.97);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      #ch11 .conversation-card > .space-y-3 {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        min-height: 9rem;
+        padding: 0.75rem 0.25rem 0.9rem;
+        border-radius: 0;
+        background: transparent;
+      }
       .chat-bubble {
-        padding: 0.7rem 0.9rem;
+        position: relative;
+        width: fit-content;
+        max-width: min(84%, 27rem);
+        padding: 0.62rem 0.78rem 0.68rem;
         border-radius: 1rem;
-        max-width: 92%;
-        border: 1px solid rgba(133, 33, 59, 0.35);
+        font-size: 0.84rem;
+        line-height: 1.48;
+        overflow-wrap: anywhere;
+        white-space: normal;
+        color: #e9edef;
+        border: 1px solid rgba(255, 255, 255, 0.035);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
       }
       .chat-bubble.her {
-        background: rgba(74, 14, 23, 0.52);
+        align-self: flex-start;
         margin-right: auto;
-        border-bottom-left-radius: 0.35rem;
+        background: #202c33;
+        border-color: rgba(255, 255, 255, 0.035);
+        border-bottom-left-radius: 0.3rem;
       }
       .chat-bubble.me {
-        background: rgba(159, 36, 67, 0.28);
+        align-self: flex-end;
         margin-left: auto;
-        border-bottom-right-radius: 0.35rem;
-        text-align: right;
+        text-align: left;
+        background: #005c4b;
+        border-color: rgba(255, 255, 255, 0.035);
+        border-bottom-right-radius: 0.3rem;
+      }
+      /* Keep consecutive messages visually grouped, like a real chat thread. */
+      .chat-bubble.her + .chat-bubble.her {
+        margin-top: -0.16rem;
+        border-top-left-radius: 0.45rem;
+      }
+      .chat-bubble.me + .chat-bubble.me {
+        margin-top: -0.16rem;
+        border-top-right-radius: 0.45rem;
+      }
+      .chat-bubble .conversation-date {
+        display: block;
+        margin: 0 0 0.28rem;
+        color: #aebac1;
+        font-size: 0.62rem;
+        line-height: 1.2;
+        letter-spacing: 0.035em;
+        text-transform: none;
+        opacity: 0.85;
+      }
+      #ch11 .conversation-card .chat-bubble p {
+        margin: 0;
+      }
+      #ch11 .conversation-card .chat-bubble em,
+      #ch11 .conversation-card .chat-bubble strong {
+        color: #fff0f3;
+      }
+      @media (min-width: 768px) {
+        #ch11 .conversation-card {
+          padding: 1.25rem;
+        }
+        #ch11 .conversation-card > .flex.items-center {
+          margin: -1.25rem -1.25rem 1rem;
+          padding: 1rem 1.25rem;
+        }
+        .chat-bubble {
+          font-size: 0.86rem;
+        }
       }
       .memory-slot {
         min-height: 125px;
@@ -329,10 +411,11 @@
       .conversation-date {
         display: block;
         font-size: 9px;
-        letter-spacing: 0.14em;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
-        opacity: 0.45;
-        margin-bottom: 3px;
+        opacity: 0.7;
+        margin-bottom: 0.2rem;
+        color: rgba(248, 223, 230, 0.8);
       }
       @keyframes conversationReveal {
         from {
@@ -1133,8 +1216,9 @@
             <p
               class="text-sm md:text-base text-burgundy-200/80 max-w-lg mx-auto font-light"
             >
-              An honest interactive journey through our beginnings,
-              misunderstandings, longings, and hopes.
+              A story of how we found our way toward each other, the questions
+              that followed, the moments that brought us closer, and the hope we
+              still carry.
             </p>
           </div>
 
@@ -1302,7 +1386,7 @@
       <!-- CHAPTER 1: THE BEGINNING OF MY QUESTIONS -->
       <section
         id="ch1"
-        class="py-20 px-4 max-w-4xl mx-auto w-full space-y-12 border-b border-burgundy-900/40"
+        class="py-14 md:py-16 px-4 max-w-4xl mx-auto w-full space-y-8 md:space-y-10 border-b border-burgundy-900/40"
       >
         <div class="text-center space-y-3">
           <span
@@ -1322,14 +1406,14 @@
             class="space-y-4 text-burgundy-100/90 text-sm md:text-base leading-relaxed"
           >
             <p>
-              It started after 2025. When I first proposed to you, you said no.
-              I accepted that and asked you to block me because I didn't want to
-              drag myself through unreciprocated feelings. But you didn't block
-              me.
+              Our story did not begin with an easy yes. When I first proposed
+              after 2025, you said no. I accepted your answer and even asked you
+              to block me, because I knew staying close would make it harder to
+              let go. But you didn't block me.
             </p>
             <p>
-              Instead, after some time passed, you started reaching out. Even
-              when I was emotionally distant, you called and texted me saying:
+              Instead, after some time, you began reaching out. Even when I
+              tried to keep my distance, you called or messaged me:
             </p>
             <blockquote
               class="p-4 rounded-xl bg-burgundy-900/40 border-l-4 border-burgundy-500 italic text-burgundy-200"
@@ -1338,11 +1422,9 @@
               "Tu meko bhav nai deta."
             </blockquote>
             <p>
-              I wondered why you were saying these things if you had rejected
-              me. I thought maybe you wanted me to stay invested. Gradually, my
-              attraction grew again, but I warned myself:
-              <em>"Can I leave?"</em> because I knew if things got deeper, I
-              would be hurt.
+              I couldn't understand why you missed my attention after turning me
+              down. Slowly, my feelings returned, but so did the fear that
+              getting attached again might leave me hurt.
             </p>
           </div>
 
@@ -1429,8 +1511,9 @@
           <p
             class="text-xs md:text-sm text-burgundy-200/90 max-w-2xl mx-auto font-light"
           >
-            I simply wanted honest clarity. If you were busy, a simple update
-            was enough so I wouldn't spend hours waiting in uncertainty.
+            I wasn't asking for every hour of your day. I wanted honesty and a
+            small update when you were busy, so care wouldn't turn into hours of
+            uncertainty.
           </p>
         </div>
       </section>
@@ -1438,7 +1521,7 @@
       <!-- CHAPTER 2: 17 AUGUST - THE DAY I ASKED FOR THE TRUTH -->
       <section
         id="ch2"
-        class="py-20 px-4 max-w-4xl mx-auto w-full space-y-12 border-b border-burgundy-900/40"
+        class="py-14 md:py-16 px-4 max-w-4xl mx-auto w-full space-y-8 md:space-y-10 border-b border-burgundy-900/40"
       >
         <div class="text-center space-y-3">
           <span
@@ -1451,8 +1534,9 @@
             17 August — The Day I Asked for the Truth
           </h2>
           <p class="text-xs md:text-sm text-burgundy-300 max-w-xl mx-auto">
-            Sending the PDF document: Laying down all my unanswered questions,
-            boundary breaches, and hurt without anger.
+            After months of unanswered questions, I finally put my feelings into
+            words—not to punish you, but to explain what the silence was doing
+            to me.
           </p>
           <div class="w-12 h-0.5 bg-burgundy-600 mx-auto rounded-full"></div>
         </div>
@@ -1505,11 +1589,12 @@
             </div>
 
             <p>
-              On 17 August, after observing a repeating pattern of ghosting—from
-              the Puri trip to the month-long silences, helping with your thesis
-              despite my laptop breaking, and receiving mixed signals—I reached
-              my threshold. I didn't want to insult myself by begging for
-              communication.
+              By 17 August, the repeated silences—from the Puri trip to long
+              gaps in communication and the mixed signals between us—had worn me
+              down. Even while helping with your thesis despite my own laptop
+              trouble, I kept hoping things would become clearer. Sending the
+              PDF was my way of asking for honesty without turning my hurt into
+              anger.
             </p>
 
             <!-- Collapsible PDF Excerpt Content -->
@@ -1578,14 +1663,15 @@
             class="space-y-4 text-sm md:text-base text-burgundy-100 leading-relaxed"
           >
             <p>
-              After reading the PDF document on 17 August, something shifted.
-              She acknowledged that she had genuinely done wrong by me and
-              apologized for the pain her inconsistent communication had caused.
+              After reading the PDF on 17 August, you acknowledged the hurt I
+              had been carrying and apologized for your part in it. For the
+              first time in a while, it felt as though you had truly heard me.
             </p>
             <p>
-              She promised that she would prove her love through her actions.
-              For the next three days, I experienced the warmth and consistent
-              communication I had been longing for.
+              You said you wanted to show your love through actions, not only
+              words. For the next three days, our conversations felt warmer and
+              more consistent—the kind of closeness I had been hoping we could
+              build.
             </p>
             <div
               class="p-4 rounded-xl bg-burgundy-900/40 border border-blush-400/30 text-xs text-blush-200 italic"
@@ -1647,10 +1733,9 @@
           <p
             class="text-sm md:text-base text-burgundy-100 leading-relaxed font-light"
           >
-            On 20 August, her menstrual period began, and she became less
-            available once again. I understood that physical discomfort and
-            emotional exhaustion during this time naturally take a toll on
-            anyone.
+            Then, on 20 August, your period began and you became less available.
+            I understood that pain and exhaustion can make ordinary things
+            harder, and I never wanted you to ignore your health for me.
           </p>
 
           <!-- Comparison / Understanding Box -->
@@ -1678,9 +1763,9 @@
                 <i class="fa-solid fa-comments"></i> The Need for Clarity
               </div>
               <p class="text-xs text-burgundy-200 leading-relaxed">
-                At the same time, I hoped for small reassuring updates so I
-                wouldn't mistake health-related silence for a return of the old
-                ghosting pattern.
+                I only hoped for a little communication when you felt able, so I
+                could understand the difference between needing rest and the
+                distance that had hurt us before.
               </p>
             </div>
           </div>
@@ -1693,114 +1778,350 @@
       </section>
 
       <!-- CHAPTER 5: THE PLANS TO MEET -->
+
       <section
         id="ch5"
-        class="py-20 px-4 max-w-4xl mx-auto w-full space-y-12 border-b border-burgundy-900/40"
+        class="relative mx-auto w-full max-w-6xl overflow-hidden border-b border-burgundy-900/40 px-4 py-20 sm:px-6 md:py-28"
       >
-        <div class="text-center space-y-3">
-          <span
-            class="text-xs uppercase tracking-widest text-gold-400 font-semibold"
-            >Chapter 05</span
-          >
-          <h2
-            class="text-3xl md:text-5xl font-serif font-bold gold-gradient-text"
-          >
-            Anticipation & Postponed Promises
-          </h2>
-          <p class="text-xs md:text-sm text-burgundy-300">
-            The journey of planning our face-to-face meeting.
-          </p>
-          <div class="w-12 h-0.5 bg-burgundy-600 mx-auto rounded-full"></div>
-        </div>
-
-        <!-- Interactive Timeline Steps -->
+        <!-- Ambient background glow -->
         <div
-          class="relative border-l-2 border-burgundy-700/60 ml-4 md:ml-32 space-y-8"
+          class="pointer-events-none absolute left-1/2 top-40 h-64 w-64 -translate-x-1/2 rounded-full bg-gold-500/5 blur-3xl"
+        ></div>
+
+        <!-- Chapter heading -->
+        <header
+          class="relative mx-auto mb-16 max-w-2xl space-y-5 text-center md:mb-24"
         >
-          <!-- Step 1: First Attempt -->
-          <div class="relative pl-6 md:pl-10 group">
-            <div
-              class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-burgundy-900 border-2 border-burgundy-500 group-hover:bg-gold-400 transition-colors"
-            ></div>
-            <div
-              class="glass-card rounded-2xl p-5 space-y-2 border-burgundy-800/40"
+          <div
+            class="inline-flex items-center gap-3 rounded-full border border-gold-500/20 bg-gold-500/5 px-4 py-2"
+          >
+            <i class="fa-solid fa-heart text-xs text-gold-400"></i>
+            <span
+              class="text-[10px] font-semibold uppercase tracking-[0.3em] text-gold-300 sm:text-xs"
             >
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-gold-400"
-                  >3 September 2026</span
-                >
-                <span
-                  class="px-2 py-0.5 rounded bg-red-950 text-red-300 text-[10px] font-semibold"
-                  >Cancelled (Health Issues)</span
-                >
-              </div>
-              <h4 class="font-serif text-base font-bold text-burgundy-100">
-                The First Planned Meeting
-              </h4>
-              <p class="text-xs text-burgundy-200/90 leading-relaxed">
-                We arranged to meet on 3 September. I looked forward to it with
-                quiet hope, but it had to be cancelled due to her health
-                condition. A familiar sting of disappointment, though
-                understandable.
-              </p>
-            </div>
+              Chapter 05 · Our Memories
+            </span>
+            <i class="fa-solid fa-heart text-xs text-gold-400"></i>
           </div>
 
-          <!-- Step 2: Second Attempt -->
-          <div class="relative pl-6 md:pl-10 group">
-            <div
-              class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-burgundy-900 border-2 border-burgundy-500 group-hover:bg-gold-400 transition-colors"
-            ></div>
-            <div
-              class="glass-card rounded-2xl p-5 space-y-2 border-burgundy-800/40"
+          <h2
+            class="gold-gradient-text font-serif text-3xl font-bold leading-tight sm:text-4xl md:text-6xl"
+          >
+            Two Meetings,<br class="sm:hidden" />
+            One Beautiful Story
+          </h2>
+
+          <p
+            class="mx-auto max-w-lg text-sm leading-7 text-burgundy-200 sm:text-base"
+          >
+            Beyond the difficult conversations, our story also holds moments of
+            real happiness. Meeting in person gave our words a place, a voice,
+            and memories we could return to.
+          </p>
+
+          <div class="flex items-center justify-center gap-3 pt-2">
+            <span
+              class="h-px w-10 bg-gradient-to-r from-transparent to-gold-500/70"
+            ></span>
+            <i class="fa-solid fa-infinity text-sm text-gold-400"></i>
+            <span
+              class="h-px w-10 bg-gradient-to-l from-transparent to-gold-500/70"
+            ></span>
+          </div>
+        </header>
+
+        <!-- Timeline -->
+        <div class="relative mx-auto max-w-5xl">
+          <!-- Central timeline line: desktop -->
+          <div
+            class="pointer-events-none absolute bottom-12 left-1/2 top-12 hidden w-px -translate-x-1/2 bg-gradient-to-b from-gold-400/0 via-gold-400/60 to-gold-400/0 md:block"
+          ></div>
+
+          <!-- Left timeline line: mobile -->
+          <div
+            class="pointer-events-none absolute bottom-10 left-[19px] top-4 w-px bg-gradient-to-b from-gold-400/0 via-gold-400/60 to-gold-400/0 md:hidden"
+          ></div>
+
+          <div class="space-y-12 sm:space-y-16 md:space-y-24">
+            <!-- MEMORY 01 -->
+            <article
+              class="relative grid grid-cols-[40px_minmax(0,1fr)] items-start gap-3 sm:grid-cols-[48px_minmax(0,1fr)] sm:gap-5 md:grid-cols-[1fr_72px_1fr] md:gap-0"
             >
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-gold-400"
-                  >Early September</span
-                >
+              <!-- Left side: date -->
+              <div class="hidden self-center pr-10 text-right md:block">
                 <span
-                  class="px-2 py-0.5 rounded bg-red-950 text-red-300 text-[10px] font-semibold"
-                  >Postponed</span
+                  class="text-xs font-semibold uppercase tracking-[0.25em] text-gold-400"
                 >
+                  The beginning
+                </span>
+                <p class="mt-3 font-serif text-3xl font-bold text-gold-200">
+                  09
+                </p>
+                <p class="mt-1 text-sm text-burgundy-300">September</p>
               </div>
-              <h4 class="font-serif text-base font-bold text-burgundy-100">
-                The Second Attempt
-              </h4>
-              <p class="text-xs text-burgundy-200/90 leading-relaxed">
-                A second date was set shortly after, but unexpected
-                circumstances again required us to reschedule. Doubts quietly
-                whispered, but hope held firm.
-              </p>
-            </div>
+
+              <!-- Timeline node -->
+              <div
+                class="relative z-10 col-start-1 row-start-1 flex justify-center md:col-start-2"
+              >
+                <div
+                  class="flex h-10 w-10 items-center justify-center rounded-full border border-gold-300/70 bg-[#351019] text-gold-300 shadow-[0_0_0_6px_rgba(214,165,95,0.07),0_0_25px_rgba(214,165,95,0.22)] sm:h-12 sm:w-12"
+                >
+                  <i class="fa-solid fa-location-dot text-sm sm:text-base"></i>
+                </div>
+              </div>
+
+              <!-- Memory card -->
+              <div
+                class="col-start-2 row-start-1 min-w-0 md:col-start-3 md:pl-10"
+              >
+                <div
+                  class="group relative overflow-hidden rounded-3xl border border-gold-500/20 bg-gradient-to-br from-burgundy-900/90 to-[#17070d]/95 p-5 shadow-[0_12px_45px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-1 hover:border-gold-400/50 sm:p-7"
+                >
+                  <!-- Decorative glow -->
+                  <div
+                    class="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-gold-500/10 blur-3xl transition group-hover:bg-gold-500/20"
+                  ></div>
+
+                  <div class="relative">
+                    <div
+                      class="mb-5 flex flex-wrap items-center justify-between gap-3"
+                    >
+                      <span
+                        class="inline-flex items-center gap-2 rounded-full border border-gold-500/25 bg-gold-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-gold-200"
+                      >
+                        <i class="fa-solid fa-sparkles"></i>
+                        First Meeting
+                      </span>
+                      <span
+                        class="font-serif text-sm italic text-burgundy-300 md:hidden"
+                      >
+                        09 September
+                      </span>
+                    </div>
+
+                    <h3
+                      class="font-serif text-xl font-bold leading-snug text-gold-200 sm:text-2xl"
+                    >
+                      Nagarda — Where It All Began
+                    </h3>
+
+                    <p
+                      class="mt-4 text-sm leading-7 text-burgundy-100/90 sm:text-base"
+                    >
+                      You travelled from Korba to Champa station and continued
+                      towards Nagarda, nearly 55 km away, just to meet me.
+                      Knowing you came all that way made our first meeting feel
+                      even more special. It was more than a meeting; it was the
+                      beginning of a memory I will always treasure.
+                    </p>
+
+                    <!-- Journey route -->
+                    <div
+                      class="mt-6 rounded-2xl border border-burgundy-700/50 bg-black/15 p-4"
+                    >
+                      <p
+                        class="mb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold-400/90"
+                      >
+                        Your journey to me
+                      </p>
+
+                      <div
+                        class="flex flex-wrap items-center gap-x-2 gap-y-3 text-xs text-burgundy-100 sm:gap-x-3"
+                      >
+                        <span class="inline-flex items-center gap-1.5">
+                          <i class="fa-solid fa-circle-dot text-gold-400"></i>
+                          Korba
+                        </span>
+                        <i
+                          class="fa-solid fa-arrow-right text-[10px] text-gold-500/60"
+                        ></i>
+                        <span class="inline-flex items-center gap-1.5">
+                          <i class="fa-solid fa-train text-gold-400"></i>
+                          Champa Station
+                        </span>
+                        <i
+                          class="fa-solid fa-arrow-right text-[10px] text-gold-500/60"
+                        ></i>
+                        <span
+                          class="inline-flex items-center gap-1.5 text-gold-200"
+                        >
+                          <i class="fa-solid fa-heart text-gold-400"></i>
+                          Nagarda
+                        </span>
+                      </div>
+                    </div>
+
+                    <div
+                      class="mt-6 flex items-start gap-3 border-t border-gold-500/10 pt-5"
+                    >
+                      <i
+                        class="fa-solid fa-quote-left mt-1 text-gold-500/70"
+                      ></i>
+                      <p
+                        class="font-serif text-sm italic leading-6 text-gold-100/90"
+                      >
+                        "Of all the places we could have been, that day, I am
+                        glad our paths led us to each other."
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- MEMORY 02 -->
+            <article
+              class="relative grid grid-cols-[40px_minmax(0,1fr)] items-start gap-3 sm:grid-cols-[48px_minmax(0,1fr)] sm:gap-5 md:grid-cols-[1fr_72px_1fr] md:gap-0"
+            >
+              <!-- Memory card -->
+              <div
+                class="col-start-2 row-start-1 min-w-0 md:col-start-1 md:pr-10"
+              >
+                <div
+                  class="group relative overflow-hidden rounded-3xl border border-gold-500/20 bg-gradient-to-br from-burgundy-900/90 to-[#17070d]/95 p-5 shadow-[0_12px_45px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-1 hover:border-gold-400/50 sm:p-7"
+                >
+                  <div
+                    class="pointer-events-none absolute -bottom-12 -left-12 h-32 w-32 rounded-full bg-rose-500/10 blur-3xl"
+                  ></div>
+
+                  <div class="relative">
+                    <div
+                      class="mb-5 flex flex-wrap items-center justify-between gap-3"
+                    >
+                      <span
+                        class="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-200"
+                      >
+                        <i class="fa-solid fa-house"></i>
+                        Together Again
+                      </span>
+                      <span
+                        class="font-serif text-sm italic text-burgundy-300 md:hidden"
+                      >
+                        09 October
+                      </span>
+                    </div>
+
+                    <h3
+                      class="font-serif text-xl font-bold leading-snug text-gold-200 sm:text-2xl"
+                    >
+                      A Little Closer to Home
+                    </h3>
+
+                    <p
+                      class="mt-4 text-sm leading-7 text-burgundy-100/90 sm:text-base"
+                    >
+                      On 9 October, we met again at my home. This time,
+                      everything felt quieter, warmer, and more familiar. Having
+                      you there made an ordinary place feel special. It was
+                      another little chapter in our story, filled with moments I
+                      wanted to hold on to.
+                    </p>
+
+                    <div class="mt-6 grid grid-cols-2 gap-3">
+                      <div
+                        class="rounded-2xl border border-burgundy-700/50 bg-black/15 p-3 sm:p-4"
+                      >
+                        <i
+                          class="fa-solid fa-house-heart mb-3 text-lg text-gold-400"
+                        ></i>
+                        <p
+                          class="text-xs font-semibold text-gold-200 sm:text-sm"
+                        >
+                          A Familiar Place
+                        </p>
+                        <p class="mt-1 text-[11px] leading-5 text-burgundy-300">
+                          Made special by you.
+                        </p>
+                      </div>
+
+                      <div
+                        class="rounded-2xl border border-burgundy-700/50 bg-black/15 p-3 sm:p-4"
+                      >
+                        <i
+                          class="fa-solid fa-heart mb-3 text-lg text-gold-400"
+                        ></i>
+                        <p
+                          class="text-xs font-semibold text-gold-200 sm:text-sm"
+                        >
+                          Another Memory
+                        </p>
+                        <p class="mt-1 text-[11px] leading-5 text-burgundy-300">
+                          A moment to cherish.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      class="mt-6 flex items-start gap-3 border-t border-gold-500/10 pt-5"
+                    >
+                      <i
+                        class="fa-solid fa-quote-left mt-1 text-gold-500/70"
+                      ></i>
+                      <p
+                        class="font-serif text-sm italic leading-6 text-gold-100/90"
+                      >
+                        "Some places become special not because of where they
+                        are, but because of who is beside you."
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Timeline node -->
+              <div
+                class="relative z-10 col-start-1 row-start-1 flex justify-center md:col-start-2"
+              >
+                <div
+                  class="flex h-10 w-10 items-center justify-center rounded-full border border-gold-300/70 bg-[#351019] text-gold-300 shadow-[0_0_0_6px_rgba(214,165,95,0.07),0_0_25px_rgba(214,165,95,0.22)] sm:h-12 sm:w-12"
+                >
+                  <i class="fa-solid fa-house-heart text-sm sm:text-base"></i>
+                </div>
+              </div>
+
+              <!-- Right side: date -->
+              <div class="hidden self-center pl-10 text-left md:block">
+                <span
+                  class="text-xs font-semibold uppercase tracking-[0.25em] text-gold-400"
+                >
+                  A new memory
+                </span>
+                <p class="mt-3 font-serif text-3xl font-bold text-gold-200">
+                  09
+                </p>
+                <p class="mt-1 text-sm text-burgundy-300">October</p>
+              </div>
+            </article>
           </div>
 
-          <!-- Step 3: 9 September Final Confirmation -->
-          <div class="relative pl-6 md:pl-10 group">
+          <!-- Timeline ending -->
+          <div
+            class="relative mt-16 flex flex-col items-center text-center md:mt-24"
+          >
             <div
-              class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full bg-gold-500 border-2 border-gold-300 shadow-lg animate-ping"
-            ></div>
-            <div
-              class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full bg-gold-400 border-2 border-gold-200 shadow-lg"
-            ></div>
-            <div
-              class="glass-card rounded-2xl p-5 space-y-2 border-gold-500/50 bg-burgundy-900/60 shadow-2xl"
+              class="flex h-12 w-12 items-center justify-center rounded-full border border-gold-400/30 bg-burgundy-950 text-gold-300 shadow-[0_0_25px_rgba(214,165,95,0.12)]"
             >
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-gold-300"
-                  >9 September 2026</span
-                >
-                <span
-                  class="px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 text-[10px] font-bold uppercase tracking-wider"
-                  >Confirmed & Fulfilled</span
-                >
-              </div>
-              <h4 class="font-serif text-lg font-bold gold-gradient-text">
-                The Day We Finally Met
-              </h4>
-              <p class="text-xs text-burgundy-100 leading-relaxed">
-                Finally, all uncertainties gave way to reality. She made the
-                journey from Korba to Champa to meet me.
-              </p>
+              <i class="fa-solid fa-infinity text-lg"></i>
+            </div>
+
+            <p
+              class="mt-5 font-serif text-xl font-bold text-gold-200 sm:text-2xl"
+            >
+              And Our Story Continues...
+            </p>
+
+            <p class="mt-3 max-w-md text-sm leading-7 text-burgundy-300">
+              These are two dates on our timeline, but the memories, feelings,
+              and little moments we share are what make our story ours.
+            </p>
+
+            <div
+              class="mt-5 flex items-center gap-2 text-xs tracking-widest text-gold-400/80"
+            >
+              <i class="fa-solid fa-heart text-[10px]"></i>
+              <span>YOU & ME</span>
+              <i class="fa-solid fa-heart text-[10px]"></i>
             </div>
           </div>
         </div>
@@ -1920,7 +2241,7 @@
       <!-- CHAPTER 7: GROWING CLOSER -->
       <section
         id="ch7"
-        class="py-20 px-4 max-w-4xl mx-auto w-full space-y-12 border-b border-burgundy-900/40"
+        class="py-14 md:py-16 px-4 max-w-4xl mx-auto w-full space-y-8 md:space-y-10 border-b border-burgundy-900/40"
       >
         <div class="text-center space-y-3">
           <span
@@ -1964,9 +2285,9 @@
             class="space-y-4 text-sm text-burgundy-100 leading-relaxed"
           >
             <p>
-              After meeting on 9 September, our emotional investment deepened.
-              Our conversations became far more personal, touching on intimate
-              aspects of life and future thoughts.
+              After 9 September, our conversations grew more personal. We began
+              sharing parts of ourselves that are not easy to say aloud, and I
+              felt grateful that you trusted me with yours.
             </p>
             <p>
               She shared vulnerable details about her past with me. I deeply
@@ -1981,15 +2302,14 @@
             class="hidden space-y-4 text-sm text-burgundy-100 leading-relaxed"
           >
             <p>
-              Yet, I noticed a quiet asymmetry: while she shared her past, she
-              rarely asked about my past or showed curiosity about my personal
-              life experiences.
+              At the same time, I sometimes wished that curiosity could move
+              both ways—that you would ask about my experiences and inner world
+              as naturally as I wanted to understand yours.
             </p>
             <p>
-              I do not claim to know her reasons. Perhaps she assumes she
-              already knows me, or perhaps her mind is preoccupied. I simply
-              long for mutual curiosity—a bond where both people hold equal
-              desire to know each other's inner worlds.
+              I don't know why that balance sometimes feels missing, and I don't
+              want to assume. I only hope we can keep learning about each other,
+              with the same care and curiosity on both sides.
             </p>
           </div>
 
@@ -1999,6 +2319,71 @@
             <i class="fa-solid fa-scale-balanced mr-1.5 text-gold-400"></i>
             A healthy relationship is built when two people listen with equal
             wonder and ask about each other's dreams.
+          </div>
+
+          <div
+            class="mt-6 p-5 md:p-6 rounded-3xl border border-gold-500/30 bg-burgundy-950/70 shadow-[0_0_30px_rgba(214,165,95,0.08)]"
+          >
+            <p
+              class="text-base md:text-lg text-gold-200 font-medium leading-relaxed"
+            >
+              ❤️ Anjali, ek baat honestly poochhu? 🥺
+            </p>
+            <p
+              class="mt-4 text-sm md:text-base text-burgundy-100 leading-relaxed"
+            >
+              Main tumse bahut pyaar karta hoon, aur tumhare saath apna future
+              imagine karta hoon even if it not possible. Bas mere dil mein ek
+              darr hai ki kahin ek din tum mujhe cheat karke ya bina sach bataye
+              chhod na do.
+            </p>
+            <p
+              class="mt-4 text-sm md:text-base text-burgundy-100 leading-relaxed"
+            >
+              <strong class="text-gold-300"
+                >Agar kabhi tumhare feelings change hue, ya tumhari life mein
+                koi aur aaya, toh kya tum mujhe dhokhe mein rakhne ke bajaye
+                sach bataogi?</strong
+              >
+              🫂❤️
+            </p>
+            <p
+              class="mt-4 text-sm md:text-base text-burgundy-100 leading-relaxed"
+            >
+              Main tumse perfect hone ki umeed nahi karta, bas honesty, loyalty
+              aur commitment chahta hoon. Main chahta hoon ki hum dono ek-doosre
+              ko itna safe feel karayein ki humein apne relationship mein jhooth
+              ya cheating ka darr lekar na jeena pade. ❤️‍🩹
+            </p>
+            <p
+              class="mt-4 text-sm md:text-base text-burgundy-100 leading-relaxed"
+            >
+              bas itna chahta hoon ki hum dono apne relationship ko protect
+              karein, ek-doosre ke loyal rahein aur kisi bhi situation mein
+              jaanbujhkar ek-doosre ko dhokha na dein.
+            </p>
+            <p
+              class="mt-4 text-sm md:text-base text-burgundy-100 leading-relaxed"
+            >
+              <strong class="text-red-300"
+                >Mujhe aisa reassurance do jo sirf aaj ke words mein nahi, balki
+                tumhare har din ke actions mein bhi dikhe. reply karna anjali
+                bhulna mt ye mere liye bahut jaruri hai 🫂❤️</strong
+              >
+            </p>
+
+            <div class="mt-5 flex justify-center">
+              <a
+                href="https://wa.me/916266245085?text=I%20read%20your%20message%20and%20I%20want%20to%20reply%20to%20you%20❤️"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition-transform duration-200 hover:scale-[1.02]"
+                aria-label="Reply on WhatsApp"
+              >
+                <i class="fa-brands fa-whatsapp text-base"></i>
+                Reply on WhatsApp
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -2019,8 +2404,9 @@
             The Questions I Still Carry
           </h2>
           <p class="text-xs md:text-sm text-burgundy-300 max-w-xl mx-auto">
-            Interactive reflection cards exploring the delicate balance between
-            love, trust, and emotional security.
+            These are not accusations or demands for perfect answers. They are
+            the questions I carry because I want our love to feel honest,
+            mutual, and emotionally safe.
           </p>
           <div class="w-12 h-0.5 bg-burgundy-600 mx-auto rounded-full"></div>
         </div>
@@ -2211,7 +2597,8 @@
           <p
             class="text-sm md:text-base text-burgundy-200/80 max-w-xl mx-auto font-light"
           >
-            Some feelings are better written by hand.
+            After all the questions, explanations, and memories, there are still
+            feelings that are easier to hold on paper than to say out loud.
           </p>
           <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
         </div>
@@ -2300,6 +2687,63 @@
       <!-- CHAPTER 11: TOP CONVERSATIONS -->
       <!-- CHAPTER 11: OUR CONVERSATIONS -->
       <section
+        id="ch10"
+        class="py-24 px-4 max-w-4xl mx-auto w-full text-center space-y-10 relative overflow-hidden"
+      >
+        <div class="space-y-4 relative z-10">
+          <span
+            class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
+            >Chapter 10</span
+          >
+          <h2
+            class="text-4xl md:text-6xl font-serif font-bold gold-gradient-text"
+          >
+            An Unwritten Future
+          </h2>
+          <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
+        </div>
+
+        <!-- Cinematic Ending Letter Container -->
+        <div
+          class="glass-card rounded-3xl p-8 md:p-12 border-gold-500/30 max-w-2xl mx-auto space-y-6 shadow-2xl relative z-10"
+        >
+          <p
+            id="typewriterText"
+            class="font-serif text-lg md:text-2xl text-burgundy-100 leading-relaxed italic font-light"
+          >
+            <!-- Typing animation target -->
+          </p>
+
+          <div
+            class="pt-6 border-t border-burgundy-800/60 flex flex-col items-center gap-4"
+          >
+            <span class="font-cursive text-3xl text-gold-300"
+              >With hope & authenticity,</span
+            >
+            <span class="text-xs text-burgundy-300 tracking-widest uppercase"
+              >Ranjan</span
+            >
+
+            <button
+              onclick="replayStory()"
+              class="mt-4 px-6 py-3 rounded-full bg-burgundy-800 hover:bg-burgundy-700 text-gold-300 text-xs font-bold uppercase tracking-wider border border-gold-500/40 transition-all hover:scale-105 shadow-xl flex items-center gap-2"
+            >
+              <i class="fa-solid fa-rotate-right"></i> Experience Our Story
+              Again
+            </button>
+          </div>
+        </div>
+
+        <!-- Subtle background aesthetic glowing orb -->
+        <div
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-burgundy-600/10 rounded-full blur-3xl pointer-events-none"
+        ></div>
+      </section>
+
+      <!-- =========================================================
+           CHAPTER 11 — OUR CONVERSATIONS
+      ========================================================= -->
+      <section
         id="ch11"
         class="py-24 px-4 max-w-6xl mx-auto w-full space-y-10 relative overflow-hidden border-t border-burgundy-900/40"
       >
@@ -2316,8 +2760,8 @@
           <p
             class="max-w-2xl mx-auto text-sm text-burgundy-300 leading-relaxed"
           >
-            Not every memory was a big moment. Some were just a few words from
-            you that I wanted to keep.
+            Little messages, teasing, reassurance, and everyday moments — kept
+            here like pages from our chat, just as they felt at the time.
           </p>
           <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
         </div>
@@ -3261,63 +3705,6 @@
       <!-- CHAPTER 10: AN UNWRITTEN FUTURE -->
 
       <section
-        id="ch10"
-        class="py-24 px-4 max-w-4xl mx-auto w-full text-center space-y-10 relative overflow-hidden"
-      >
-        <div class="space-y-4 relative z-10">
-          <span
-            class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
-            >Chapter 10</span
-          >
-          <h2
-            class="text-4xl md:text-6xl font-serif font-bold gold-gradient-text"
-          >
-            An Unwritten Future
-          </h2>
-          <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
-        </div>
-
-        <!-- Cinematic Ending Letter Container -->
-        <div
-          class="glass-card rounded-3xl p-8 md:p-12 border-gold-500/30 max-w-2xl mx-auto space-y-6 shadow-2xl relative z-10"
-        >
-          <p
-            id="typewriterText"
-            class="font-serif text-lg md:text-2xl text-burgundy-100 leading-relaxed italic font-light"
-          >
-            <!-- Typing animation target -->
-          </p>
-
-          <div
-            class="pt-6 border-t border-burgundy-800/60 flex flex-col items-center gap-4"
-          >
-            <span class="font-cursive text-3xl text-gold-300"
-              >With hope & authenticity,</span
-            >
-            <span class="text-xs text-burgundy-300 tracking-widest uppercase"
-              >Ranjan</span
-            >
-
-            <button
-              onclick="replayStory()"
-              class="mt-4 px-6 py-3 rounded-full bg-burgundy-800 hover:bg-burgundy-700 text-gold-300 text-xs font-bold uppercase tracking-wider border border-gold-500/40 transition-all hover:scale-105 shadow-xl flex items-center gap-2"
-            >
-              <i class="fa-solid fa-rotate-right"></i> Experience Our Story
-              Again
-            </button>
-          </div>
-        </div>
-
-        <!-- Subtle background aesthetic glowing orb -->
-        <div
-          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-burgundy-600/10 rounded-full blur-3xl pointer-events-none"
-        ></div>
-      </section>
-
-      <!-- =========================================================
-           CHAPTER 12 — THE MEMORY BOX
-      ========================================================= -->
-      <section
         id="ch12"
         class="py-28 px-4 max-w-6xl mx-auto w-full relative overflow-hidden border-t border-burgundy-900/40"
       >
@@ -3339,7 +3726,9 @@
             <p
               class="max-w-xl mx-auto text-sm text-burgundy-300 leading-relaxed"
             >
-              A little place for the memories we collect along the way.
+              And so, this is where the little pieces of our story can live
+              together—not only the big days, but the small moments that make
+              them matter.
             </p>
 
             <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>

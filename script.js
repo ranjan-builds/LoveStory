@@ -512,6 +512,12 @@ const memories = [
     file: "memories\\audios\\Teri Baaten.mp3",
     caption: "This one will always remind me of you.",
   },
+  {
+    type: "note",
+    title: "You came for me",
+    date: "9 October 2026",
+    text: " ❤️ Anjali, kal tum 60 km door se mujhse milne aayi, aur tab se tumhari yaadein dil se jaa hi nahi rahi. I love you, hamesha mere saath rehna. 🫶🏻💗",
+  },
 ];
 
 const memoryMeta = {
