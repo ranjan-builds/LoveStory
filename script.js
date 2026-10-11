@@ -403,6 +403,7 @@ function revealMoreConversations() {
   // No password, login state, or unlock flag is written to browser storage.
   // A fresh page load ALWAYS asks for the password again.
   // Only a SHA-256 digest is embedded for client-side verification.
+  const DEVELOPER_MODE = true; // Set to true to skip the password during development.
   const PASSWORD_SHA256 =
     "0890930cbc82a905bd28dec28ba7db90a3e9bec2231003288497fc943ed1e99f";
   const gate = document.getElementById("passwordGate");
@@ -424,6 +425,11 @@ function revealMoreConversations() {
     gate.classList.add("is-unlocking");
     input.value = "";
     window.setTimeout(() => gate.remove(), 700);
+  }
+
+  if (DEVELOPER_MODE) {
+    unlockDiary();
+    return;
   }
 
   function showError() {
@@ -513,10 +519,32 @@ const memories = [
     caption: "This one will always remind me of you.",
   },
   {
+    type: "audio",
+    title: "Tere Efforts Mein Chhupa Mera Pyaar",
+    date: "Our Song",
+    file: "memories\\audios\\gharSeNikaltiHoon.mp3",
+    caption:
+      "Tere pyaar ki sabse khoobsurat baat ye hai ki tu sirf kehti nahi, kabhi-kabhi apne actions se bhi mehsoos karwa deti hai. ❤️",
+  },
+  {
+    type: "audio",
+    title: "Teri nazron ke sadke main apni har khushi vaar doon",
+    date: "Our Song",
+    file: "memories\\audios\\HokeRupoosh.mp3",
+    caption:
+      "Tu saamne ho toh bas tujhe dekhta rahoon Aur tu nazron se ojhal ho toh har jagah tujhe hi dhoondhta rahoon. 🫶🏻",
+  },
+  {
     type: "note",
     title: "You came for me",
     date: "9 October 2026",
     text: " ❤️ Anjali, kal tum 60 km door se mujhse milne aayi, aur tab se tumhari yaadein dil se jaa hi nahi rahi. I love you, hamesha mere saath rehna. 🫶🏻💗",
+  },
+  {
+    type: "video",
+    title: "Her Mood swings be like ☝️ Meri mood swing wali cute si ladki",
+    date: "2026",
+    file: "memories\\videos\\HerMood.mp4",
   },
 ];
 
