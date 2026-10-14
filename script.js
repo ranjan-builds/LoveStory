@@ -3,6 +3,11 @@ let isAudioPlaying = false;
 let isScootyAnimating = false;
 let scootyAnimationFrame = null;
 
+const cursor = Cursorly.init({
+  cursor: 4, // Index of the cursor icon (default: 0)
+  effect: { name: "trail", color: "snow" }, // Effect name and color are required
+});
+
 const playlist = [
   { title: "The song that reminds me of you", file: "candy.mp3" },
 ];
