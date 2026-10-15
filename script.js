@@ -4,8 +4,8 @@ let isScootyAnimating = false;
 let scootyAnimationFrame = null;
 
 const cursor = Cursorly.init({
-  cursor: 4, // Index of the cursor icon (default: 0)
-  effect: { name: "trail", color: "snow" }, // Effect name and color are required
+  cursor: 10, // Index of the cursor icon (default: 0)
+  effect: { name: "sparkle", color: "snow" }, // Effect name and color are required
 });
 
 const playlist = [
@@ -64,60 +64,114 @@ document.getElementById("ambientAudio").addEventListener("ended", () => {
   document.getElementById("audioIcon").className = "fa-solid fa-play";
   document.getElementById("audioStatusText").innerText = "Song finished";
 });
-
+particlesJS("snow-particles", {
+  particles: {
+    number: {
+      value: 140,
+      density: {
+        enable: true,
+        value_area: 900,
+      },
+    },
+    color: {
+      value: "#ffffff",
+    },
+    shape: {
+      type: "circle",
+    },
+    opacity: {
+      value: 0.65,
+      random: true,
+      anim: {
+        enable: true,
+      },
+    },
+    size: {
+      value: 4,
+      random: true,
+    },
+    line_linked: {
+      enable: false,
+    },
+    move: {
+      enable: true,
+      speed: 1.5,
+      direction: "top",
+      random: true,
+      straight: false,
+      out_mode: "out",
+      bounce: false,
+    },
+  },
+  interactivity: {
+    detect_on: "canvas",
+    events: {
+      onhover: {
+        enable: true,
+        mode: "repulse",
+      },
+      onclick: {
+        enable: true,
+        mode: "repulse",
+      },
+      resize: true,
+    },
+  },
+  retina_detect: true,
+});
 // Canvas Particle System for Atmosphere
-const particleCanvas = document.getElementById("particleCanvas");
-const pCtx = particleCanvas.getContext("2d");
-let particles = [];
+// const particleCanvas = document.getElementById("particleCanvas");
+// const pCtx = particleCanvas.getContext("2d");
+// let particles = [];
 
-function resizeParticleCanvas() {
-  particleCanvas.width = window.innerWidth;
-  particleCanvas.height = window.innerHeight;
-}
-window.addEventListener("resize", resizeParticleCanvas);
-resizeParticleCanvas();
+// function resizeParticleCanvas() {
+//   particleCanvas.width = window.innerWidth;
+//   particleCanvas.height = window.innerHeight;
+// }
+// window.addEventListener("resize", resizeParticleCanvas);
+// resizeParticleCanvas();
 
-class Particle {
-  constructor() {
-    this.reset();
-  }
-  reset() {
-    this.x = Math.random() * particleCanvas.width;
-    this.y = Math.random() * particleCanvas.height;
-    this.size = Math.random() * 2 + 0.5;
-    this.speedX = (Math.random() - 0.5) * 0.3;
-    this.speedY = -Math.random() * 0.4 - 0.1;
-    this.opacity = Math.random() * 0.5 + 0.2;
-  }
-  update() {
-    this.x += this.speedX;
-    this.y += this.speedY;
-    if (this.y < 0 || this.x < 0 || this.x > particleCanvas.width) {
-      this.reset();
-      this.y = particleCanvas.height;
-    }
-  }
-  draw() {
-    pCtx.fillStyle = `rgba(240, 168, 182, ${this.opacity})`;
-    pCtx.beginPath();
-    pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    pCtx.fill();
-  }
-}
+// class Particle {
+//   constructor() {
+//     this.reset();
+//   }
+//   reset() {
+//     this.x = Math.random() * particleCanvas.width;
+//     this.y = Math.random() * particleCanvas.height;
+//     this.size = Math.random() * 2 + 0.5;
+//     this.speedX = (Math.random() - 0.5) * 0.3;
+//     this.speedY = -Math.random() * 0.4 - 0.1;
+//     this.opacity = Math.random() * 0.5 + 0.2;
+//   }
+//   update() {
+//     this.x += this.speedX;
+//     this.y += this.speedY;
+//     if (this.y < 0 || this.x < 0 || this.x > particleCanvas.width) {
+//       this.reset();
+//       this.y = particleCanvas.height;
+//     }
+//   }
+//   draw() {
+//     pCtx.fillStyle = `rgba(240, 168, 182, ${this.opacity})`;
+//     pCtx.beginPath();
+//     pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+//     pCtx.fill();
+//   }
+// }
 
-for (let i = 0; i < 40; i++) {
-  particles.push(new Particle());
-}
+// for (let i = 0; i < 40; i++) {
+//   particles.push(new Particle());
+// }
 
-function animateParticles() {
-  pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-  particles.forEach((p) => {
-    p.update();
-    p.draw();
-  });
-  requestAnimationFrame(animateParticles);
-}
-animateParticles();
+// function animateParticles() {
+//   pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+//   particles.forEach((p) => {
+//     p.update();
+//     p.draw();
+//   });
+//   requestAnimationFrame(animateParticles);
+// }
+// animateParticles();
 
 function openEnvelope() {
   const card = document.getElementById("envelopeCard");
@@ -558,7 +612,8 @@ const memories = [
     title: "A Letter for the Future",
     date: "14 October 2026",
     file: "memories\\doc\\futureLetter.pdf",
-    caption: "Jab tum ready feel karo tab padhna. Turant reply dene ki koi zaroorat nahi hai.",
+    caption:
+      "Jab tum ready feel karo tab padhna. Turant reply dene ki koi zaroorat nahi hai.",
   },
 ];
 

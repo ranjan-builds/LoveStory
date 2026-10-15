@@ -440,6 +440,20 @@
         }
       }
 
+      #snow-particles {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      #snow-particles canvas {
+        display: block;
+        vertical-align: bottom;
+      }
+
       /* ================= PASSWORD GATE ================= */
       body.site-locked {
         overflow: hidden !important;
@@ -1102,8 +1116,8 @@
       </div>
     </div>
     <!-- Background Canvas for Soft Particles & Ambiance -->
-    <canvas id="particleCanvas"></canvas>
-
+    <!-- <canvas id="particleCanvas"></canvas> -->
+    <div id="snow-particles"></div>
     <!-- GLOBAL MINI PLAYLIST -->
     <div
       id="musicPlayer"
@@ -1200,7 +1214,7 @@
     <!-- MAIN APP CONTAINER -->
     <div class="relative z-10 flex-grow flex flex-col">
       <!-- SECTION 0: CINEMATIC ENVELOPE ENTRY -->
-    
+
       <section
         id="heroSection"
         class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden transition-opacity duration-1000"
@@ -2415,6 +2429,7 @@
         </div>
 
         <!-- Interactive Reflection Flip Cards Grid -->
+
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <!-- Card 1: Honesty -->
           <div
@@ -2434,12 +2449,13 @@
                   <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <h4 class="font-serif font-bold text-lg text-burgundy-100">
-                  Honesty vs Silence
+                  Sachchai vs Khamoshi
                 </h4>
-                <span class="text-[10px] text-burgundy-400"
-                  >Click to reveal reflection</span
-                >
+                <span class="text-[10px] text-burgundy-400">
+                  Sochne ke liye click karo
+                </span>
               </div>
+
               <!-- Back -->
               <div
                 class="absolute inset-0 glass-card rounded-2xl p-5 flex flex-col justify-center text-center space-y-2 backface-hidden rotate-y-180 bg-burgundy-950/90 border-gold-500/40"
@@ -2447,11 +2463,11 @@
                 <h5
                   class="text-xs font-bold text-gold-300 uppercase tracking-wider"
                 >
-                  Honesty
+                  Sachchai
                 </h5>
                 <p class="text-xs text-burgundy-100 leading-relaxed">
-                  Silence breeds doubts, but honest communication brings peace
-                  even when the truth is difficult to speak.
+                  Khamoshi dil mein shak paida karti hai, lekin sachchai se ki
+                  gayi baat mushkil hone ke bawajood dil ko sukoon deti hai.
                 </p>
               </div>
             </div>
@@ -2475,12 +2491,13 @@
                   <i class="fa-solid fa-key"></i>
                 </div>
                 <h4 class="font-serif font-bold text-lg text-burgundy-100">
-                  Trust & Reassurance
+                  Bharosa aur Tasalli
                 </h4>
-                <span class="text-[10px] text-burgundy-400"
-                  >Click to reveal reflection</span
-                >
+                <span class="text-[10px] text-burgundy-400">
+                  Sochne ke liye click karo
+                </span>
               </div>
+
               <!-- Back -->
               <div
                 class="absolute inset-0 glass-card rounded-2xl p-5 flex flex-col justify-center text-center space-y-2 backface-hidden rotate-y-180 bg-burgundy-950/90 border-gold-500/40"
@@ -2488,17 +2505,18 @@
                 <h5
                   class="text-xs font-bold text-gold-300 uppercase tracking-wider"
                 >
-                  Trust
+                  Bharosa
                 </h5>
                 <p class="text-xs text-burgundy-100 leading-relaxed">
-                  Trust isn't built in a single day or proven by words alone; it
-                  is nurtured through steady, predictable actions.
+                  Bharosa ek din mein nahi banta aur na hi sirf baaton se saabit
+                  hota hai. Yeh roz ke chhote-chhote, sachche aur consistent
+                  actions se mazboot hota hai.
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- Card 3: Effort -->
+          <!-- Card 3: Mutual Effort -->
           <div
             class="perspective-1000 h-56 cursor-pointer group"
             onclick="flipCard(this)"
@@ -2516,12 +2534,13 @@
                   <i class="fa-solid fa-handshake"></i>
                 </div>
                 <h4 class="font-serif font-bold text-lg text-burgundy-100">
-                  Mutual Effort
+                  Dono Ki Koshish
                 </h4>
-                <span class="text-[10px] text-burgundy-400"
-                  >Click to reveal reflection</span
-                >
+                <span class="text-[10px] text-burgundy-400">
+                  Sochne ke liye click karo
+                </span>
               </div>
+
               <!-- Back -->
               <div
                 class="absolute inset-0 glass-card rounded-2xl p-5 flex flex-col justify-center text-center space-y-2 backface-hidden rotate-y-180 bg-burgundy-950/90 border-gold-500/40"
@@ -2532,8 +2551,9 @@
                   Mutual Effort
                 </h5>
                 <p class="text-xs text-burgundy-100 leading-relaxed">
-                  One-sided efforts tire the soul. True connection requires two
-                  people walking toward each other equally.
+                  Jab sirf ek insaan rishta nibhane ki koshish karta hai, toh
+                  woh andar se thak jaata hai. Sachcha connection tab banta hai
+                  jab dono ek-doosre ki taraf barabar kadam badhate hain.
                 </p>
               </div>
             </div>
@@ -2559,10 +2579,11 @@
                 <h4 class="font-serif font-bold text-lg text-burgundy-100">
                   Emotional Security
                 </h4>
-                <span class="text-[10px] text-burgundy-400"
-                  >Click to reveal reflection</span
-                >
+                <span class="text-[10px] text-burgundy-400">
+                  Sochne ke liye click karo
+                </span>
               </div>
+
               <!-- Back -->
               <div
                 class="absolute inset-0 glass-card rounded-2xl p-5 flex flex-col justify-center text-center space-y-2 backface-hidden rotate-y-180 bg-burgundy-950/90 border-gold-500/40"
@@ -2570,11 +2591,12 @@
                 <h5
                   class="text-xs font-bold text-gold-300 uppercase tracking-wider"
                 >
-                  Security
+                  Dil Ka Sukoon
                 </h5>
                 <p class="text-xs text-burgundy-100 leading-relaxed">
-                  Security means feeling chosen consistently, not just when life
-                  gets quiet or stressful elsewhere.
+                  Emotional security ka matlab hai har din yeh mehsoos hona ki
+                  tum apne partner ke liye important ho, sirf tab nahi jab woh
+                  akela ho ya zindagi mein pareshani chal rahi ho.
                 </p>
               </div>
             </div>
@@ -4033,7 +4055,7 @@
         </div>
       </footer>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
