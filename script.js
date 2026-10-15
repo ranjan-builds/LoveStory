@@ -408,7 +408,7 @@ function revealMoreConversations() {
   // No password, login state, or unlock flag is written to browser storage.
   // A fresh page load ALWAYS asks for the password again.
   // Only a SHA-256 digest is embedded for client-side verification.
-  const DEVELOPER_MODE = false; // Set to true to skip the password during development.
+  const DEVELOPER_MODE = true; // Set to true to skip the password during development.
   const PASSWORD_SHA256 =
     "0890930cbc82a905bd28dec28ba7db90a3e9bec2231003288497fc943ed1e99f";
   const gate = document.getElementById("passwordGate");
@@ -486,20 +486,14 @@ function revealMoreConversations() {
          ========================================================= */
 
 const memories = [
-  {
-    type: "image",
-    title: "Our Togather Photo",
-    date: "9 September 2026",
-    file: "./memories/images/we.jpg",
-    caption: "The day we finally went to devriside road trip.",
-  },
-  {
-    type: "image",
-    title: "She was so happy to see canal side view.",
-    date: "9 September 2026",
-    file: "./memories/images/anjaliatcanal.jpg",
-    caption: "She was just so happy",
-  },
+  // {
+  //   type: "image",
+  //   title: "Our Togather Photo",
+  //   date: "9 September 2026",
+  //   file: "./memories/images/we.jpg",
+  //   caption: "The day we finally went to devriside road trip.",
+  // },
+
   {
     type: "place",
     title: "Nagargda Waterfall",
@@ -515,6 +509,14 @@ const memories = [
     file: "./memories/images/devriSide.jpeg",
     location: "Devri, Chhattisgarh",
     maps: "https://maps.app.goo.gl/QJ53m7wn1nbjreow5",
+  },
+  {
+    type: "place",
+    title: "You came my home to meet me when i was not well",
+    date: "9 October 2026",
+    file: "./memories/images/myHome.jpg",
+    location: "Gaud, Chhattisgarh",
+    maps: "https://maps.app.goo.gl/ppBJu3ZgcFYHVLWK6",
   },
   {
     type: "audio",
@@ -539,17 +541,24 @@ const memories = [
     caption:
       "Tu saamne ho toh bas tujhe dekhta rahoon Aur tu nazron se ojhal ho toh har jagah tujhe hi dhoondhta rahoon. 🫶🏻",
   },
-  {
-    type: "note",
-    title: "You came for me",
-    date: "9 October 2026",
-    text: " ❤️ Anjali, kal tum 60 km door se mujhse milne aayi, aur tab se tumhari yaadein dil se jaa hi nahi rahi. I love you, hamesha mere saath rehna. 🫶🏻💗",
-  },
+  // {
+  //   type: "note",
+  //   title: "You came for me",
+  //   date: "9 October 2026",
+  //   text: " ❤️ Anjali, kal tum 60 km door se mujhse milne aayi, aur tab se tumhari yaadein dil se jaa hi nahi rahi. I love you, hamesha mere saath rehna. 🫶🏻💗",
+  // },
   {
     type: "video",
     title: "Her Mood swings be like ☝️ Meri mood swing wali cute si ladki",
     date: "2026",
     file: "memories\\videos\\HerMood.mp4",
+  },
+  {
+    type: "file",
+    title: "A Letter for the Future",
+    date: "14 October 2026",
+    file: "memories\\doc\\futureLetter.pdf",
+    caption: "Jab tum ready feel karo tab padhna. Turant reply dene ki koi zaroorat nahi hai.",
   },
 ];
 
