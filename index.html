@@ -913,6 +913,37 @@
             and memories we could return to.
           </p>
 
+          <div
+            id="togetherCountdown"
+            class="together-countdown mx-auto w-full max-w-xl"
+            data-milestone="2026-09-09"
+            role="group"
+            aria-label="Time since our first meeting on 9 September 2026"
+          >
+            <p class="countdown-caption">
+              <i class="fa-solid fa-heart" aria-hidden="true"></i>
+              Since our first meeting · 9 September 2026
+            </p>
+            <div class="countdown-units">
+              <div class="countdown-unit">
+                <span id="countdownDays" class="countdown-value">0</span>
+                <span class="countdown-label">Days</span>
+              </div>
+              <div class="countdown-unit">
+                <span id="countdownHours" class="countdown-value">00</span>
+                <span class="countdown-label">Hours</span>
+              </div>
+              <div class="countdown-unit">
+                <span id="countdownMinutes" class="countdown-value">00</span>
+                <span class="countdown-label">Minutes</span>
+              </div>
+              <div class="countdown-unit">
+                <span id="countdownSeconds" class="countdown-value">00</span>
+                <span class="countdown-label">Seconds</span>
+              </div>
+            </div>
+          </div>
+
           <div class="flex items-center justify-center gap-3 pt-2">
             <span
               class="h-px w-10 bg-gradient-to-r from-transparent to-gold-500/70"
@@ -1216,6 +1247,114 @@
               <i class="fa-solid fa-heart text-[10px]"></i>
               <span>YOU & ME</span>
               <i class="fa-solid fa-heart text-[10px]"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PLAYFUL LOVE METER -->
+      <section
+        id="loveMeterSection"
+        class="love-meter-section border-b border-burgundy-900/40 px-4 py-16 sm:px-6 md:py-20"
+        aria-labelledby="loveMeterTitle"
+      >
+        <div class="mx-auto max-w-5xl">
+          <div class="mx-auto mb-8 max-w-2xl text-center">
+            <span class="love-meter-kicker">
+              <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+              Just for fun
+            </span>
+            <h2
+              id="loveMeterTitle"
+              class="mt-3 font-serif text-3xl font-bold gold-gradient-text sm:text-4xl"
+            >
+              The Very Scientific Love Meter
+            </h2>
+            <p
+              class="mx-auto mt-2 max-w-md text-sm leading-6 text-burgundy-200"
+            >
+              Dono ke naam daalo aur dekho love story banegi ya rejection ki
+              kahaani! 😂❤️ 0% pe “kabhi nahi ho sakta” 💀 aur 98% pe “Rab ne
+              bana di jodi!” 🧿💘
+            </p>
+          </div>
+
+          <div class="love-meter mx-auto max-w-xl">
+            <form id="loveMeterForm" class="love-meter-form">
+              <div class="love-meter-fields">
+                <div class="love-meter-field">
+                  <label for="loveNameOne">First name</label>
+                  <input
+                    id="loveNameOne"
+                    name="nameOne"
+                    type="text"
+                    maxlength="30"
+                    autocomplete="off"
+                    placeholder="e.g. Ranjan"
+                    required
+                  />
+                </div>
+                <span class="love-meter-heart" aria-hidden="true">
+                  <i class="fa-solid fa-heart"></i>
+                </span>
+                <div class="love-meter-field">
+                  <label for="loveNameTwo">Second name</label>
+                  <input
+                    id="loveNameTwo"
+                    name="nameTwo"
+                    type="text"
+                    maxlength="30"
+                    autocomplete="off"
+                    placeholder="e.g. Anjali"
+                    required
+                  />
+                </div>
+              </div>
+              <button
+                id="loveMeterSubmit"
+                class="love-meter-submit"
+                type="submit"
+              >
+                <i class="fa-solid fa-heart-pulse" aria-hidden="true"></i>
+                Calculate our vibes
+              </button>
+            </form>
+
+            <div
+              id="loveMeterResult"
+              class="love-meter-result"
+              aria-live="polite"
+              aria-atomic="true"
+              hidden
+            >
+              <p id="loveMeterStatus" class="love-meter-status"></p>
+              <div
+                id="loveMeterProgress"
+                class="love-meter-progress"
+                role="progressbar"
+                aria-label="Playful compatibility score"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              >
+                <span id="loveMeterProgressFill"></span>
+              </div>
+              <p id="loveMeterScore" class="love-meter-score"></p>
+              <p id="loveMeterMessage" class="love-meter-message"></p>
+              <button
+                id="loveMeterExport"
+                class="love-meter-export"
+                type="button"
+                hidden
+              >
+                <i class="fa-solid fa-image" aria-hidden="true"></i>
+                Export Result as Image
+              </button>
+              <p
+                id="loveMeterExportStatus"
+                class="love-meter-export-status"
+                aria-live="polite"
+              ></p>
             </div>
           </div>
         </div>

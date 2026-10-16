@@ -486,7 +486,7 @@ function revealMoreConversations() {
     window.setTimeout(() => gate.remove(), 700);
   }
 
-  if (DEVELOPER_MODE) {
+  if (typeof DEVELOPER_MODE !== "undefined" && DEVELOPER_MODE) {
     unlockDiary();
     return;
   }
@@ -736,4 +736,434 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeMemoryViewer();
 });
 
+function startTogetherCountdown() {
+  const countdown = document.getElementById("togetherCountdown");
+  if (!countdown) return;
+
+  const milestone = new Date(`${countdown.dataset.milestone}T00:00:00`);
+  const units = {
+    days: document.getElementById("countdownDays"),
+    hours: document.getElementById("countdownHours"),
+    minutes: document.getElementById("countdownMinutes"),
+    seconds: document.getElementById("countdownSeconds"),
+  };
+
+  if (
+    Number.isNaN(milestone.getTime()) ||
+    Object.values(units).some((unit) => !unit)
+  ) {
+    console.error("Unable to initialize the time-together countdown.");
+    return;
+  }
+
+  function updateCountdown() {
+    const elapsedSeconds = Math.max(
+      0,
+      Math.floor((Date.now() - milestone.getTime()) / 1000),
+    );
+    const days = Math.floor(elapsedSeconds / 86400);
+    const hours = Math.floor((elapsedSeconds % 86400) / 3600);
+    const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+    const seconds = elapsedSeconds % 60;
+
+    units.days.textContent = String(days);
+    units.hours.textContent = String(hours).padStart(2, "0");
+    units.minutes.textContent = String(minutes).padStart(2, "0");
+    units.seconds.textContent = String(seconds).padStart(2, "0");
+  }
+
+  updateCountdown();
+  window.setInterval(updateCountdown, 1000);
+}
+
+function startLoveMeter() {
+  const form = document.getElementById("loveMeterForm");
+  const nameOneInput = document.getElementById("loveNameOne");
+  const nameTwoInput = document.getElementById("loveNameTwo");
+  const submitButton = document.getElementById("loveMeterSubmit");
+  const result = document.getElementById("loveMeterResult");
+  const status = document.getElementById("loveMeterStatus");
+  const progress = document.getElementById("loveMeterProgress");
+  const progressFill = document.getElementById("loveMeterProgressFill");
+  const scoreText = document.getElementById("loveMeterScore");
+  const message = document.getElementById("loveMeterMessage");
+  const exportButton = document.getElementById("loveMeterExport");
+  const exportStatus = document.getElementById("loveMeterExportStatus");
+
+  if (
+    !form ||
+    !nameOneInput ||
+    !nameTwoInput ||
+    !submitButton ||
+    !result ||
+    !status ||
+    !progress ||
+    !progressFill ||
+    !scoreText ||
+    !message ||
+    !exportButton ||
+    !exportStatus
+  ) {
+    console.error("Unable to initialize the playful love meter.");
+    return;
+  }
+
+  let latestResult = null;
+
+
+const messages = [
+  {
+    minimum: 0,
+    text: "Impossible  💀😭 Is janam toh kya, agle janam mein bhi koi chance nahi! 😂💔"
+  },
+  {
+    minimum: 10,
+    text: "Kuch toh gadbad hai Daya 😂 Dil ka connection abhi weak signal pe hai!"
+  },
+  {
+    minimum: 20,
+    text: "Abhi toh kahaani shuru hui hai 😏 Thoda time do, picture abhi baaki hai!"
+  },
+  {
+    minimum: 30,
+    text: "Baat ban sakti hai 😜 Bas thodi flirting aur thoda effort chahiye!"
+  },
+  {
+    minimum: 40,
+    text: "Cute si chemistry hai ❤️ Ab dekhte hain pehle blush kaun karta hai!"
+  },
+  {
+    minimum: 50,
+    text: "50-50 ka chakkar hai 😅 Dil bhi confused hai, dimaag bhi!"
+  },
+  {
+    minimum: 60,
+    text: "Oho! 👀 Kuch toh chal raha hai boss! Nazar na lage 🧿❤️"
+  },
+  {
+    minimum: 70,
+    text: "Strong connection hai jaan! 🫶 Ab bas ek cute si date ho jaaye!"
+  },
+  {
+    minimum: 75,
+    text: "Dil ki frequency match ho rahi hai 📶💕 Lagta hai kuch special hai!"
+  },
+  {
+    minimum: 80,
+    text: "Arey waah! 😍 Chemistry toh full power mein hai, bas nazar na lage!"
+  },
+  {
+    minimum: 85,
+    text: "Ek dusre ki smile ki wajah banne wale lagte ho 🥹❤️"
+  },
+  {
+    minimum: 90,
+    text: "Soulmate wali vibes aa rahi hain! 🫂❤️ Ek tum, ek main, aur dher saari memories!"
+  },
+  {
+    minimum: 95,
+    text: "Itna strong connection? Wi-Fi bhi sharma jaaye! 📶❤️😂"
+  },
+  {
+    minimum: 98,
+    text: "Haiii! 🥹💗 Itna pyaar? Nazar utaaro koi! 🧿 Made for each other vibes!♾️"
+  },
+  {
+    minimum: 100,
+    text: "100% ISHQ! 💍❤️ Tum dono ki jodi ekdum Rab Ne Bana Di Jodi! 🧿♾️"
+  }
+];
+
+  function getCompatibilityScore(firstName, secondName) {
+    const normalizeName = (name) =>
+      name.normalize("NFKC").trim().replace(/\s+/gu, " ").toLowerCase();
+    const normalizedNames = [normalizeName(firstName), normalizeName(secondName)]
+      .sort();
+    const [first, second] = normalizedNames;
+
+    if (first === "anjali" && second === "ranjan") return 98;
+    if (normalizedNames.includes("anjali") || normalizedNames.includes("ranjan")) {
+      return 0;
+    }
+
+    const input = normalizedNames
+      .map((name) => `${name.length}:${name}`)
+      .join("|");
+    let hash = 0x811c9dc5;
+
+    for (let index = 0; index < input.length; index += 1) {
+      hash = Math.imul(hash ^ input.charCodeAt(index), 0x01000193);
+    }
+
+    return (hash >>> 0) % 101;
+  }
+
+  function drawRoundedRect(context, x, y, width, height, radius) {
+    context.beginPath();
+    context.moveTo(x + radius, y);
+    context.arcTo(x + width, y, x + width, y + height, radius);
+    context.arcTo(x + width, y + height, x, y + height, radius);
+    context.arcTo(x, y + height, x, y, radius);
+    context.arcTo(x, y, x + width, y, radius);
+    context.closePath();
+  }
+
+  function drawHeart(context, x, y, size) {
+    context.save();
+    context.translate(x, y);
+    context.scale(size / 100, size / 100);
+    context.beginPath();
+    context.moveTo(0, 30);
+    context.bezierCurveTo(-50, 0, -50, -35, -25, -35);
+    context.bezierCurveTo(-10, -35, 0, -20, 0, -10);
+    context.bezierCurveTo(0, -20, 10, -35, 25, -35);
+    context.bezierCurveTo(50, -35, 50, 0, 0, 30);
+    context.closePath();
+    context.fill();
+    context.restore();
+  }
+
+  function drawWrappedText(context, text, centerX, startY, maxWidth, lineHeight) {
+    const words = text.split(/\s+/u);
+    let line = "";
+    let y = startY;
+
+    for (const word of words) {
+      const nextLine = line ? `${line} ${word}` : word;
+      if (line && context.measureText(nextLine).width > maxWidth) {
+        context.fillText(line, centerX, y);
+        line = word;
+        y += lineHeight;
+      } else {
+        line = nextLine;
+      }
+    }
+
+    if (line) context.fillText(line, centerX, y);
+    return y;
+  }
+
+  function renderLoveResultImage(resultData) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1200;
+    canvas.height = 1500;
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      exportStatus.textContent = "Could not create the result image in this browser.";
+      console.error("Canvas 2D context is unavailable for the love result export.");
+      return;
+    }
+
+    const { firstName, secondName, score, message: resultMessage } = resultData;
+    const centerX = canvas.width / 2;
+    const background = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+    background.addColorStop(0, "#2a050b");
+    background.addColorStop(0.52, "#120508");
+    background.addColorStop(1, "#090204");
+    context.fillStyle = background;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    const glow = context.createRadialGradient(centerX, 360, 20, centerX, 360, 720);
+    glow.addColorStop(0, "rgba(159, 36, 67, 0.42)");
+    glow.addColorStop(1, "rgba(159, 36, 67, 0)");
+    context.fillStyle = glow;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    context.strokeStyle = "rgba(212, 175, 55, 0.52)";
+    context.lineWidth = 3;
+    drawRoundedRect(context, 42, 42, canvas.width - 84, canvas.height - 84, 42);
+    context.stroke();
+    context.strokeStyle = "rgba(240, 168, 182, 0.2)";
+    context.lineWidth = 1;
+    drawRoundedRect(context, 62, 62, canvas.width - 124, canvas.height - 124, 32);
+    context.stroke();
+
+    context.save();
+    context.globalAlpha = 0.26;
+    context.fillStyle = "#d4af37";
+    drawHeart(context, 175, 225, 70);
+    drawHeart(context, 1025, 270, 48);
+    drawHeart(context, 180, 1270, 44);
+    drawHeart(context, 1025, 1230, 68);
+    context.restore();
+
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillStyle = "#f6e05e";
+    context.font = '700 24px "Plus Jakarta Sans", sans-serif';
+    context.letterSpacing = "7px";
+    context.fillText("OUR UNWRITTEN STORY", centerX, 180);
+    context.letterSpacing = "4px";
+    context.fillStyle = "#f0a8b6";
+    context.font = '600 20px "Plus Jakarta Sans", sans-serif';
+    context.fillText("THE VERY SCIENTIFIC LOVE METER", centerX, 255);
+
+    context.letterSpacing = "0";
+    context.fillStyle = "#fff0f3";
+    context.font = '600 56px "Cormorant Garamond", Georgia, serif';
+    context.fillText(firstName, centerX, 420, 920);
+    context.fillStyle = "#ecc94b";
+    context.font = '400 42px "Cormorant Garamond", Georgia, serif';
+    context.fillText("&", centerX, 505);
+    context.fillStyle = "#fff0f3";
+    context.font = '600 56px "Cormorant Garamond", Georgia, serif';
+    context.fillText(secondName, centerX, 590, 920);
+
+    const scoreGradient = context.createLinearGradient(300, 0, 900, 0);
+    scoreGradient.addColorStop(0, "#f8a3b7");
+    scoreGradient.addColorStop(0.55, "#fff0f3");
+    scoreGradient.addColorStop(1, "#f6e05e");
+    context.fillStyle = scoreGradient;
+    context.font = '700 220px "Cormorant Garamond", Georgia, serif';
+    context.fillText(`${score}%`, centerX, 845);
+
+    const barX = 190;
+    const barY = 980;
+    const barWidth = 820;
+    const barHeight = 22;
+    context.fillStyle = "rgba(9, 2, 4, 0.88)";
+    drawRoundedRect(context, barX, barY, barWidth, barHeight, barHeight / 2);
+    context.fill();
+    if (score > 0) {
+      const barGradient = context.createLinearGradient(barX, 0, barX + barWidth, 0);
+      barGradient.addColorStop(0, "#be3154");
+      barGradient.addColorStop(0.72, "#e5778f");
+      barGradient.addColorStop(1, "#ecc94b");
+      context.fillStyle = barGradient;
+      const fillWidth = (barWidth * score) / 100;
+      drawRoundedRect(
+        context,
+        barX,
+        barY,
+        fillWidth,
+        barHeight,
+        Math.min(barHeight / 2, fillWidth / 2),
+      );
+      context.fill();
+    }
+
+    context.fillStyle = "#f7ced5";
+    context.font = '500 28px "Plus Jakarta Sans", sans-serif';
+    const messageEndY = drawWrappedText(
+      context,
+      resultMessage,
+      centerX,
+      1100,
+      820,
+      42,
+    );
+
+    context.fillStyle = "#f6e05e";
+    context.font = '600 22px "Plus Jakarta Sans", sans-serif';
+    context.fillText("A PLAYFUL READING · JUST FOR FUN", centerX, Math.max(1255, messageEndY + 95));
+    context.fillStyle = "rgba(247, 206, 213, 0.74)";
+    context.font = '400 20px "Plus Jakarta Sans", sans-serif';
+    context.fillText("Made with love, not science.", centerX, 1320);
+    context.fillStyle = "#d4af37";
+    context.font = '600 18px "Plus Jakarta Sans", sans-serif';
+    context.letterSpacing = "3px";
+    context.fillText("YOU & ME", centerX, 1390);
+    context.letterSpacing = "0";
+
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => resolve(blob), "image/png");
+    });
+  }
+
+  function createNameSlug(name) {
+    return (
+      name
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/gu, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/gu, "-")
+        .replace(/^-|-$/gu, "") || "name"
+    );
+  }
+
+  exportButton.addEventListener("click", async () => {
+    if (!latestResult) {
+      exportStatus.textContent = "Calculate a result before exporting it.";
+      return;
+    }
+
+    exportStatus.textContent = "Preparing your image…";
+    await document.fonts.ready;
+    const blob = await renderLoveResultImage(latestResult);
+
+    if (!blob) {
+      exportStatus.textContent = "Could not create the result image. Please try again.";
+      console.error("The browser could not encode the love result as a PNG.");
+      return;
+    }
+
+    const downloadUrl = URL.createObjectURL(blob);
+    const downloadLink = document.createElement("a");
+    downloadLink.href = downloadUrl;
+    downloadLink.download = `love-match-${createNameSlug(latestResult.firstName)}-and-${createNameSlug(latestResult.secondName)}.png`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    downloadLink.remove();
+    window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    exportStatus.textContent = "Your love result image has been downloaded.";
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const firstName = nameOneInput.value.trim();
+    const secondName = nameTwoInput.value.trim();
+    nameOneInput.setCustomValidity(
+      firstName ? "" : "Please enter the first name.",
+    );
+    nameTwoInput.setCustomValidity(
+      secondName ? "" : "Please enter the second name.",
+    );
+
+    if (!form.reportValidity()) return;
+
+    const score = getCompatibilityScore(firstName, secondName);
+    const reading = [...messages].reverse().find((item) => score >= item.minimum);
+    const animationDuration = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches
+      ? 0
+      : 1400;
+
+    result.hidden = false;
+    submitButton.disabled = true;
+    exportButton.hidden = true;
+    exportStatus.textContent = "";
+    status.textContent = "Consulting the extremely unserious love algorithms…";
+    progress.setAttribute("aria-valuenow", "0");
+    progressFill.style.width = "0";
+    scoreText.textContent = "";
+    message.textContent = "";
+
+    window.requestAnimationFrame(() => {
+      progressFill.style.width = `${score}%`;
+    });
+
+    window.setTimeout(() => {
+      progress.setAttribute("aria-valuenow", String(score));
+      status.textContent = `${firstName} + ${secondName}`;
+      scoreText.textContent = `${score}%`;
+      message.textContent = reading.text;
+      latestResult = { firstName, secondName, score, message: reading.text };
+      exportButton.hidden = false;
+      submitButton.disabled = false;
+    }, animationDuration);
+  });
+
+  nameOneInput.addEventListener("input", () =>
+    nameOneInput.setCustomValidity(""),
+  );
+  nameTwoInput.addEventListener("input", () =>
+    nameTwoInput.setCustomValidity(""),
+  );
+}
+
+startTogetherCountdown();
+startLoveMeter();
 renderMemoryBox();
