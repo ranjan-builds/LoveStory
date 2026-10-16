@@ -1,19 +1,11 @@
-/* ==========================================================================
-         GSAP MASTER ANIMATION SYSTEM
-         Professional-grade animations for Our Unwritten Story
-      ========================================================================== */
-
-gsap.registerPlugin(ScrollTrigger, TextPlugin);
-
-// Global state
+// Global App State
 let isAudioPlaying = false;
 let isScootyAnimating = false;
 let scootyAnimationFrame = null;
-let typewriterTriggered = false;
-let particlesInstance = null;
 
 const cursor = Cursorly.init({
-  effect: { name: "sparkle", color: "snow" },
+  cursor: 10, // Index of the cursor icon (default: 0)
+  effect: { name: "sparkle", color: "snow" }, // Effect name and color are required
 });
 
 const playlist = [
@@ -21,762 +13,8 @@ const playlist = [
 ];
 let currentSongIndex = 0;
 
-/* ==========================================================================
-         GSAP ANIMATION SETUP
-      ========================================================================== */
-
-// Set initial states via GSAP for smooth animations
-function setupInitialStates() {
-  // Hero elements
-  gsap.set("#heroLabel, #heroTitle, #heroSubtitle", { opacity: 0, y: 40 });
-  gsap.set("#envelopeWrapper", { opacity: 0, y: 60, scale: 0.95 });
-  gsap.set("#scrollHint", { opacity: 0, y: 20 });
-
-  // Navigation
-  gsap.set("#mainNav", { opacity: 0, y: -20 });
-
-  // Chapter headings
-  gsap.set(".chapter-heading", { opacity: 0, y: 40 });
-  gsap.set(".chapter-text-left", { opacity: 0, x: -50 });
-  gsap.set(".chapter-chat-box", { opacity: 0, x: 50 });
-  gsap.set(".chapter-card", { opacity: 0, y: 50 });
-  gsap.set(".chapter-reflection", { opacity: 0, y: 40 });
-
-  // Feature cards
-  gsap.set(".feature-card", { opacity: 0, y: 40, scale: 0.95 });
-
-  // Timeline items
-  gsap.set(".timeline-item", { opacity: 0, y: 60 });
-  gsap.set(".timeline-node", { scale: 0 });
-  gsap.set(".timeline-line", { scaleY: 0, transformOrigin: "top" });
-
-  // Letter
-  gsap.set(".letter-container", { opacity: 0, scale: 0.9 });
-  gsap.set(".letter-card", { opacity: 0, y: 50 });
-  gsap.set(".letter-tagline", { opacity: 0, y: 30 });
-
-  // Conversations
-  gsap.set(".conversation-item", { opacity: 0, y: 50, scale: 0.95 });
-  gsap.set(".conversation-tagline", { opacity: 0, y: 30 });
-
-  // Memory box
-  gsap.set(".memory-lid-icon", { opacity: 0, scale: 0.5, rotation: -20 });
-  gsap.set(".memory-pills-row", { opacity: 0, y: 30 });
-
-  // Footer
-  gsap.set(".footer-content", { opacity: 0, y: 40 });
-
-  // Password gate
-  gsap.set("#passwordCard", { opacity: 0, scale: 0.9, y: 30 });
-}
-
-// Run initial states immediately
-setupInitialStates();
-
-/* ==========================================================================
-         PASSWORD GATE ANIMATION
-      ========================================================================== */
-
-function animatePasswordGate() {
-  const tl = gsap.timeline({ delay: 0.2 });
-
-  tl.to("#passwordCard", {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    duration: 1,
-    ease: "power3.out",
-  })
-    .from(
-      "#passwordHeart",
-      {
-        scale: 0,
-        rotation: -180,
-        duration: 0.8,
-        ease: "back.out(1.7)",
-      },
-      "-=0.5",
-    )
-    .from(
-      "#passwordCard > p:first-of-type",
-      {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-      "-=0.3",
-    )
-    .from(
-      "#passwordGateTitle",
-      {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-      "-=0.4",
-    )
-    .from(
-      "#passwordCard > p:nth-of-type(2)",
-      {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-      "-=0.4",
-    )
-    .from(
-      "#passwordForm",
-      {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-      "-=0.3",
-    );
-}
-
-// Start password gate animation
-animatePasswordGate();
-
-/* ==========================================================================
-         HERO SECTION ANIMATION
-      ========================================================================== */
-
-function animateHero() {
-  const tl = gsap.timeline({ delay: 0.3 });
-
-  tl.to("#heroLabel", {
-    opacity: 1,
-    y: 0,
-    duration: 0.8,
-    ease: "power3.out",
-  })
-    .to(
-      "#heroTitle",
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power3.out",
-      },
-      "-=0.5",
-    )
-    .to(
-      "#heroSubtitle",
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power3.out",
-      },
-      "-=0.6",
-    )
-    .to(
-      "#envelopeWrapper",
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 1,
-        ease: "back.out(1.4)",
-      },
-      "-=0.4",
-    )
-    .to(
-      "#scrollHint",
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-      "-=0.3",
-    )
-    .to(
-      "#mainNav",
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-      "-=0.3",
-    );
-
-  // Envelope floating animation
-  gsap.to("#envelopeWrapper", {
-    y: -8,
-    duration: 2.5,
-    repeat: -1,
-    yoyo: true,
-    ease: "sine.inOut",
-    delay: 1.5,
-  });
-
-  // Envelope icon pulse
-  gsap.to("#envelopeIcon", {
-    scale: 1.08,
-    duration: 1.2,
-    repeat: -1,
-    yoyo: true,
-    ease: "sine.inOut",
-  });
-
-  // Scroll hint bounce
-  gsap.to("#scrollHint", {
-    y: 8,
-    duration: 1.5,
-    repeat: -1,
-    yoyo: true,
-    ease: "sine.inOut",
-  });
-}
-
-/* ==========================================================================
-         SCROLL-TRIGGERED CHAPTER ANIMATIONS
-      ========================================================================== */
-
-function setupScrollAnimations() {
-  // Chapter headings
-  gsap.utils.toArray(".chapter-heading").forEach((heading) => {
-    gsap.to(heading, {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: heading,
-        start: "top 85%",
-        toggleActions: "play none none none",
-      },
-    });
-  });
-
-  // Chapter text left
-  gsap.utils.toArray(".chapter-text-left").forEach((el) => {
-    gsap.to(el, {
-      opacity: 1,
-      x: 0,
-      duration: 0.9,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: el,
-        start: "top 80%",
-        toggleActions: "play none none none",
-      },
-    });
-  });
-
-  // Chapter chat boxes
-  gsap.utils.toArray(".chapter-chat-box").forEach((el) => {
-    gsap.to(el, {
-      opacity: 1,
-      x: 0,
-      duration: 0.9,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: el,
-        start: "top 80%",
-        toggleActions: "play none none none",
-      },
-    });
-  });
-
-  // Chapter cards
-  gsap.utils.toArray(".chapter-card").forEach((el) => {
-    gsap.to(el, {
-      opacity: 1,
-      y: 0,
-      duration: 0.9,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: el,
-        start: "top 82%",
-        toggleActions: "play none none none",
-      },
-    });
-  });
-
-  // Reflection boxes
-  gsap.utils.toArray(".chapter-reflection").forEach((el) => {
-    gsap.to(el, {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: el,
-        start: "top 88%",
-        toggleActions: "play none none none",
-      },
-    });
-  });
-
-  // Feature cards with stagger
-  gsap.utils.toArray(".feature-card").forEach((card, i) => {
-    gsap.to(card, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 0.7,
-      delay: i * 0.15,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: card.parentElement,
-        start: "top 80%",
-        toggleActions: "play none none none",
-      },
-    });
-  });
-
-  // Flip cards
-  gsap.utils.toArray(".flip-card").forEach((card, i) => {
-    gsap.from(card, {
-      opacity: 0,
-      y: 50,
-      rotationY: -15,
-      duration: 0.8,
-      delay: i * 0.12,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: card,
-        start: "top 85%",
-        toggleActions: "play none none none",
-      },
-    });
-  });
-
-  // PDF card
-  gsap.from(".pdf-card", {
-    opacity: 0,
-    y: 50,
-    scale: 0.98,
-    duration: 1,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: ".pdf-card",
-      start: "top 80%",
-      toggleActions: "play none none none",
-    },
-  });
-
-  // Question box
-  gsap.from(".question-box", {
-    opacity: 0,
-    y: 40,
-    duration: 0.9,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: ".question-box",
-      start: "top 85%",
-      toggleActions: "play none none none",
-    },
-  });
-
-  // Timeline items
-  gsap.utils.toArray(".timeline-item").forEach((item, i) => {
-    const node = item.querySelector(".timeline-node");
-    const card = item.querySelector(".timeline-card");
-
-    gsap.to(item, {
-      opacity: 1,
-      y: 0,
-      duration: 0.9,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: item,
-        start: "top 80%",
-        toggleActions: "play none none none",
-      },
-    });
-
-    if (node) {
-      gsap.to(node, {
-        scale: 1,
-        duration: 0.6,
-        delay: 0.3,
-        ease: "back.out(1.7)",
-        scrollTrigger: {
-          trigger: item,
-          start: "top 80%",
-          toggleActions: "play none none none",
-        },
-      });
-    }
-
-    if (card) {
-      gsap.from(card, {
-        rotationY: i % 2 === 0 ? 8 : -8,
-        duration: 1,
-        delay: 0.4,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: item,
-          start: "top 80%",
-          toggleActions: "play none none none",
-        },
-      });
-    }
-  });
-
-  // Timeline ending
-  gsap.from(".timeline-ending", {
-    opacity: 0,
-    y: 40,
-    duration: 0.8,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: ".timeline-ending",
-      start: "top 88%",
-      toggleActions: "play none none none",
-    },
-  });
-
-  // Letter section
-  gsap.to(".letter-container", {
-    opacity: 1,
-    scale: 1,
-    duration: 1,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: ".letter-container",
-      start: "top 80%",
-      toggleActions: "play none none none",
-    },
-  });
-
-  gsap.to(".letter-card", {
-    opacity: 1,
-    y: 0,
-    duration: 0.9,
-    delay: 0.2,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: ".letter-container",
-      start: "top 80%",
-      toggleActions: "play none none none",
-    },
-  });
-
-  gsap.to(".letter-tagline", {
-    opacity: 1,
-    y: 0,
-    duration: 0.8,
-    delay: 0.4,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: ".letter-tagline",
-      start: "top 90%",
-      toggleActions: "play none none none",
-    },
-  });
-
-  // Conversations with stagger
-  gsap.utils.toArray(".conversation-item").forEach((card, i) => {
-    gsap.to(card, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 0.7,
-      delay: (i % 4) * 0.1,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: card,
-        start: "top 88%",
-        toggleActions: "play none none none",
-      },
-    });
-  });
-
-  gsap.to(".conversation-tagline", {
-    opacity: 1,
-    y: 0,
-    duration: 0.8,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: ".conversation-tagline",
-      start: "top 90%",
-      toggleActions: "play none none none",
-    },
-  });
-
-  // Memory box lid
-  gsap.to(".memory-lid-icon", {
-    opacity: 1,
-    scale: 1,
-    rotation: 0,
-    duration: 1,
-    ease: "back.out(1.7)",
-    scrollTrigger: {
-      trigger: ".memory-lid-icon",
-      start: "top 85%",
-      toggleActions: "play none none none",
-    },
-  });
-
-  // Memory pills
-  gsap.to(".memory-pills-row", {
-    opacity: 1,
-    y: 0,
-    duration: 0.8,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: ".memory-pills-row",
-      start: "top 92%",
-      toggleActions: "play none none none",
-    },
-  });
-
-  // Footer
-  gsap.to(".footer-content", {
-    opacity: 1,
-    y: 0,
-    duration: 0.9,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: ".footer-content",
-      start: "top 92%",
-      toggleActions: "play none none none",
-    },
-  });
-}
-
-/* ==========================================================================
-         TYPEWRITER ANIMATION FOR CHAPTER 10
-      ========================================================================== */
-
-const endingText =
-  "Our story is still being written. We don't know what tomorrow holds, but every honest conversation, every effort, every shared smile, and every moment of understanding becomes a part of our journey. Perhaps the most beautiful part of our story is not knowing exactly how it ends, but discovering how we choose to write it together.";
-
-function setupTypewriter() {
-  ScrollTrigger.create({
-    trigger: "#ch10",
-    start: "top 60%",
-    onEnter: () => {
-      if (!typewriterTriggered) {
-        typewriterTriggered = true;
-        gsap.to("#typewriterText", {
-          text: endingText,
-          duration: endingText.length * 0.04,
-          ease: "none",
-        });
-      }
-    },
-  });
-}
-
-/* ==========================================================================
-         PASSWORD GATE LOGIC
-      ========================================================================== */
-
-(() => {
-  const DEVELOPER_MODE = false;
-  const PASSWORD_SHA256 =
-    "0890930cbc82a905bd28dec28ba7db90a3e9bec2231003288497fc943ed1e99f";
-  const gate = document.getElementById("passwordGate");
-  const form = document.getElementById("passwordForm");
-  const input = document.getElementById("diaryPassword");
-  const error = document.getElementById("passwordError");
-  const toggle = document.getElementById("togglePasswordVisibility");
-
-  async function sha256(value) {
-    const data = new TextEncoder().encode(value);
-    const hash = await crypto.subtle.digest("SHA-256", data);
-    return Array.from(new Uint8Array(hash))
-      .map((byte) => byte.toString(16).padStart(2, "0"))
-      .join("");
-  }
-
-  function unlockDiary() {
-    document.body.classList.remove("site-locked");
-    input.value = "";
-
-    // GSAP unlock animation
-    gsap.to("#passwordCard", {
-      opacity: 0,
-      scale: 0.9,
-      y: -30,
-      duration: 0.5,
-      ease: "power2.in",
-      onComplete: () => {
-        gsap.to("#passwordGate", {
-          opacity: 0,
-          duration: 0.4,
-          ease: "power2.in",
-          onComplete: () => {
-            gate.remove();
-
-            // Initialize hero animations after unlock
-            animateHero();
-            setupScrollAnimations();
-            setupTypewriter();
-            initParticles();
-            renderJourneyCanvas();
-          },
-        });
-      },
-    });
-  }
-
-  if (DEVELOPER_MODE) {
-    document.body.classList.remove("site-locked");
-    gate.remove();
-    animateHero();
-    setupScrollAnimations();
-    setupTypewriter();
-    initParticles();
-    renderJourneyCanvas();
-    return;
-  }
-
-  function showError() {
-    error.textContent = "That password isn't right. Try again, love.";
-
-    gsap.fromTo(
-      "#passwordCard",
-      { x: 0 },
-      {
-        x: 8,
-        duration: 0.08,
-        repeat: 5,
-        yoyo: true,
-        ease: "power2.inOut",
-        onComplete: () => {
-          gsap.set("#passwordCard", { x: 0 });
-        },
-      },
-    );
-
-    input.select();
-  }
-
-  window.setTimeout(() => input.focus(), 500);
-
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const submittedPassword = input.value;
-    input.value = "";
-
-    try {
-      const submittedHash = await sha256(submittedPassword);
-      if (submittedHash === PASSWORD_SHA256) {
-        error.textContent = "";
-        unlockDiary();
-      } else {
-        showError();
-      }
-    } catch {
-      error.textContent = "Unable to verify right now. Please try again.";
-      showError();
-    }
-  });
-
-  toggle.addEventListener("click", () => {
-    const showing = input.type === "text";
-    input.type = showing ? "password" : "text";
-    toggle.innerHTML = showing
-      ? '<i class="fa-solid fa-eye"></i>'
-      : '<i class="fa-solid fa-eye-slash"></i>';
-    toggle.setAttribute(
-      "aria-label",
-      showing ? "Show password" : "Hide password",
-    );
-  });
-})();
-
-/* ==========================================================================
-         PARTICLES
-      ========================================================================== */
-
-function initParticles() {
-  particlesJS("snow-particles", {
-    particles: {
-      number: {
-        value: 100,
-        density: {
-          enable: true,
-          value_area: 900,
-        },
-      },
-      color: {
-        value: "#ffffff",
-      },
-      shape: {
-        type: "circle",
-      },
-      opacity: {
-        value: 0.65,
-        random: true,
-        anim: {
-          enable: true,
-        },
-      },
-      size: {
-        value: 4,
-        random: true,
-      },
-      line_linked: {
-        enable: false,
-      },
-      move: {
-        enable: true,
-        speed: 1.5,
-        direction: "top",
-        random: true,
-        straight: false,
-        out_mode: "out",
-        bounce: false,
-      },
-    },
-    interactivity: {
-      detect_on: "canvas",
-      events: {
-        onhover: {
-          enable: true,
-          mode: "repulse",
-        },
-        onclick: {
-          enable: true,
-          mode: "repulse",
-        },
-        resize: true,
-      },
-    },
-    retina_detect: true,
-  });
-}
-
-/* ==========================================================================
-         MUSIC PLAYER
-      ========================================================================== */
-
 function togglePlaylist() {
-  const panel = document.getElementById("playlistPanel");
-  const isHidden = panel.classList.contains("hidden");
-
-  if (isHidden) {
-    panel.classList.remove("hidden");
-    gsap.from(panel, {
-      opacity: 0,
-      y: 20,
-      scale: 0.95,
-      duration: 0.4,
-      ease: "power3.out",
-    });
-  } else {
-    gsap.to(panel, {
-      opacity: 0,
-      y: 20,
-      scale: 0.95,
-      duration: 0.3,
-      ease: "power2.in",
-      onComplete: () => panel.classList.add("hidden"),
-    });
-  }
+  document.getElementById("playlistPanel").classList.toggle("hidden");
 }
 
 async function playPlaylistSong(index) {
@@ -826,25 +64,122 @@ document.getElementById("ambientAudio").addEventListener("ended", () => {
   document.getElementById("audioIcon").className = "fa-solid fa-play";
   document.getElementById("audioStatusText").innerText = "Song finished";
 });
+particlesJS("snow-particles", {
+  particles: {
+    number: {
+      value: 140,
+      density: {
+        enable: true,
+        value_area: 900,
+      },
+    },
+    color: {
+      value: "#ffffff",
+    },
+    shape: {
+      type: "circle",
+    },
+    opacity: {
+      value: 0.65,
+      random: true,
+      anim: {
+        enable: true,
+      },
+    },
+    size: {
+      value: 4,
+      random: true,
+    },
+    line_linked: {
+      enable: false,
+    },
+    move: {
+      enable: true,
+      speed: 1.5,
+      direction: "top",
+      random: true,
+      straight: false,
+      out_mode: "out",
+      bounce: false,
+    },
+  },
+  interactivity: {
+    detect_on: "canvas",
+    events: {
+      onhover: {
+        enable: true,
+        mode: "repulse",
+      },
+      onclick: {
+        enable: true,
+        mode: "repulse",
+      },
+      resize: true,
+    },
+  },
+  retina_detect: true,
+});
+// Canvas Particle System for Atmosphere
+// const particleCanvas = document.getElementById("particleCanvas");
+// const pCtx = particleCanvas.getContext("2d");
+// let particles = [];
 
-/* ==========================================================================
-         NAVIGATION & SCROLL
-      ========================================================================== */
+// function resizeParticleCanvas() {
+//   particleCanvas.width = window.innerWidth;
+//   particleCanvas.height = window.innerHeight;
+// }
+// window.addEventListener("resize", resizeParticleCanvas);
+// resizeParticleCanvas();
+
+// class Particle {
+//   constructor() {
+//     this.reset();
+//   }
+//   reset() {
+//     this.x = Math.random() * particleCanvas.width;
+//     this.y = Math.random() * particleCanvas.height;
+//     this.size = Math.random() * 2 + 0.5;
+//     this.speedX = (Math.random() - 0.5) * 0.3;
+//     this.speedY = -Math.random() * 0.4 - 0.1;
+//     this.opacity = Math.random() * 0.5 + 0.2;
+//   }
+//   update() {
+//     this.x += this.speedX;
+//     this.y += this.speedY;
+//     if (this.y < 0 || this.x < 0 || this.x > particleCanvas.width) {
+//       this.reset();
+//       this.y = particleCanvas.height;
+//     }
+//   }
+//   draw() {
+//     pCtx.fillStyle = `rgba(240, 168, 182, ${this.opacity})`;
+//     pCtx.beginPath();
+//     pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+//     pCtx.fill();
+//   }
+// }
+
+// for (let i = 0; i < 40; i++) {
+//   particles.push(new Particle());
+// }
+
+// function animateParticles() {
+//   pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+//   particles.forEach((p) => {
+//     p.update();
+//     p.draw();
+//   });
+//   requestAnimationFrame(animateParticles);
+// }
+// animateParticles();
 
 function openEnvelope() {
   const card = document.getElementById("envelopeCard");
-
-  gsap.to(card, {
-    scale: 0.9,
-    rotationY: 180,
-    opacity: 0,
-    duration: 0.6,
-    ease: "power2.in",
-    onComplete: () => {
-      gsap.set(card, { clearProps: "all" });
-      scrollToChapter("ch1");
-    },
-  });
+  card.style.transform = "scale(0.95) rotateY(180deg)";
+  card.style.opacity = "0";
+  setTimeout(() => {
+    scrollToChapter("ch1");
+  }, 500);
 }
 
 function scrollToChapter(chapterId) {
@@ -854,7 +189,7 @@ function scrollToChapter(chapterId) {
   }
 }
 
-// Progress bar and chapter indicator
+// Scroll Progress Bar & Navigation Indicator update
 window.addEventListener("scroll", () => {
   const winScroll =
     document.body.scrollTop || document.documentElement.scrollTop;
@@ -864,6 +199,7 @@ window.addEventListener("scroll", () => {
   const scrolled = (winScroll / height) * 100;
   document.getElementById("progressBar").style.width = scrolled + "%";
 
+  // Active Chapter Detection
   const chapters = [
     "ch1",
     "ch2",
@@ -898,42 +234,17 @@ window.addEventListener("scroll", () => {
   }
 });
 
-/* ==========================================================================
-         PDF TOGGLE
-      ========================================================================== */
-
 function togglePdfSummary() {
   const excerpts = document.getElementById("pdfExcerpts");
   const text = document.getElementById("pdfToggleText");
-
   if (excerpts.classList.contains("hidden")) {
     excerpts.classList.remove("hidden");
     text.innerText = "Hide Excerpts";
-    gsap.from(excerpts.children, {
-      opacity: 0,
-      y: 20,
-      duration: 0.5,
-      stagger: 0.1,
-      ease: "power3.out",
-    });
   } else {
-    gsap.to(excerpts, {
-      opacity: 0,
-      y: -10,
-      duration: 0.3,
-      ease: "power2.in",
-      onComplete: () => {
-        excerpts.classList.add("hidden");
-        gsap.set(excerpts, { clearProps: "all" });
-        text.innerText = "Expand Full Excerpts";
-      },
-    });
+    excerpts.classList.add("hidden");
+    text.innerText = "Expand Full Excerpts";
   }
 }
-
-/* ==========================================================================
-         PERSPECTIVE SWITCHER
-      ========================================================================== */
 
 function switchPerspective(type) {
   const myTab = document.getElementById("perspectiveMy");
@@ -942,19 +253,12 @@ function switchPerspective(type) {
   const unknownBtn = document.getElementById("tabUnknownPerspectiveBtn");
 
   if (type === "my") {
-    unknownTab.classList.add("hidden");
     myTab.classList.remove("hidden");
+    unknownTab.classList.add("hidden");
     myBtn.className =
       "flex-1 py-2 px-4 rounded-xl text-xs font-bold transition-all bg-burgundy-800 text-gold-300 shadow";
     unknownBtn.className =
       "flex-1 py-2 px-4 rounded-xl text-xs font-bold text-burgundy-300 transition-all hover:text-white";
-
-    gsap.from(myTab, {
-      opacity: 0,
-      y: 15,
-      duration: 0.4,
-      ease: "power3.out",
-    });
   } else {
     myTab.classList.add("hidden");
     unknownTab.classList.remove("hidden");
@@ -962,45 +266,19 @@ function switchPerspective(type) {
       "flex-1 py-2 px-4 rounded-xl text-xs font-bold transition-all bg-burgundy-800 text-gold-300 shadow";
     myBtn.className =
       "flex-1 py-2 px-4 rounded-xl text-xs font-bold text-burgundy-300 transition-all hover:text-white";
-
-    gsap.from(unknownTab, {
-      opacity: 0,
-      y: 15,
-      duration: 0.4,
-      ease: "power3.out",
-    });
   }
 }
 
-/* ==========================================================================
-         FLIP CARDS WITH GSAP
-      ========================================================================== */
-
 function flipCard(cardEl) {
   const inner = cardEl.querySelector(".card-inner");
-  const isFlipped = inner.classList.contains("rotate-y-180");
-
-  gsap.to(inner, {
-    rotationY: isFlipped ? 0 : 180,
-    duration: 0.7,
-    ease: "power2.inOut",
-    onComplete: () => {
-      inner.classList.toggle("rotate-y-180");
-    },
-  });
+  inner.classList.toggle("rotate-y-180");
 }
-
-/* ==========================================================================
-         JOURNEY CANVAS
-      ========================================================================== */
 
 const jCanvas = document.getElementById("journeyCanvas");
 const jCtx = jCanvas.getContext("2d");
 let scootyProgress = 0;
 
 function renderJourneyCanvas() {
-  if (!jCanvas) return;
-
   jCanvas.width = jCanvas.offsetWidth;
   jCanvas.height = jCanvas.offsetHeight;
 
@@ -1023,6 +301,7 @@ function renderJourneyCanvas() {
   jCtx.lineWidth = 12;
   jCtx.stroke();
 
+  // Location Nodes (Korba & Nagargda Waterfall)
   // Node 1: Korba
   jCtx.fillStyle = "#be3154";
   jCtx.beginPath();
@@ -1048,13 +327,14 @@ function renderJourneyCanvas() {
   jCtx.fillStyle = "#38bdf8";
   jCtx.fillText("Nagargda Waterfall", w - 90, h / 2 - 18);
 
-  // Scooty Position
+  // Calculate Scooty Position along Curve
   const t = scootyProgress;
   const px =
     (1 - t) * (1 - t) * 40 + 2 * (1 - t) * t * (w * 0.5) + t * t * (w - 50);
   const py =
     (1 - t) * (1 - t) * (h / 2) + 2 * (1 - t) * t * (h * 0.7) + t * t * (h / 2);
 
+  // Draw Scooty Icon / Marker
   jCtx.fillStyle = "#f6e05e";
   jCtx.shadowColor = "#d4af37";
   jCtx.shadowBlur = 10;
@@ -1063,16 +343,14 @@ function renderJourneyCanvas() {
   jCtx.fill();
   jCtx.shadowBlur = 0;
 
+  // Update Label text depending on position
   const locLabel = document.getElementById("locationLabel");
-  if (locLabel) {
-    if (t < 0.4) {
-      locLabel.innerText = "Departing Korba towards Champa...";
-    } else if (t < 0.8) {
-      locLabel.innerText =
-        "Riding together on scooty through scenic greenery...";
-    } else {
-      locLabel.innerText = "Arrived at Nagargda Waterfall (9 Sept Memory)";
-    }
+  if (t < 0.4) {
+    locLabel.innerText = "Departing Korba towards Champa...";
+  } else if (t < 0.8) {
+    locLabel.innerText = "Riding together on scooty through scenic greenery...";
+  } else {
+    locLabel.innerText = "Arrived at Nagargda Waterfall (9 Sept Memory)";
   }
 }
 
@@ -1096,48 +374,50 @@ function toggleScootyAnimation() {
     cancelAnimationFrame(scootyAnimationFrame);
   }
 }
+renderJourneyCanvas();
 
-/* ==========================================================================
-         LETTER MODAL
-      ========================================================================== */
+const endingText =
+  "Our story is still being written. We don't know what tomorrow holds, but every honest conversation, every effort, every shared smile, and every moment of understanding becomes a part of our journey. Perhaps the most beautiful part of our story is not knowing exactly how it ends, but discovering how we choose to write it together.";
+
+let typewriterIndex = 0;
+function typeWriter() {
+  const container = document.getElementById("typewriterText");
+  if (typewriterIndex < endingText.length) {
+    container.innerHTML += endingText.charAt(typewriterIndex);
+    typewriterIndex++;
+    setTimeout(typeWriter, 35);
+  }
+}
+
+// Trigger Typewriter when Chapter 10 comes into view
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && typewriterIndex === 0) {
+        typeWriter();
+      }
+    });
+  },
+  { threshold: 0.3 },
+);
+
+observer.observe(document.getElementById("ch10"));
 
 function openLetter() {
   const modal = document.getElementById("letterModal");
   modal.classList.remove("hidden");
   modal.classList.add("flex");
   document.body.style.overflow = "hidden";
-
-  gsap.from(modal, {
-    opacity: 0,
-    duration: 0.4,
-    ease: "power2.out",
-  });
-
-  gsap.from(modal.querySelector("img"), {
-    scale: 0.9,
-    opacity: 0,
-    duration: 0.5,
-    delay: 0.1,
-    ease: "back.out(1.4)",
-  });
 }
 
 function closeLetter(event) {
+  // Close only when clicking the backdrop or close button.
   if (event && event.target !== event.currentTarget) return;
 
   const modal = document.getElementById("letterModal");
-
-  gsap.to(modal, {
-    opacity: 0,
-    duration: 0.3,
-    ease: "power2.in",
-    onComplete: () => {
-      modal.classList.add("hidden");
-      modal.classList.remove("flex");
-      document.body.style.overflow = "";
-      gsap.set(modal, { clearProps: "all" });
-    },
-  });
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+  document.body.style.overflow = "";
 }
 
 document.addEventListener("keydown", (event) => {
@@ -1151,53 +431,22 @@ document.addEventListener("keydown", (event) => {
 
 function replayStory() {
   window.scrollTo({ top: 0, behavior: "smooth" });
-
-  // Reset typewriter
-  typewriterTriggered = false;
+  typewriterIndex = 0;
   document.getElementById("typewriterText").innerHTML = "";
-
-  // Reset scroll trigger
-  ScrollTrigger.getAll().forEach((trigger) => {
-    if (trigger.trigger === document.getElementById("ch10")) {
-      trigger.kill();
-    }
-  });
-
-  setTimeout(() => {
-    setupTypewriter();
-  }, 500);
 }
 
-/* ==========================================================================
-         REVEAL MORE CONVERSATIONS
-      ========================================================================== */
-
 let revealedConversations = 0;
-
 function revealMoreConversations() {
   const cards = [...document.querySelectorAll(".conversation-extra")];
   const next = Math.min(revealedConversations + 4, cards.length);
-
-  cards.slice(revealedConversations, next).forEach((card, i) => {
-    card.classList.add("is-visible");
-
-    gsap.from(card, {
-      opacity: 0,
-      y: 50,
-      scale: 0.95,
-      duration: 0.6,
-      delay: i * 0.1,
-      ease: "power3.out",
-    });
-  });
-
+  cards
+    .slice(revealedConversations, next)
+    .forEach((card) => card.classList.add("is-visible"));
   revealedConversations = next;
   const count = document.getElementById("conversationCount");
   const btn = document.getElementById("revealConversationsBtn");
   const hint = document.getElementById("conversationHint");
-
   count.textContent = `${revealedConversations + 20} / 100`;
-
   if (revealedConversations >= cards.length) {
     btn.innerHTML =
       '<i class="fa-solid fa-heart"></i> All Our Top Picks Revealed';
@@ -1208,11 +457,97 @@ function revealMoreConversations() {
   }
 }
 
-/* ==========================================================================
-         MEMORY BOX
-      ========================================================================== */
+/* ================= PASSWORD PROTECTION ================= */
+(() => {
+  // No password, login state, or unlock flag is written to browser storage.
+  // A fresh page load ALWAYS asks for the password again.
+  // Only a SHA-256 digest is embedded for client-side verification.
+  const DEVELOPER_MODE = false; // Set to true to skip the password during development.
+  const PASSWORD_SHA256 =
+    "0890930cbc82a905bd28dec28ba7db90a3e9bec2231003288497fc943ed1e99f";
+  const gate = document.getElementById("passwordGate");
+  const form = document.getElementById("passwordForm");
+  const input = document.getElementById("diaryPassword");
+  const error = document.getElementById("passwordError");
+  const toggle = document.getElementById("togglePasswordVisibility");
+
+  async function sha256(value) {
+    const data = new TextEncoder().encode(value);
+    const hash = await crypto.subtle.digest("SHA-256", data);
+    return Array.from(new Uint8Array(hash))
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  function unlockDiary() {
+    document.body.classList.remove("site-locked");
+    gate.classList.add("is-unlocking");
+    input.value = "";
+    window.setTimeout(() => gate.remove(), 700);
+  }
+
+  if (DEVELOPER_MODE) {
+    unlockDiary();
+    return;
+  }
+
+  function showError() {
+    error.textContent = "That password isn't right. Try again, love.";
+    gate.classList.remove("shake");
+    void gate.offsetWidth;
+    gate.classList.add("shake");
+    input.select();
+  }
+
+  window.setTimeout(() => input.focus(), 120);
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const submittedPassword = input.value;
+    input.value = "";
+
+    try {
+      const submittedHash = await sha256(submittedPassword);
+      if (submittedHash === PASSWORD_SHA256) {
+        error.textContent = "";
+        unlockDiary();
+      } else {
+        showError();
+      }
+    } catch {
+      error.textContent = "Unable to verify right now. Please try again.";
+      showError();
+    }
+  });
+
+  toggle.addEventListener("click", () => {
+    const showing = input.type === "text";
+    input.type = showing ? "password" : "text";
+    toggle.innerHTML = showing
+      ? '<i class="fa-solid fa-eye"></i>'
+      : '<i class="fa-solid fa-eye-slash"></i>';
+    toggle.setAttribute(
+      "aria-label",
+      showing ? "Show password" : "Hide password",
+    );
+  });
+})();
+
+/* =========================================================
+         MEMORY BOX DATA
+         Add/edit memories here. The UI is generated automatically.
+         Supported types: image, place, audio, file, video, note
+         ========================================================= */
 
 const memories = [
+  // {
+  //   type: "image",
+  //   title: "Our Togather Photo",
+  //   date: "9 September 2026",
+  //   file: "./memories/images/we.jpg",
+  //   caption: "The day we finally went to devriside road trip.",
+  // },
+
   {
     type: "place",
     title: "Nagargda Waterfall",
@@ -1260,6 +595,12 @@ const memories = [
     caption:
       "Tu saamne ho toh bas tujhe dekhta rahoon Aur tu nazron se ojhal ho toh har jagah tujhe hi dhoondhta rahoon. 🫶🏻",
   },
+  // {
+  //   type: "note",
+  //   title: "You came for me",
+  //   date: "9 October 2026",
+  //   text: " ❤️ Anjali, kal tum 60 km door se mujhse milne aayi, aur tab se tumhari yaadein dil se jaa hi nahi rahi. I love you, hamesha mere saath rehna. 🫶🏻💗",
+  // },
   {
     type: "video",
     title: "Her Mood swings be like ☝️ Meri mood swing wali cute si ladki",
@@ -1287,14 +628,14 @@ const memoryMeta = {
 
 function escapeMemoryText(value) {
   return String(value ?? "").replace(
-    /[&<>"']/g,
+    /[&<>"\']/g,
     (char) =>
       ({
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
         '"': "&quot;",
-        "'": "&#039;",
+        "\'": "&#039;",
       })[char],
   );
 }
@@ -1358,10 +699,6 @@ function renderMemoryBox() {
     card.innerHTML = `${media}<div class="memory-card-body"><span class="memory-card-type"><i class="fa-solid ${memoryIcon(type)}"></i>${memoryLabel(type)}</span><h3 class="memory-card-title">${title}</h3>${date ? `<span class="memory-card-date">${date}</span>` : ""}${location ? `<p class="memory-card-caption"><i class="fa-solid fa-location-dot text-gold-400 mr-1"></i>${location}</p>` : ""}${caption && type !== "note" ? `<p class="memory-card-caption">${caption}</p>` : ""}${action}</div>`;
     grid.appendChild(card);
   });
-
-  // Update count
-  document.getElementById("memoryCount").textContent =
-    `${memories.length} memories`;
 }
 
 function openMemoryViewer(index) {
@@ -1385,190 +722,18 @@ function openMemoryViewer(index) {
 
   viewer.classList.remove("hidden");
   document.body.style.overflow = "hidden";
-
-  gsap.from(viewer, {
-    opacity: 0,
-    duration: 0.4,
-    ease: "power2.out",
-  });
-
-  gsap.from(content, {
-    scale: 0.9,
-    opacity: 0,
-    duration: 0.5,
-    delay: 0.1,
-    ease: "back.out(1.4)",
-  });
 }
 
 function closeMemoryViewer() {
   const viewer = document.getElementById("memoryViewer");
   const content = document.getElementById("memoryViewerContent");
-
-  gsap.to(viewer, {
-    opacity: 0,
-    duration: 0.3,
-    ease: "power2.in",
-    onComplete: () => {
-      viewer.classList.add("hidden");
-      content.innerHTML = "";
-      document.body.style.overflow = "";
-      gsap.set(viewer, { clearProps: "all" });
-    },
-  });
+  viewer.classList.add("hidden");
+  content.innerHTML = "";
+  document.body.style.overflow = "";
 }
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeMemoryViewer();
 });
 
-// Memory filters
-document.querySelectorAll(".memory-filter").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    document
-      .querySelectorAll(".memory-filter")
-      .forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    const filter = btn.dataset.memoryFilter;
-    const cards = document.querySelectorAll(".memory-card");
-
-    cards.forEach((card) => {
-      const type = card
-        .querySelector(".memory-card-type")
-        ?.textContent?.toLowerCase()
-        .includes("photo")
-        ? "image"
-        : card
-              .querySelector(".memory-card-type")
-              ?.textContent?.toLowerCase()
-              .includes("place")
-          ? "place"
-          : card
-                .querySelector(".memory-card-type")
-                ?.textContent?.toLowerCase()
-                .includes("song")
-            ? "audio"
-            : card
-                  .querySelector(".memory-card-type")
-                  ?.textContent?.toLowerCase()
-                  .includes("video")
-              ? "video"
-              : card
-                    .querySelector(".memory-card-type")
-                    ?.textContent?.toLowerCase()
-                    .includes("file")
-                ? "file"
-                : "note";
-
-      if (filter === "all" || type === filter) {
-        card.style.display = "";
-        gsap.from(card, {
-          opacity: 0,
-          scale: 0.95,
-          duration: 0.4,
-          ease: "power2.out",
-        });
-      } else {
-        card.style.display = "none";
-      }
-    });
-  });
-});
-
-// Render memory box
 renderMemoryBox();
-
-// Handle resize for journey canvas
-window.addEventListener("resize", () => {
-  renderJourneyCanvas();
-});
-
-/* ==========================================================================
-         ADDITIONAL GSAP ENHANCEMENTS
-      ========================================================================== */
-
-// Smooth nav button animations
-document.querySelectorAll(".nav-btn").forEach((btn) => {
-  btn.addEventListener("mouseenter", () => {
-    gsap.to(btn, { scale: 1.05, duration: 0.2, ease: "power2.out" });
-  });
-  btn.addEventListener("mouseleave", () => {
-    gsap.to(btn, { scale: 1, duration: 0.2, ease: "power2.out" });
-  });
-});
-
-// Chat bubble entrance animations
-gsap.utils.toArray(".chat-msg").forEach((msg, i) => {
-  gsap.from(msg, {
-    opacity: 0,
-    x: i % 2 === 0 ? -20 : 20,
-    duration: 0.5,
-    delay: 0.2 + i * 0.1,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: msg,
-      start: "top 90%",
-      toggleActions: "play none none none",
-    },
-  });
-});
-
-// Memory card hover effects
-document.addEventListener(
-  "mouseenter",
-  (e) => {
-    if (!(e.target instanceof Element)) return;
-    const memoryCard = e.target.closest(".memory-card");
-    if (!memoryCard) return;
-
-    gsap.to(memoryCard, {
-      scale: 1.02,
-      duration: 0.3,
-      ease: "power2.out",
-    });
-  },
-  true,
-);
-
-document.addEventListener(
-  "mouseleave",
-  (e) => {
-    if (!(e.target instanceof Element)) return;
-    const memoryCard = e.target.closest(".memory-card");
-    if (!memoryCard) return;
-
-    gsap.to(memoryCard, {
-      scale: 1,
-      duration: 0.3,
-      ease: "power2.out",
-    });
-  },
-  true,
-);
-
-// Add resize observer for journey canvas
-if (window.ResizeObserver) {
-  const resizeObserver = new ResizeObserver(() => {
-    renderJourneyCanvas();
-  });
-  const canvasContainer = jCanvas?.parentElement;
-  if (canvasContainer) {
-    resizeObserver.observe(canvasContainer);
-  }
-}
-
-/* ==========================================================================
-         CLEANUP
-      ========================================================================== */
-
-// Refresh ScrollTrigger on window resize
-let resizeTimeout;
-window.addEventListener("resize", () => {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(() => {
-    ScrollTrigger.refresh();
-  }, 250);
-});
-
-console.log("🎬 GSAP Master Animation System initialized successfully!");

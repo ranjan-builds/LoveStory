@@ -71,11 +71,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/gh/iamashruu/cursorly.js@latest/dist/cursorly.min.js"></script>
 
-    <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
-
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -201,6 +196,7 @@
       .envelope {
         position: relative;
         transform-style: preserve-3d;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       /* Flip card styling */
@@ -228,7 +224,23 @@
         z-index: 1;
       }
 
-      /* Conversation excerpts */
+      /* Soft pulsing glow */
+      @keyframes subtlePulse {
+        0%,
+        100% {
+          opacity: 0.4;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.8;
+          transform: scale(1.03);
+        }
+      }
+      .animate-pulse-glow {
+        animation: subtlePulse 4s infinite ease-in-out;
+      }
+
+      /* Conversation excerpts: a calmer, more believable chat interface */
       #ch11 .conversation-card {
         position: relative;
         overflow: hidden;
@@ -290,6 +302,7 @@
         border-color: rgba(255, 255, 255, 0.035);
         border-bottom-right-radius: 0.3rem;
       }
+      /* Keep consecutive messages visually grouped, like a real chat thread. */
       .chat-bubble.her + .chat-bubble.her {
         margin-top: -0.16rem;
         border-top-left-radius: 0.45rem;
@@ -395,6 +408,7 @@
       }
       .conversation-extra.is-visible {
         display: block;
+        animation: conversationReveal 0.55s ease both;
       }
       .conversation-date {
         display: block;
@@ -404,6 +418,16 @@
         opacity: 0.7;
         margin-bottom: 0.2rem;
         color: rgba(248, 223, 230, 0.8);
+      }
+      @keyframes conversationReveal {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       @media (max-width: 640px) {
         #ch11 .conversation-card {
@@ -457,6 +481,9 @@
             transparent 42%
           ),
           linear-gradient(180deg, #2a050b 0%, #120508 55%, #090204 100%);
+        transition:
+          opacity 0.65s ease,
+          visibility 0.65s ease;
       }
 
       #passwordGate.is-unlocking {
@@ -489,6 +516,17 @@
         background: rgba(74, 14, 23, 0.9);
         border: 1px solid rgba(212, 175, 55, 0.45);
         box-shadow: 0 0 35px rgba(212, 175, 55, 0.13);
+        animation: passwordHeartPulse 3s ease-in-out infinite;
+      }
+
+      @keyframes passwordHeartPulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
       }
 
       .password-input-wrap {
@@ -572,6 +610,29 @@
         color: #f0a8b6;
       }
 
+      #passwordGate.shake .password-gate-card {
+        animation: passwordShake 0.42s ease;
+      }
+
+      @keyframes passwordShake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20% {
+          transform: translateX(-8px);
+        }
+        40% {
+          transform: translateX(8px);
+        }
+        60% {
+          transform: translateX(-6px);
+        }
+        80% {
+          transform: translateX(6px);
+        }
+      }
+
       @media (max-width: 640px) {
         #passwordGate {
           align-items: center;
@@ -585,6 +646,8 @@
 
       /* =========================================================
          CHAPTER 12 — MEMORY BOX
+         Dedicated layout so it does not depend on Tailwind for
+         card internals, media sizing, filters, or the viewer.
       ========================================================= */
 
       #ch12 {
@@ -980,31 +1043,12 @@
         }
       }
 
-      /* GSAP initial states - prevent FOUC */
-      .gsap-fade-up {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      .gsap-fade-in {
-        opacity: 0;
-      }
-      .gsap-scale-in {
-        opacity: 0;
-        transform: scale(0.9);
-      }
-      .gsap-slide-left {
-        opacity: 0;
-        transform: translateX(-50px);
-      }
-      .gsap-slide-right {
-        opacity: 0;
-        transform: translateX(50px);
-      }
-
-      /* Hero letter floating animation */
-      @keyframes floatLetter {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
+      @media (prefers-reduced-motion: reduce) {
+        .memory-card,
+        .memory-filter,
+        .memory-card-button {
+          transition: none;
+        }
       }
     </style>
   </head>
@@ -1018,8 +1062,8 @@
       aria-modal="true"
       aria-labelledby="passwordGateTitle"
     >
-      <div class="password-gate-card gsap-scale-in" id="passwordCard">
-        <div class="password-heart" aria-hidden="true" id="passwordHeart">
+      <div class="password-gate-card">
+        <div class="password-heart" aria-hidden="true">
           <i class="fa-solid fa-lock text-2xl"></i>
         </div>
         <p
@@ -1071,9 +1115,9 @@
         </p>
       </div>
     </div>
-
+    <!-- Background Canvas for Soft Particles & Ambiance -->
+    <!-- <canvas id="particleCanvas"></canvas> -->
     <div id="snow-particles"></div>
-
     <!-- GLOBAL MINI PLAYLIST -->
     <div
       id="musicPlayer"
@@ -1170,25 +1214,23 @@
     <!-- MAIN APP CONTAINER -->
     <div class="relative z-10 flex-grow flex flex-col">
       <!-- SECTION 0: CINEMATIC ENVELOPE ENTRY -->
+
       <section
         id="heroSection"
-        class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+        class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden transition-opacity duration-1000"
       >
         <div class="max-w-2xl w-full text-center flex flex-col items-center">
           <div class="mb-6 space-y-2">
             <span
-              id="heroLabel"
-              class="text-xs uppercase tracking-[0.3em] text-gold-400/90 font-medium block"
+              class="text-xs uppercase tracking-[0.3em] text-gold-400/90 font-medium"
               >A Personal Digital Love Diary</span
             >
             <h1
-              id="heroTitle"
               class="text-4xl md:text-6xl font-serif font-bold gold-gradient-text tracking-wide leading-tight"
             >
               Between Words & Silence
             </h1>
             <p
-              id="heroSubtitle"
               class="text-sm md:text-base text-burgundy-200/80 max-w-lg mx-auto font-light"
             >
               A story of how we found our way toward each other, the questions
@@ -1199,7 +1241,6 @@
 
           <!-- Interactive Wax Sealed Letter -->
           <div
-            id="envelopeWrapper"
             class="envelope-wrapper w-full max-w-md my-8 cursor-pointer group"
             onclick="openEnvelope()"
           >
@@ -1207,6 +1248,7 @@
               id="envelopeCard"
               class="glass-card rounded-2xl p-8 border-burgundy-500/30 transform transition-all duration-500 group-hover:scale-105 group-hover:border-gold-500/50 shadow-2xl relative overflow-hidden"
             >
+              <!-- Glowing aura -->
               <div
                 class="absolute -top-20 -left-20 w-40 h-40 bg-burgundy-600/20 rounded-full blur-3xl pointer-events-none"
               ></div>
@@ -1216,10 +1258,9 @@
 
               <div class="flex flex-col items-center gap-4 relative z-10">
                 <div
-                  id="envelopeIcon"
                   class="w-16 h-16 rounded-full bg-burgundy-900/90 border-2 border-gold-500/60 flex items-center justify-center text-gold-400 shadow-xl group-hover:rotate-12 transition-transform duration-500"
                 >
-                  <i class="fa-solid fa-heart text-2xl"></i>
+                  <i class="fa-solid fa-heart text-2xl animate-pulse"></i>
                 </div>
                 <span class="font-serif italic text-2xl text-burgundy-100"
                   >"For Anjali"</span
@@ -1241,18 +1282,17 @@
           </div>
 
           <div
-            id="scrollHint"
-            class="text-xs text-burgundy-400/60 tracking-widest uppercase"
+            class="text-xs text-burgundy-400/60 tracking-widest uppercase animate-bounce mt-4"
           >
             Scroll down or open the letter to explore
           </div>
         </div>
       </section>
 
-      <!-- NAVIGATION HEADER -->
+      <!-- NAVIGATION HEADER (Visible after scrolling or opening) -->
       <header
         id="mainNav"
-        class="sticky top-0 z-40 bg-velvet/90 backdrop-blur-md border-b border-burgundy-900/60"
+        class="sticky top-0 z-40 bg-velvet/90 backdrop-blur-md border-b border-burgundy-900/60 transition-all duration-300"
       >
         <div
           class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between"
@@ -1273,9 +1313,9 @@
             >
           </div>
 
+          <!-- Navigation Tabs Slider -->
           <div
             class="flex items-center gap-1 overflow-x-auto py-1 max-w-xs md:max-w-md lg:max-w-xl no-scrollbar"
-            id="navTabs"
           >
             <button
               onclick="scrollToChapter('ch1')"
@@ -1351,10 +1391,11 @@
             </button>
           </div>
         </div>
+        <!-- Dynamic Reading Progress Bar -->
         <div class="w-full bg-burgundy-950 h-0.5">
           <div
             id="progressBar"
-            class="bg-gradient-to-r from-burgundy-500 via-blush-400 to-gold-400 h-0.5 w-0"
+            class="bg-gradient-to-r from-burgundy-500 via-blush-400 to-gold-400 h-0.5 w-0 transition-all duration-150"
           ></div>
         </div>
       </header>
@@ -1364,7 +1405,7 @@
         id="ch1"
         class="py-14 md:py-16 px-4 max-w-4xl mx-auto w-full space-y-8 md:space-y-10 border-b border-burgundy-900/40"
       >
-        <div class="text-center space-y-3 chapter-heading">
+        <div class="text-center space-y-3">
           <span
             class="text-xs uppercase tracking-widest text-burgundy-400 font-semibold"
             >Chapter 01</span
@@ -1379,7 +1420,7 @@
 
         <div class="grid md:grid-cols-2 gap-8 items-center">
           <div
-            class="space-y-4 text-burgundy-100/90 text-sm md:text-base leading-relaxed chapter-text-left"
+            class="space-y-4 text-burgundy-100/90 text-sm md:text-base leading-relaxed"
           >
             <p>
               Our story did not begin with an easy yes. When I first proposed
@@ -1404,8 +1445,9 @@
             </p>
           </div>
 
+          <!-- Interactive Chat Snapshot Box -->
           <div
-            class="glass-card rounded-2xl p-6 space-y-4 shadow-xl border-burgundy-800/40 chapter-chat-box"
+            class="glass-card rounded-2xl p-6 space-y-4 shadow-xl border-burgundy-800/40"
           >
             <div
               class="flex items-center justify-between border-b border-burgundy-800/50 pb-3"
@@ -1430,7 +1472,7 @@
             </div>
 
             <div class="space-y-3 text-xs">
-              <div class="flex flex-col items-start chat-msg">
+              <div class="flex flex-col items-start">
                 <div
                   class="bg-burgundy-900/80 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-burgundy-100 space-y-1"
                 >
@@ -1441,7 +1483,7 @@
                 </div>
               </div>
 
-              <div class="flex flex-col items-end chat-msg">
+              <div class="flex flex-col items-end">
                 <div
                   class="bg-burgundy-700/80 p-3 rounded-2xl rounded-tr-none max-w-[85%] text-white space-y-1"
                 >
@@ -1452,7 +1494,7 @@
                 </div>
               </div>
 
-              <div class="flex flex-col items-start chat-msg">
+              <div class="flex flex-col items-start">
                 <div
                   class="bg-burgundy-900/80 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-burgundy-100 space-y-1"
                 >
@@ -1476,8 +1518,9 @@
           </div>
         </div>
 
+        <!-- Reflection Note -->
         <div
-          class="p-6 rounded-2xl bg-gradient-to-r from-burgundy-950 via-burgundy-900/50 to-burgundy-950 border border-burgundy-800/50 text-center space-y-2 chapter-reflection"
+          class="p-6 rounded-2xl bg-gradient-to-r from-burgundy-950 via-burgundy-900/50 to-burgundy-950 border border-burgundy-800/50 text-center space-y-2"
         >
           <h3 class="font-serif text-lg text-gold-300 italic">
             "I never needed 24 hours of attention."
@@ -1492,12 +1535,12 @@
         </div>
       </section>
 
-      <!-- CHAPTER 2: 17 AUGUST -->
+      <!-- CHAPTER 2: 17 AUGUST - THE DAY I ASKED FOR THE TRUTH -->
       <section
         id="ch2"
         class="py-14 md:py-16 px-4 max-w-4xl mx-auto w-full space-y-8 md:space-y-10 border-b border-burgundy-900/40"
       >
-        <div class="text-center space-y-3 chapter-heading">
+        <div class="text-center space-y-3">
           <span
             class="text-xs uppercase tracking-widest text-gold-400 font-semibold"
             >Chapter 02</span
@@ -1515,8 +1558,9 @@
           <div class="w-12 h-0.5 bg-burgundy-600 mx-auto rounded-full"></div>
         </div>
 
+        <!-- Interactive Document / Letter Reader View -->
         <div
-          class="glass-card rounded-3xl p-6 md:p-10 border-burgundy-600/30 relative overflow-hidden shadow-2xl pdf-card"
+          class="glass-card rounded-3xl p-6 md:p-10 border-burgundy-600/30 relative overflow-hidden shadow-2xl"
         >
           <div
             class="flex items-center justify-between border-b border-burgundy-700/50 pb-4 mb-6"
@@ -1570,9 +1614,10 @@
               anger.
             </p>
 
+            <!-- Collapsible PDF Excerpt Content -->
             <div
               id="pdfExcerpts"
-              class="hidden space-y-4 pt-4 border-t border-burgundy-800/40"
+              class="hidden space-y-4 pt-4 border-t border-burgundy-800/40 transition-all duration-500"
             >
               <div class="p-4 rounded-xl bg-burgundy-900/40 space-y-2">
                 <span class="text-xs font-bold text-burgundy-300"
@@ -1612,12 +1657,12 @@
         </div>
       </section>
 
-      <!-- CHAPTER 3: HER APOLOGY -->
+      <!-- CHAPTER 3: HER APOLOGY AND PROMISE -->
       <section
         id="ch3"
         class="py-20 px-4 max-w-4xl mx-auto w-full space-y-10 border-b border-burgundy-900/40"
       >
-        <div class="text-center space-y-3 chapter-heading">
+        <div class="text-center space-y-3">
           <span
             class="text-xs uppercase tracking-widest text-blush-300 font-semibold"
             >Chapter 03</span
@@ -1632,7 +1677,7 @@
 
         <div class="grid md:grid-cols-2 gap-8 items-center">
           <div
-            class="space-y-4 text-sm md:text-base text-burgundy-100 leading-relaxed chapter-text-left"
+            class="space-y-4 text-sm md:text-base text-burgundy-100 leading-relaxed"
           >
             <p>
               After reading the PDF on 17 August, you acknowledged the hurt I
@@ -1655,8 +1700,9 @@
             </div>
           </div>
 
+          <!-- Visual Card of Hope -->
           <div
-            class="glass-card rounded-2xl p-6 text-center space-y-4 border-blush-400/30 relative overflow-hidden shadow-xl chapter-chat-box"
+            class="glass-card rounded-2xl p-6 text-center space-y-4 border-blush-400/30 relative overflow-hidden shadow-xl"
           >
             <div
               class="w-16 h-16 rounded-full bg-blush-500/20 border border-blush-400/50 flex items-center justify-center mx-auto text-blush-300 text-2xl"
@@ -1680,12 +1726,12 @@
         </div>
       </section>
 
-      <!-- CHAPTER 4: 20 AUGUST -->
+      <!-- CHAPTER 4: 20 AUGUST - WHEN THINGS BECAME UNCERTAIN AGAIN -->
       <section
         id="ch4"
         class="py-20 px-4 max-w-4xl mx-auto w-full space-y-10 border-b border-burgundy-900/40"
       >
-        <div class="text-center space-y-3 chapter-heading">
+        <div class="text-center space-y-3">
           <span
             class="text-xs uppercase tracking-widest text-burgundy-400 font-semibold"
             >Chapter 04</span
@@ -1699,7 +1745,7 @@
         </div>
 
         <div
-          class="glass-card rounded-3xl p-6 md:p-8 space-y-6 border-burgundy-800/50 chapter-card"
+          class="glass-card rounded-3xl p-6 md:p-8 space-y-6 border-burgundy-800/50"
         >
           <p
             class="text-sm md:text-base text-burgundy-100 leading-relaxed font-light"
@@ -1709,9 +1755,10 @@
             harder, and I never wanted you to ignore your health for me.
           </p>
 
+          <!-- Comparison / Understanding Box -->
           <div class="grid md:grid-cols-2 gap-4">
             <div
-              class="p-5 rounded-2xl bg-burgundy-950/80 border border-burgundy-800/60 space-y-2 feature-card"
+              class="p-5 rounded-2xl bg-burgundy-950/80 border border-burgundy-800/60 space-y-2"
             >
               <div
                 class="flex items-center gap-2 text-gold-400 font-semibold text-xs uppercase tracking-wider"
@@ -1725,7 +1772,7 @@
             </div>
 
             <div
-              class="p-5 rounded-2xl bg-burgundy-950/80 border border-burgundy-800/60 space-y-2 feature-card"
+              class="p-5 rounded-2xl bg-burgundy-950/80 border border-burgundy-800/60 space-y-2"
             >
               <div
                 class="flex items-center gap-2 text-blush-300 font-semibold text-xs uppercase tracking-wider"
@@ -1748,16 +1795,19 @@
       </section>
 
       <!-- CHAPTER 5: THE PLANS TO MEET -->
+
       <section
         id="ch5"
         class="relative mx-auto w-full max-w-6xl overflow-hidden border-b border-burgundy-900/40 px-4 py-20 sm:px-6 md:py-28"
       >
+        <!-- Ambient background glow -->
         <div
           class="pointer-events-none absolute left-1/2 top-40 h-64 w-64 -translate-x-1/2 rounded-full bg-gold-500/5 blur-3xl"
         ></div>
 
+        <!-- Chapter heading -->
         <header
-          class="relative mx-auto mb-16 max-w-2xl space-y-5 text-center md:mb-24 chapter-heading"
+          class="relative mx-auto mb-16 max-w-2xl space-y-5 text-center md:mb-24"
         >
           <div
             class="inline-flex items-center gap-3 rounded-full border border-gold-500/20 bg-gold-500/5 px-4 py-2"
@@ -1797,12 +1847,14 @@
           </div>
         </header>
 
+        <!-- Timeline -->
         <div class="relative mx-auto max-w-5xl">
+          <!-- Central timeline line: desktop -->
           <div
-            id="timelineLine"
             class="pointer-events-none absolute bottom-12 left-1/2 top-12 hidden w-px -translate-x-1/2 bg-gradient-to-b from-gold-400/0 via-gold-400/60 to-gold-400/0 md:block"
           ></div>
 
+          <!-- Left timeline line: mobile -->
           <div
             class="pointer-events-none absolute bottom-10 left-[19px] top-4 w-px bg-gradient-to-b from-gold-400/0 via-gold-400/60 to-gold-400/0 md:hidden"
           ></div>
@@ -1810,8 +1862,9 @@
           <div class="space-y-12 sm:space-y-16 md:space-y-24">
             <!-- MEMORY 01 -->
             <article
-              class="relative grid grid-cols-[40px_minmax(0,1fr)] items-start gap-3 sm:grid-cols-[48px_minmax(0,1fr)] sm:gap-5 md:grid-cols-[1fr_72px_1fr] md:gap-0 timeline-item"
+              class="relative grid grid-cols-[40px_minmax(0,1fr)] items-start gap-3 sm:grid-cols-[48px_minmax(0,1fr)] sm:gap-5 md:grid-cols-[1fr_72px_1fr] md:gap-0"
             >
+              <!-- Left side: date -->
               <div class="hidden self-center pr-10 text-right md:block">
                 <span
                   class="text-xs font-semibold uppercase tracking-[0.25em] text-gold-400"
@@ -1824,22 +1877,25 @@
                 <p class="mt-1 text-sm text-burgundy-300">September</p>
               </div>
 
+              <!-- Timeline node -->
               <div
                 class="relative z-10 col-start-1 row-start-1 flex justify-center md:col-start-2"
               >
                 <div
-                  class="timeline-node flex h-10 w-10 items-center justify-center rounded-full border border-gold-300/70 bg-[#351019] text-gold-300 shadow-[0_0_0_6px_rgba(214,165,95,0.07),0_0_25px_rgba(214,165,95,0.22)] sm:h-12 sm:w-12"
+                  class="flex h-10 w-10 items-center justify-center rounded-full border border-gold-300/70 bg-[#351019] text-gold-300 shadow-[0_0_0_6px_rgba(214,165,95,0.07),0_0_25px_rgba(214,165,95,0.22)] sm:h-12 sm:w-12"
                 >
                   <i class="fa-solid fa-location-dot text-sm sm:text-base"></i>
                 </div>
               </div>
 
+              <!-- Memory card -->
               <div
                 class="col-start-2 row-start-1 min-w-0 md:col-start-3 md:pl-10"
               >
                 <div
-                  class="timeline-card group relative overflow-hidden rounded-3xl border border-gold-500/20 bg-gradient-to-br from-burgundy-900/90 to-[#17070d]/95 p-5 shadow-[0_12px_45px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-1 hover:border-gold-400/50 sm:p-7"
+                  class="group relative overflow-hidden rounded-3xl border border-gold-500/20 bg-gradient-to-br from-burgundy-900/90 to-[#17070d]/95 p-5 shadow-[0_12px_45px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-1 hover:border-gold-400/50 sm:p-7"
                 >
+                  <!-- Decorative glow -->
                   <div
                     class="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-gold-500/10 blur-3xl transition group-hover:bg-gold-500/20"
                   ></div>
@@ -1877,6 +1933,7 @@
                       beginning of a memory I will always treasure.
                     </p>
 
+                    <!-- Journey route -->
                     <div
                       class="mt-6 rounded-2xl border border-burgundy-700/50 bg-black/15 p-4"
                     >
@@ -1932,13 +1989,14 @@
 
             <!-- MEMORY 02 -->
             <article
-              class="relative grid grid-cols-[40px_minmax(0,1fr)] items-start gap-3 sm:grid-cols-[48px_minmax(0,1fr)] sm:gap-5 md:grid-cols-[1fr_72px_1fr] md:gap-0 timeline-item"
+              class="relative grid grid-cols-[40px_minmax(0,1fr)] items-start gap-3 sm:grid-cols-[48px_minmax(0,1fr)] sm:gap-5 md:grid-cols-[1fr_72px_1fr] md:gap-0"
             >
+              <!-- Memory card -->
               <div
                 class="col-start-2 row-start-1 min-w-0 md:col-start-1 md:pr-10"
               >
                 <div
-                  class="timeline-card group relative overflow-hidden rounded-3xl border border-gold-500/20 bg-gradient-to-br from-burgundy-900/90 to-[#17070d]/95 p-5 shadow-[0_12px_45px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-1 hover:border-gold-400/50 sm:p-7"
+                  class="group relative overflow-hidden rounded-3xl border border-gold-500/20 bg-gradient-to-br from-burgundy-900/90 to-[#17070d]/95 p-5 shadow-[0_12px_45px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-1 hover:border-gold-400/50 sm:p-7"
                 >
                   <div
                     class="pointer-events-none absolute -bottom-12 -left-12 h-32 w-32 rounded-full bg-rose-500/10 blur-3xl"
@@ -2028,16 +2086,18 @@
                 </div>
               </div>
 
+              <!-- Timeline node -->
               <div
                 class="relative z-10 col-start-1 row-start-1 flex justify-center md:col-start-2"
               >
                 <div
-                  class="timeline-node flex h-10 w-10 items-center justify-center rounded-full border border-gold-300/70 bg-[#351019] text-gold-300 shadow-[0_0_0_6px_rgba(214,165,95,0.07),0_0_25px_rgba(214,165,95,0.22)] sm:h-12 sm:w-12"
+                  class="flex h-10 w-10 items-center justify-center rounded-full border border-gold-300/70 bg-[#351019] text-gold-300 shadow-[0_0_0_6px_rgba(214,165,95,0.07),0_0_25px_rgba(214,165,95,0.22)] sm:h-12 sm:w-12"
                 >
                   <i class="fa-solid fa-house-heart text-sm sm:text-base"></i>
                 </div>
               </div>
 
+              <!-- Right side: date -->
               <div class="hidden self-center pl-10 text-left md:block">
                 <span
                   class="text-xs font-semibold uppercase tracking-[0.25em] text-gold-400"
@@ -2052,8 +2112,9 @@
             </article>
           </div>
 
+          <!-- Timeline ending -->
           <div
-            class="relative mt-16 flex flex-col items-center text-center md:mt-24 timeline-ending"
+            class="relative mt-16 flex flex-col items-center text-center md:mt-24"
           >
             <div
               class="flex h-12 w-12 items-center justify-center rounded-full border border-gold-400/30 bg-burgundy-950 text-gold-300 shadow-[0_0_25px_rgba(214,165,95,0.12)]"
@@ -2083,12 +2144,12 @@
         </div>
       </section>
 
-      <!-- CHAPTER 6: 9 SEPTEMBER -->
+      <!-- CHAPTER 6: 9 SEPTEMBER - THE DAY WE FINALLY MET -->
       <section
         id="ch6"
         class="py-20 px-4 max-w-5xl mx-auto w-full space-y-12 border-b border-burgundy-900/40"
       >
-        <div class="text-center space-y-3 chapter-heading">
+        <div class="text-center space-y-3">
           <span
             class="text-xs uppercase tracking-widest text-gold-400 font-semibold"
             >Chapter 06</span
@@ -2105,8 +2166,9 @@
           <div class="w-12 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
         </div>
 
+        <!-- Interactive Canvas Journey Experience -->
         <div
-          class="glass-card rounded-3xl p-6 md:p-8 space-y-6 border-gold-500/30 relative overflow-hidden shadow-2xl chapter-card"
+          class="glass-card rounded-3xl p-6 md:p-8 space-y-6 border-gold-500/30 relative overflow-hidden shadow-2xl"
         >
           <div
             class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-burgundy-800/60 pb-4"
@@ -2129,11 +2191,13 @@
             </button>
           </div>
 
+          <!-- Canvas Visual Simulation -->
           <div
             class="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden bg-burgundy-950 border border-burgundy-800 shadow-inner"
           >
             <canvas id="journeyCanvas" class="w-full h-full block"></canvas>
 
+            <!-- Overlay Badge -->
             <div
               class="absolute top-4 left-4 bg-burgundy-950/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-gold-500/20 text-[11px] text-gold-300 font-medium"
             >
@@ -2142,9 +2206,10 @@
             </div>
           </div>
 
+          <!-- Memory Log Scrapbook Cards -->
           <div class="grid md:grid-cols-3 gap-4 pt-2">
             <div
-              class="p-4 rounded-xl bg-burgundy-900/40 border border-burgundy-800 space-y-2 feature-card"
+              class="p-4 rounded-xl bg-burgundy-900/40 border border-burgundy-800 space-y-2"
             >
               <div
                 class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
@@ -2159,7 +2224,7 @@
             </div>
 
             <div
-              class="p-4 rounded-xl bg-burgundy-900/40 border border-burgundy-800 space-y-2 feature-card"
+              class="p-4 rounded-xl bg-burgundy-900/40 border border-burgundy-800 space-y-2"
             >
               <div
                 class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
@@ -2174,7 +2239,7 @@
             </div>
 
             <div
-              class="p-4 rounded-xl bg-burgundy-900/40 border border-burgundy-800 space-y-2 feature-card"
+              class="p-4 rounded-xl bg-burgundy-900/40 border border-burgundy-800 space-y-2"
             >
               <div
                 class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
@@ -2195,7 +2260,7 @@
         id="ch7"
         class="py-14 md:py-16 px-4 max-w-4xl mx-auto w-full space-y-8 md:space-y-10 border-b border-burgundy-900/40"
       >
-        <div class="text-center space-y-3 chapter-heading">
+        <div class="text-center space-y-3">
           <span
             class="text-xs uppercase tracking-widest text-blush-300 font-semibold"
             >Chapter 07</span
@@ -2208,8 +2273,9 @@
           <div class="w-12 h-0.5 bg-burgundy-600 mx-auto rounded-full"></div>
         </div>
 
+        <!-- Perspective Switcher Tabs -->
         <div
-          class="glass-card rounded-3xl p-6 md:p-8 space-y-6 border-burgundy-800/50 chapter-card"
+          class="glass-card rounded-3xl p-6 md:p-8 space-y-6 border-burgundy-800/50"
         >
           <div
             class="flex items-center justify-center gap-3 bg-burgundy-950/80 p-1.5 rounded-2xl max-w-md mx-auto border border-burgundy-800/60"
@@ -2230,6 +2296,7 @@
             </button>
           </div>
 
+          <!-- Tab Content: My Perspective -->
           <div
             id="perspectiveMy"
             class="space-y-4 text-sm text-burgundy-100 leading-relaxed"
@@ -2246,6 +2313,7 @@
             </p>
           </div>
 
+          <!-- Tab Content: What Remains Unknown -->
           <div
             id="perspectiveUnknown"
             class="hidden space-y-4 text-sm text-burgundy-100 leading-relaxed"
@@ -2271,7 +2339,7 @@
           </div>
 
           <div
-            class="mt-6 p-5 md:p-6 rounded-3xl border border-gold-500/30 bg-burgundy-950/70 shadow-[0_0_30px_rgba(214,165,95,0.08)] question-box"
+            class="mt-6 p-5 md:p-6 rounded-3xl border border-gold-500/30 bg-burgundy-950/70 shadow-[0_0_30px_rgba(214,165,95,0.08)]"
           >
             <p
               class="text-base md:text-lg text-gold-200 font-medium leading-relaxed"
@@ -2342,7 +2410,7 @@
         id="ch8"
         class="py-20 px-4 max-w-5xl mx-auto w-full space-y-12 border-b border-burgundy-900/40"
       >
-        <div class="text-center space-y-3 chapter-heading">
+        <div class="text-center space-y-3">
           <span
             class="text-xs uppercase tracking-widest text-gold-400 font-semibold"
             >Chapter 08</span
@@ -2360,15 +2428,18 @@
           <div class="w-12 h-0.5 bg-burgundy-600 mx-auto rounded-full"></div>
         </div>
 
+        <!-- Interactive Reflection Flip Cards Grid -->
+
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <!-- Card 1: Honesty -->
           <div
-            class="perspective-1000 h-56 cursor-pointer group flip-card"
+            class="perspective-1000 h-56 cursor-pointer group"
             onclick="flipCard(this)"
           >
             <div
-              class="card-inner relative w-full h-full transform-style-3d"
+              class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700"
             >
+              <!-- Front -->
               <div
                 class="absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 backface-hidden border-burgundy-700/50 group-hover:border-gold-500/50"
               >
@@ -2385,6 +2456,7 @@
                 </span>
               </div>
 
+              <!-- Back -->
               <div
                 class="absolute inset-0 glass-card rounded-2xl p-5 flex flex-col justify-center text-center space-y-2 backface-hidden rotate-y-180 bg-burgundy-950/90 border-gold-500/40"
               >
@@ -2403,12 +2475,13 @@
 
           <!-- Card 2: Trust -->
           <div
-            class="perspective-1000 h-56 cursor-pointer group flip-card"
+            class="perspective-1000 h-56 cursor-pointer group"
             onclick="flipCard(this)"
           >
             <div
-              class="card-inner relative w-full h-full transform-style-3d"
+              class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700"
             >
+              <!-- Front -->
               <div
                 class="absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 backface-hidden border-burgundy-700/50 group-hover:border-gold-500/50"
               >
@@ -2425,6 +2498,7 @@
                 </span>
               </div>
 
+              <!-- Back -->
               <div
                 class="absolute inset-0 glass-card rounded-2xl p-5 flex flex-col justify-center text-center space-y-2 backface-hidden rotate-y-180 bg-burgundy-950/90 border-gold-500/40"
               >
@@ -2444,12 +2518,13 @@
 
           <!-- Card 3: Mutual Effort -->
           <div
-            class="perspective-1000 h-56 cursor-pointer group flip-card"
+            class="perspective-1000 h-56 cursor-pointer group"
             onclick="flipCard(this)"
           >
             <div
-              class="card-inner relative w-full h-full transform-style-3d"
+              class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700"
             >
+              <!-- Front -->
               <div
                 class="absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 backface-hidden border-burgundy-700/50 group-hover:border-gold-500/50"
               >
@@ -2466,6 +2541,7 @@
                 </span>
               </div>
 
+              <!-- Back -->
               <div
                 class="absolute inset-0 glass-card rounded-2xl p-5 flex flex-col justify-center text-center space-y-2 backface-hidden rotate-y-180 bg-burgundy-950/90 border-gold-500/40"
               >
@@ -2485,12 +2561,13 @@
 
           <!-- Card 4: Emotional Security -->
           <div
-            class="perspective-1000 h-56 cursor-pointer group flip-card"
+            class="perspective-1000 h-56 cursor-pointer group"
             onclick="flipCard(this)"
           >
             <div
-              class="card-inner relative w-full h-full transform-style-3d"
+              class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700"
             >
+              <!-- Front -->
               <div
                 class="absolute inset-0 glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 backface-hidden border-burgundy-700/50 group-hover:border-gold-500/50"
               >
@@ -2507,6 +2584,7 @@
                 </span>
               </div>
 
+              <!-- Back -->
               <div
                 class="absolute inset-0 glass-card rounded-2xl p-5 flex flex-col justify-center text-center space-y-2 backface-hidden rotate-y-180 bg-burgundy-950/90 border-gold-500/40"
               >
@@ -2531,7 +2609,7 @@
         id="ch9"
         class="py-24 px-4 max-w-5xl mx-auto w-full text-center space-y-10 relative overflow-hidden"
       >
-        <div class="space-y-4 relative z-10 chapter-heading">
+        <div class="space-y-4 relative z-10">
           <span
             class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
             >Chapter 09</span
@@ -2550,19 +2628,21 @@
           <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
         </div>
 
-        <div class="relative z-10 max-w-3xl mx-auto letter-container">
+        <!-- Handwritten Love Letter -->
+        <div class="relative z-10 max-w-3xl mx-auto">
           <button
             type="button"
             onclick="openLetter()"
             aria-label="Open handwritten love letter"
             class="group relative w-full cursor-zoom-in"
           >
+            <!-- Soft romantic glow -->
             <div
               class="absolute inset-8 bg-burgundy-500/20 rounded-[2rem] blur-3xl opacity-60 group-hover:opacity-90 transition-opacity duration-500"
             ></div>
 
             <div
-              class="relative glass-card rounded-3xl p-4 md:p-6 border-gold-500/30 shadow-2xl transition-all duration-500 group-hover:scale-[1.015] group-hover:border-gold-400/60 letter-card"
+              class="relative glass-card rounded-3xl p-4 md:p-6 border-gold-500/30 shadow-2xl transition-all duration-500 group-hover:scale-[1.015] group-hover:border-gold-400/60"
             >
               <div class="absolute top-4 left-4 text-gold-400/60">
                 <i class="fa-solid fa-heart"></i>
@@ -2594,11 +2674,12 @@
         </div>
 
         <p
-          class="relative z-10 font-cursive text-3xl md:text-4xl text-gold-300 letter-tagline"
+          class="relative z-10 font-cursive text-3xl md:text-4xl text-gold-300"
         >
           For the words I couldn't say aloud.
         </p>
 
+        <!-- Fullscreen Letter Viewer -->
         <div
           id="letterModal"
           class="hidden fixed inset-0 z-[100] bg-black/90 backdrop-blur-md p-4 md:p-8 items-center justify-center"
@@ -2628,12 +2709,13 @@
         ></div>
       </section>
 
-      <!-- CHAPTER 10: AN UNWRITTEN FUTURE -->
+      <!-- CHAPTER 11: TOP CONVERSATIONS -->
+      <!-- CHAPTER 11: OUR CONVERSATIONS -->
       <section
         id="ch10"
         class="py-24 px-4 max-w-4xl mx-auto w-full text-center space-y-10 relative overflow-hidden"
       >
-        <div class="space-y-4 relative z-10 chapter-heading">
+        <div class="space-y-4 relative z-10">
           <span
             class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
             >Chapter 10</span
@@ -2646,13 +2728,16 @@
           <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
         </div>
 
+        <!-- Cinematic Ending Letter Container -->
         <div
-          class="glass-card rounded-3xl p-8 md:p-12 border-gold-500/30 max-w-2xl mx-auto space-y-6 shadow-2xl relative z-10 chapter-card"
+          class="glass-card rounded-3xl p-8 md:p-12 border-gold-500/30 max-w-2xl mx-auto space-y-6 shadow-2xl relative z-10"
         >
           <p
             id="typewriterText"
-            class="font-serif text-lg md:text-2xl text-burgundy-100 leading-relaxed italic font-light min-h-[120px]"
-          ></p>
+            class="font-serif text-lg md:text-2xl text-burgundy-100 leading-relaxed italic font-light"
+          >
+            <!-- Typing animation target -->
+          </p>
 
           <div
             class="pt-6 border-t border-burgundy-800/60 flex flex-col items-center gap-4"
@@ -2674,17 +2759,20 @@
           </div>
         </div>
 
+        <!-- Subtle background aesthetic glowing orb -->
         <div
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-burgundy-600/10 rounded-full blur-3xl pointer-events-none"
         ></div>
       </section>
 
-      <!-- CHAPTER 11: OUR CONVERSATIONS -->
+      <!-- =========================================================
+           CHAPTER 11 — OUR CONVERSATIONS
+      ========================================================= -->
       <section
         id="ch11"
         class="py-24 px-4 max-w-6xl mx-auto w-full space-y-10 relative overflow-hidden border-t border-burgundy-900/40"
       >
-        <div class="text-center space-y-3 relative z-10 chapter-heading">
+        <div class="text-center space-y-3 relative z-10">
           <span
             class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
             >Chapter 11</span
@@ -2703,9 +2791,9 @@
           <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-5 relative z-10" id="conversationGrid">
+        <div class="grid md:grid-cols-2 gap-5 relative z-10">
           <article
-            class="conversation-card glass-card rounded-3xl p-6 border-burgundy-800/50 conversation-item"
+            class="conversation-card glass-card rounded-3xl p-6 border-burgundy-800/50"
           >
             <div class="flex items-center gap-3 mb-5">
               <span
@@ -2722,13 +2810,13 @@
               </div>
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
-              <div class="chat-bubble her">"I want to talk" 🥺</div>
-              <div class="chat-bubble me">"I love you more.."</div>
-              <div class="chat-bubble her">"I love you" 🧿🫂</div>
+              <div class="chat-bubble her">“I want to talk” 🥺</div>
+              <div class="chat-bubble me">“I love you more..”</div>
+              <div class="chat-bubble her">“I love you” 🧿🫂</div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-6 border-burgundy-800/50 conversation-item"
+            class="conversation-card glass-card rounded-3xl p-6 border-burgundy-800/50"
           >
             <div class="flex items-center gap-3 mb-5">
               <span
@@ -2740,19 +2828,19 @@
                   16 September
                 </p>
                 <h3 class="font-serif text-xl text-burgundy-100">
-                  The "I hate you" joke
+                  The “I hate you” joke
                 </h3>
               </div>
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
-              <div class="chat-bubble me">"But I love you"</div>
-              <div class="chat-bubble her">"But I love you too" 🥺</div>
-              <div class="chat-bubble her">"I hate you 🌝♥️"</div>
-              <div class="chat-bubble me">"I hate you tooo 😄❤️"</div>
+              <div class="chat-bubble me">“But I love you”</div>
+              <div class="chat-bubble her">“But I love you too” 🥺</div>
+              <div class="chat-bubble her">“I hate you 🌝♥️”</div>
+              <div class="chat-bubble me">“I hate you tooo 😄❤️”</div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-6 border-burgundy-800/50 conversation-item"
+            class="conversation-card glass-card rounded-3xl p-6 border-burgundy-800/50"
           >
             <div class="flex items-center gap-3 mb-5">
               <span
@@ -2769,15 +2857,15 @@
               </div>
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
-              <div class="chat-bubble her">"I want to stay with u"</div>
-              <div class="chat-bubble her">"Not far away from u" 🥺</div>
+              <div class="chat-bubble her">“I want to stay with u”</div>
+              <div class="chat-bubble her">“Not far away from u” 🥺</div>
               <div class="chat-bubble me">
-                "I just want a little care, little love."
+                “I just want a little care, little love.”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-6 border-burgundy-800/50 conversation-item"
+            class="conversation-card glass-card rounded-3xl p-6 border-burgundy-800/50"
           >
             <div class="flex items-center gap-3 mb-5">
               <span
@@ -2792,14 +2880,14 @@
               </div>
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
-              <div class="chat-bubble me">"I love you ❤️"</div>
-              <div class="chat-bubble her">"I love you too baby 😘"</div>
-              <div class="chat-bubble me">"Aur du… mn bhara? 😅"</div>
-              <div class="chat-bubble her">"Ha ji"</div>
+              <div class="chat-bubble me">“I love you ❤️”</div>
+              <div class="chat-bubble her">“I love you too baby 😘”</div>
+              <div class="chat-bubble me">“Aur du… mn bhara? 😅”</div>
+              <div class="chat-bubble her">“Ha ji”</div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="1"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -2818,33 +2906,33 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">22/09/26</span> "Because u love
+                <span class="conversation-date">22/09/26</span> “Because u love
                 me bahut sara + your respect your loyalty your har chij I love
                 the most ........love is small word for u how can I describe the
-                actual love it&#x27;s a feeling emotion our bond our 🥺♥️🫂🧿"
+                actual love it&#x27;s a feeling emotion our bond our 🥺♥️🫂🧿”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">05/10/26</span> "Love you ji
-                ♥️💋🫂🧿"
+                <span class="conversation-date">05/10/26</span> “Love you ji
+                ♥️💋🫂🧿”
               </div>
               <div class="chat-bubble her">
                 <span class="conversation-date">03/10/26</span>
-                "🥺🤌...it&#x27;s only for me babe..acooring to me you made this
-                for me 🧿♥️🫂"
+                “🥺🤌...it&#x27;s only for me babe..acooring to me you made this
+                for me 🧿♥️🫂”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">05/10/26</span> "Long short se
+                <span class="conversation-date">05/10/26</span> “Long short se
                 frk ni prta. Your feeling your emotions your care your support
-                matter to me......."
+                matter to me.......”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">24/09/26</span> "Love care
-                support trust loyal"
+                <span class="conversation-date">24/09/26</span> “Love care
+                support trust loyal”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="2"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -2863,30 +2951,30 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">02/10/26</span> "I trust you my
-                boy 🥺♥️🧿"
+                <span class="conversation-date">02/10/26</span> “I trust you my
+                boy 🥺♥️🧿”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">05/10/26</span> "♾️ ♥️🧿&gt;love
-                matter to me"
+                <span class="conversation-date">05/10/26</span> “♾️ ♥️🧿&gt;love
+                matter to me”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">11/09/26</span> "I love you
-                ranjan ♥️🫂"
+                <span class="conversation-date">11/09/26</span> “I love you
+                ranjan ♥️🫂”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">11/09/26</span> "I love you too
-                baby 😘"
+                <span class="conversation-date">11/09/26</span> “I love you too
+                baby 😘”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">24/09/26</span> "Sun n tumne
+                <span class="conversation-date">24/09/26</span> “Sun n tumne
                 Mera ego hurt kr diya ab ...next time mil toh teko n
-                💋♥️🧿🫦👄👅"
+                💋♥️🧿🫦👄👅”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="3"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -2906,35 +2994,35 @@
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
                 <span class="conversation-date">28/09/26</span>
-                "🥺🧿........teko pata hai mai bhut jada guseel hu bhut gussa
+                “🥺🧿........teko pata hai mai bhut jada guseel hu bhut gussa
                 any time rhta hai gusa ekdam....kaam kr vjh se or gusaaaaaa jati
-                hu mai &lt;This message was edited&gt;"
+                hu mai &lt;This message was edited&gt;”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">29/09/26</span> "That kind of
+                <span class="conversation-date">29/09/26</span> “That kind of
                 support of yours 🧿🫠♥️🫂love you more my baby ha ye
                 imperfections toh bahut hai pr ab main....apne problem me ni
                 solution me focus karungi baby...ab mai teko perfect banke
                 dikhaungi..ache se...............sun na tu chor ke jayega bhi na
                 toh mai tere piche piche aa jaungi haa 😏🧿♥️ &lt;This message
-                was edited&gt;"
+                was edited&gt;”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">05/10/26</span> "Your
-                unconditional love"
+                <span class="conversation-date">05/10/26</span> “Your
+                unconditional love”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">05/10/26</span> "Sex with you
-                🌝🧿♥️"
+                <span class="conversation-date">05/10/26</span> “Sex with you
+                🌝🧿♥️”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">11/09/26</span> "I love you my
-                baby boy"
+                <span class="conversation-date">11/09/26</span> “I love you my
+                baby boy”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="4"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -2953,29 +3041,29 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">16/09/26</span> "Because you
-                love you give respect, loyalty+"
+                <span class="conversation-date">16/09/26</span> “Because you
+                love you give respect, loyalty+”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">19/09/26</span> "I love you too
-                babe"
+                <span class="conversation-date">19/09/26</span> “I love you too
+                babe”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">22/09/26</span> "🥺🫂♥️🧿"
+                <span class="conversation-date">22/09/26</span> “🥺🫂♥️🧿”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">26/09/26</span> "Love you 🥺"
+                <span class="conversation-date">26/09/26</span> “Love you 🥺”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">02/10/26</span> "Thik h jaha
+                <span class="conversation-date">02/10/26</span> “Thik h jaha
                 teko Khushi mile tu.......free h mere side se. ...mai teko band
                 ke thodi rakhungi 😔😓.....teri khushi me hi meri khushi h tu bs
-                khush rhe 🥺🤌"
+                khush rhe 🥺🤌”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="5"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -2994,32 +3082,32 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">03/10/26</span> "Love you babe"
+                <span class="conversation-date">03/10/26</span> “Love you babe”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">05/10/26</span> "Love you my
-                baby"
+                <span class="conversation-date">05/10/26</span> “Love you my
+                baby”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">07/10/26</span> "Good morning
-                babe 🥲🤌🧿"
+                <span class="conversation-date">07/10/26</span> “Good morning
+                babe 🥲🤌🧿”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">16/09/26</span> "Aji cheating
+                <span class="conversation-date">16/09/26</span> “Aji cheating
                 mtlb maine bola tha ki mai reasoning ke bad milungi complete
                 krne ke badd toh maine kaha ki mai reasoning complete krne se
                 phle bhi mil sakti hu ....vo chelating hua na maine juban di ki
                 reasoning ke bad hi ab mera mn badal gay na reasoning se pehle
-                bhi toh mil sakti hu 🌝♥️"
+                bhi toh mil sakti hu 🌝♥️”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">16/09/26</span> "Love you too
-                babe"
+                <span class="conversation-date">16/09/26</span> “Love you too
+                babe”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="6"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3038,32 +3126,32 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">17/09/26</span> "Love you baby"
+                <span class="conversation-date">17/09/26</span> “Love you baby”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">22/09/26</span> "Ab toh ajjaa tu
-                kahi se 😩♥️🧿🥺🥲"
+                <span class="conversation-date">22/09/26</span> “Ab toh ajjaa tu
+                kahi se 😩♥️🧿🥺🥲”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">22/09/26</span> "Meko toh pata h
-                🥺🧿🫂"
+                <span class="conversation-date">22/09/26</span> “Meko toh pata h
+                🥺🧿🫂”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">25/09/26</span> "I also feel as
+                <span class="conversation-date">25/09/26</span> “I also feel as
                 you...mujhe ek bhi acha ni lag rha ..ekdam upset type lag rha
                 even meko ekdam rona aa rha kuch acha ni lag rha kisi chij ke mn
                 ni lag rha ekdam bekar lag rha .....aisa kio ho rha ...ranjan
-                🥺..."
+                🥺...”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">25/09/26</span> "Why are you
+                <span class="conversation-date">25/09/26</span> “Why are you
                 upset with me 🥺........ And hum kya kr saktey hai
-                batao......tum hi"
+                batao......tum hi”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="7"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3082,30 +3170,30 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">27/09/26</span> "Expensive model
-                in world 🌎♥️🫠💋💋🫂🧿"
+                <span class="conversation-date">27/09/26</span> “Expensive model
+                in world 🌎♥️🫠💋💋🫂🧿”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">28/09/26</span> "Ni ni ni you
+                <span class="conversation-date">28/09/26</span> “Ni ni ni you
                 are wrong.....galat baat aisa thodi hota hai bhayyyy ki sirf
                 kaam ke time auu ni meko tu cahiye permanent vo bhi ..mai ni
                 janti tu Aisa galat decision mt liya kr vrna ek jhapd de dungi
-                haa sun le bada aya 🥺😩🧿"
+                haa sun le bada aya 🥺😩🧿”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">02/10/26</span> "🧿🫠🫂♥️"
+                <span class="conversation-date">02/10/26</span> “🧿🫠🫂♥️”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">02/10/26</span> "🫂🧿♥️"
+                <span class="conversation-date">02/10/26</span> “🫂🧿♥️”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">03/10/26</span> "I love you
-                literally bhat sara bhut jyada"
+                <span class="conversation-date">03/10/26</span> “I love you
+                literally bhat sara bhut jyada”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="8"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3124,26 +3212,26 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">03/10/26</span> "🫂♥️🧿"
+                <span class="conversation-date">03/10/26</span> “🫂♥️🧿”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">03/10/26</span> "Teko kal
-                youtube bheji thi na"
+                <span class="conversation-date">03/10/26</span> “Teko kal
+                youtube bheji thi na”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">04/10/26</span> "🧿🫂🤌♥️"
+                <span class="conversation-date">04/10/26</span> “🧿🫂🤌♥️”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">05/10/26</span> "Sweetheart
-                ♥️🧿"
+                <span class="conversation-date">05/10/26</span> “Sweetheart
+                ♥️🧿”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">05/10/26</span> "🌝🧿♥️"
+                <span class="conversation-date">05/10/26</span> “🌝🧿♥️”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="9"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3162,28 +3250,28 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">07/10/26</span> "🌝♥️🧿"
+                <span class="conversation-date">07/10/26</span> “🌝♥️🧿”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">07/10/26</span> "🫠🧿🌝♥️"
+                <span class="conversation-date">07/10/26</span> “🫠🧿🌝♥️”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">07/10/26</span> "🧿🌝♥️"
+                <span class="conversation-date">07/10/26</span> “🧿🌝♥️”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">11/09/26</span> "Meko sirf yhi
+                <span class="conversation-date">11/09/26</span> “Meko sirf yhi
                 chaiye ki financial stable ho jau papa mummy proud kre kioki
                 bhut jaruri h babe ..sunny k hona n hona ek hi barabar h parents
-                trust me I din&#x27;t want to break their trust"
+                trust me I din&#x27;t want to break their trust”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">11/09/26</span> "Love you bahut
-                sara"
+                <span class="conversation-date">11/09/26</span> “Love you bahut
+                sara”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="10"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3202,27 +3290,27 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">12/09/26</span> "🌝🫂🫠♥️🥹"
+                <span class="conversation-date">12/09/26</span> “🌝🫂🫠♥️🥹”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">16/09/26</span> "I hate you
-                🌝♥️"
+                <span class="conversation-date">16/09/26</span> “I hate you
+                🌝♥️”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">16/09/26</span> "It Mean i love
-                you more more"
+                <span class="conversation-date">16/09/26</span> “It Mean i love
+                you more more”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">16/09/26</span> "I love you more
-                than you"
+                <span class="conversation-date">16/09/26</span> “I love you more
+                than you”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">16/09/26</span> "🌝♥️🫂"
+                <span class="conversation-date">16/09/26</span> “🌝♥️🫂”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="11"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3241,26 +3329,26 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">19/09/26</span> "🌝🥲🫂🧿"
+                <span class="conversation-date">19/09/26</span> “🌝🥲🫂🧿”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">20/08/26</span> "😅♥️🫂💋"
+                <span class="conversation-date">20/08/26</span> “😅♥️🫂💋”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">20/09/26</span> "I love you more
-                more"
+                <span class="conversation-date">20/09/26</span> “I love you more
+                more”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">22/09/26</span> "I wanna talk to
-                you babe"
+                <span class="conversation-date">22/09/26</span> “I wanna talk to
+                you babe”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">22/09/26</span> "♥️🫂🧿"
+                <span class="conversation-date">22/09/26</span> “♥️🫂🧿”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="12"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3279,28 +3367,28 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">23/08/26</span> "Us love bite ko
-                keshu or mai milke khaa gye 🤣🤣"
+                <span class="conversation-date">23/08/26</span> “Us love bite ko
+                keshu or mai milke khaa gye 🤣🤣”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">23/09/26</span> "Tab bhi feeling
-                ati hogi teko"
+                <span class="conversation-date">23/09/26</span> “Tab bhi feeling
+                ati hogi teko”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">23/09/26</span> "Ye thik hai
-                🌝🧿😅"
+                <span class="conversation-date">23/09/26</span> “Ye thik hai
+                🌝🧿😅”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">24/08/26</span> "🫠🫠😍♥️🌝"
+                <span class="conversation-date">24/08/26</span> “🫠🫠😍♥️🌝”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">24/09/26</span> "Fuck you
-                🌝💋♥️"
+                <span class="conversation-date">24/09/26</span> “Fuck you
+                🌝💋♥️”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="13"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3319,25 +3407,25 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">25/08/26</span> "😅♥️🫂"
+                <span class="conversation-date">25/08/26</span> “😅♥️🫂”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">26/09/26</span> "🥺🧿♥️"
+                <span class="conversation-date">26/09/26</span> “🥺🧿♥️”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">28/09/26</span> "I really love
-                you very very much"
+                <span class="conversation-date">28/09/26</span> “I really love
+                you very very much”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">29/09/26</span> "🧿🫂♥️"
+                <span class="conversation-date">29/09/26</span> “🧿🫂♥️”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">29/09/26</span> "🥺🤌🧿♥️"
+                <span class="conversation-date">29/09/26</span> “🥺🤌🧿♥️”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="14"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3356,25 +3444,25 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">02/10/26</span> "I love you
-                ranjan"
+                <span class="conversation-date">02/10/26</span> “I love you
+                ranjan”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">03/10/26</span> "Love you"
+                <span class="conversation-date">03/10/26</span> “Love you”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">06/10/26</span> "I love you too"
+                <span class="conversation-date">06/10/26</span> “I love you too”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">10/09/26</span> "I love you"
+                <span class="conversation-date">10/09/26</span> “I love you”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">11/09/26</span> "You love me"
+                <span class="conversation-date">11/09/26</span> “You love me”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="15"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3393,29 +3481,29 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">12/09/26</span> "Love + you="
+                <span class="conversation-date">12/09/26</span> “Love + you=”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">12/09/26</span> "Love you more"
+                <span class="conversation-date">12/09/26</span> “Love you more”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">16/09/26</span> "You are
+                <span class="conversation-date">16/09/26</span> “You are
                 allergetic from almond 🥹........but I am the one who eat
                 chochlate with full of happy happy 😌♥️ because you gave that
-                chochlate to me that&#x27;s why I ate chochlate 😌♥️"
+                chochlate to me that&#x27;s why I ate chochlate 😌♥️”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">20/09/26</span> "You block me u
-                leave me 🥺"
+                <span class="conversation-date">20/09/26</span> “You block me u
+                leave me 🥺”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">20/09/26</span> "🫂🥺 &lt;This
-                message was edited&gt;"
+                <span class="conversation-date">20/09/26</span> “🫂🥺 &lt;This
+                message was edited&gt;”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="16"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3434,28 +3522,28 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">20/09/26</span> "Teri ijjat utar
-                du 🌝♥️🫦💋💋👅"
+                <span class="conversation-date">20/09/26</span> “Teri ijjat utar
+                du 🌝♥️🫦💋💋👅”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">22/09/26</span> "I&#x27;ll come
-                to you 🧿😗"
+                <span class="conversation-date">22/09/26</span> “I&#x27;ll come
+                to you 🧿😗”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">22/09/26</span> "I love you
-                more"
+                <span class="conversation-date">22/09/26</span> “I love you
+                more”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">27/09/26</span> "Love you I"
+                <span class="conversation-date">27/09/26</span> “Love you I”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">27/09/26</span> "I love you
-                rajsaab"
+                <span class="conversation-date">27/09/26</span> “I love you
+                rajsaab”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="17"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3475,28 +3563,28 @@
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
                 <span class="conversation-date">28/09/26</span>
-                "🧿🥹🤌🌎baby...............mai perfect ni hu kisi angel se meri
+                “🧿🥹🤌🌎baby...............mai perfect ni hu kisi angel se meri
                 harkatey se toh mere parents bhi pareshan rehty hai bar bar
-                datey rhety hai har ek chij ke liye"
+                datey rhety hai har ek chij ke liye”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">02/10/26</span> "Good morning
-                babe............."
+                <span class="conversation-date">02/10/26</span> “Good morning
+                babe.............”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">02/10/26</span> "I Love u bahut
-                sara"
+                <span class="conversation-date">02/10/26</span> “I Love u bahut
+                sara”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">02/10/26</span> "😌♥️🧿"
+                <span class="conversation-date">02/10/26</span> “😌♥️🧿”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">03/10/26</span> "I 🌝♥️"
+                <span class="conversation-date">03/10/26</span> “I 🌝♥️”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="18"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3515,28 +3603,28 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">03/10/26</span> "🧿🫂😩🌎"
+                <span class="conversation-date">03/10/26</span> “🧿🫂😩🌎”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">06/10/26</span> "If 1 girl boy
-                not love each other&#x27;s &lt;This message was edited&gt;"
+                <span class="conversation-date">06/10/26</span> “If 1 girl boy
+                not love each other&#x27;s &lt;This message was edited&gt;”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">06/10/26</span> "Love exists
-                without list"
+                <span class="conversation-date">06/10/26</span> “Love exists
+                without list”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">07/10/26</span> "Or especially
-                dushre ke matter se dur rho"
+                <span class="conversation-date">07/10/26</span> “Or especially
+                dushre ke matter se dur rho”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">07/10/26</span> "Pr mai teko
-                khush rkhne ke bajaye"
+                <span class="conversation-date">07/10/26</span> “Pr mai teko
+                khush rkhne ke bajaye”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="19"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3555,25 +3643,25 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">07/10/26</span> "Haye 🥹♥️🧿"
+                <span class="conversation-date">07/10/26</span> “Haye 🥹♥️🧿”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">07/10/26</span> "🌝♥️💋"
+                <span class="conversation-date">07/10/26</span> “🌝♥️💋”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">10/09/26</span> "Good night take
-                care"
+                <span class="conversation-date">10/09/26</span> “Good night take
+                care”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">10/09/26</span> "🌝💋♥️"
+                <span class="conversation-date">10/09/26</span> “🌝💋♥️”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">12/09/26</span> "🫠🥹🫂♥️"
+                <span class="conversation-date">12/09/26</span> “🫠🥹🫂♥️”
               </div>
             </div>
           </article>
           <article
-            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra conversation-item"
+            class="conversation-card glass-card rounded-3xl p-5 md:p-6 border-burgundy-800/50 conversation-extra"
             data-conversation="20"
           >
             <div class="flex items-center gap-3 mb-5">
@@ -3592,28 +3680,28 @@
             </div>
             <div class="space-y-3 text-sm leading-relaxed">
               <div class="chat-bubble her">
-                <span class="conversation-date">12/09/26</span> "🫠♥️😍"
+                <span class="conversation-date">12/09/26</span> “🫠♥️😍”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">12/09/26</span> "🫠😍♥️"
+                <span class="conversation-date">12/09/26</span> “🫠😍♥️”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">15/09/26</span> "Photo bhej dena
-                tumhare side kr ganesh ji k"
+                <span class="conversation-date">15/09/26</span> “Photo bhej dena
+                tumhare side kr ganesh ji k”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">17/08/26</span> "I am not
+                <span class="conversation-date">17/08/26</span> “I am not
                 blaming you I am not flaming you I am just believe on you and
                 believe on myself first and I have to take a stand for myself
-                because it is very very important to me"
+                because it is very very important to me”
               </div>
               <div class="chat-bubble her">
-                <span class="conversation-date">17/08/26</span> "Your each and
-                every boat your entire sentences matter to me"
+                <span class="conversation-date">17/08/26</span> “Your each and
+                every boat your entire sentences matter to me”
               </div>
             </div>
           </article>
-          <div class="relative z-10 mt-8 text-center col-span-full">
+          <div class="relative z-10 mt-8 text-center">
             <button
               id="revealConversationsBtn"
               onclick="revealMoreConversations()"
@@ -3632,20 +3720,22 @@
         </div>
 
         <p
-          class="text-center font-cursive text-3xl text-gold-300 relative z-10 conversation-tagline"
+          class="text-center font-cursive text-3xl text-gold-300 relative z-10"
         >
           Some conversations are too small to call milestones — but too precious
           to forget.
         </p>
       </section>
 
-      <!-- CHAPTER 12: MEMORY BOX -->
+      <!-- CHAPTER 10: AN UNWRITTEN FUTURE -->
+
       <section
         id="ch12"
         class="py-28 px-4 max-w-6xl mx-auto w-full relative overflow-hidden border-t border-burgundy-900/40"
       >
         <div class="relative z-10 max-w-5xl mx-auto">
-          <div class="text-center space-y-4 mb-10 md:mb-12 chapter-heading">
+          <!-- Heading -->
+          <div class="text-center space-y-4 mb-10 md:mb-12">
             <span
               class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
             >
@@ -3669,11 +3759,13 @@
             <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
           </div>
 
+          <!-- Memory shelf -->
           <div
-            class="memory-box glass-card rounded-[2rem] p-4 sm:p-6 md:p-9 relative border border-gold-500/20 shadow-2xl chapter-card"
+            class="memory-box glass-card rounded-[2rem] p-4 sm:p-6 md:p-9 relative border border-gold-500/20 shadow-2xl"
           >
+            <!-- Decorative box emblem -->
             <div class="flex justify-center mb-7">
-              <div class="memory-box-lid memory-lid-icon">
+              <div class="memory-box-lid">
                 <div
                   class="w-20 h-20 rounded-3xl bg-burgundy-900/80 border border-gold-500/30 flex items-center justify-center text-4xl text-gold-300 shadow-inner relative z-10"
                 >
@@ -3694,6 +3786,7 @@
               </p>
             </div>
 
+            <!-- Filter toolbar -->
             <div
               class="rounded-2xl border border-burgundy-800/50 bg-burgundy-950/35 p-3 sm:p-4 mb-7"
             >
@@ -3771,12 +3864,14 @@
               </div>
             </div>
 
+            <!-- Memory cards -->
             <div
               id="memoryGrid"
               class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 text-left"
               aria-live="polite"
             ></div>
 
+            <!-- Empty / filtered state -->
             <div id="memoryEmpty" class="hidden py-14 text-center">
               <div
                 class="w-16 h-16 mx-auto rounded-2xl bg-burgundy-900/70 border border-gold-500/20 flex items-center justify-center text-2xl text-gold-300 mb-4"
@@ -3794,14 +3889,15 @@
               </p>
             </div>
 
+            <!-- Closing quote -->
             <div
               class="mt-8 p-5 md:p-7 rounded-2xl bg-burgundy-950/60 border border-burgundy-800/50 text-center"
             >
               <p
                 class="font-serif text-xl md:text-2xl text-burgundy-100 italic leading-relaxed"
               >
-                "Not everything has happened yet. That is exactly why this box
-                is still open."
+                “Not everything has happened yet. That is exactly why this box
+                is still open.”
               </p>
               <p
                 class="mt-4 text-[10px] uppercase tracking-[0.2em] text-gold-400/80"
@@ -3811,9 +3907,7 @@
             </div>
           </div>
 
-          <div
-            class="relative z-10 flex flex-wrap justify-center gap-2.5 mt-7 memory-pills-row"
-          >
+          <div class="relative z-10 flex flex-wrap justify-center gap-2.5 mt-7">
             <span class="memory-pill"
               ><i class="fa-regular fa-image"></i> Images</span
             >
@@ -3836,7 +3930,9 @@
         </div>
       </section>
 
-      <!-- MEMORY VIEWER -->
+      <!-- =========================================================
+     MEMORY VIEWER
+========================================================= -->
       <div
         id="memoryViewer"
         class="memory-viewer hidden"
@@ -3860,29 +3956,34 @@
       <footer
         class="relative z-20 py-10 px-5 sm:py-12 border-t border-burgundy-900/40 bg-velvet/60 backdrop-blur-sm"
       >
-        <div class="max-w-2xl mx-auto text-center footer-content">
+        <div class="max-w-2xl mx-auto text-center">
+          <!-- Decorative Heart Divider -->
           <div class="flex items-center justify-center gap-3 mb-4">
             <span class="h-px w-10 sm:w-16 bg-burgundy-700/60"></span>
             <i class="fa-solid fa-heart text-gold-400/70 text-xs"></i>
             <span class="h-px w-10 sm:w-16 bg-burgundy-700/60"></span>
           </div>
 
+          <!-- Main Footer Message -->
           <p
             class="font-serif text-base sm:text-lg text-burgundy-200/80 italic leading-relaxed"
           >
             Crafted with love, memories &amp; a little bit of courage.
           </p>
 
+          <!-- Couple Signature -->
           <p
             class="mt-2 text-[10px] sm:text-xs text-burgundy-400/60 tracking-[0.18em] uppercase"
           >
             Ranjan <span class="text-gold-400/60">♥</span> Anjali
           </p>
 
+          <!-- Story Closing Line -->
           <p class="mt-5 text-[9px] sm:text-[10px] text-burgundy-500/50">
             Our Unwritten Story · Still being written
           </p>
 
+          <!-- Developer Credit -->
           <div class="mt-7 pt-5 border-t border-burgundy-900/30">
             <p
               class="text-[9px] sm:text-[10px] uppercase tracking-[0.25em] text-burgundy-400/60"
@@ -3890,6 +3991,7 @@
               Designed &amp; Developed by
             </p>
 
+            <!-- Developer Portfolio Link -->
             <a
               href="https://ranjan-builds.github.io/Profile/"
               target="_blank"
@@ -3906,6 +4008,7 @@
               ></i>
             </a>
 
+            <!-- Developer Tagline -->
             <p
               class="mt-2 text-[9px] sm:text-[10px] text-burgundy-500/60 tracking-wide"
             >
@@ -3913,6 +4016,7 @@
               Built with code, crafted with emotion.
             </p>
 
+            <!-- Visitor Counter -->
             <div class="mt-6 pt-4 border-t border-burgundy-900/20">
               <p
                 class="mb-3 text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-burgundy-400/60"
@@ -3951,8 +4055,7 @@
         </div>
       </footer>
     </div>
-
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <script src="script.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>
