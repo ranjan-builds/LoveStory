@@ -3,11 +3,6 @@ let isAudioPlaying = false;
 let isScootyAnimating = false;
 let scootyAnimationFrame = null;
 
-const cursor = Cursorly.init({
-  cursor: 0, // Index of the cursor icon (default: 0)
-  effect: { name: "sparkle", color: "snow" }, // Effect name and color are required
-});
-
 const playlist = [
   { title: "The song that reminds me of you", file: "candy.mp3" },
 ];
@@ -463,6 +458,7 @@ function revealMoreConversations() {
   // A fresh page load ALWAYS asks for the password again.
   // Only a SHA-256 digest is embedded for client-side verification.
   // Set to true to skip the password during development.
+  let DEVELOPER_MODE = true
   const PASSWORD_SHA256 =
     "0890930cbc82a905bd28dec28ba7db90a3e9bec2231003288497fc943ed1e99f";
   const gate = document.getElementById("passwordGate");
@@ -810,79 +806,83 @@ function startLoveMeter() {
 
   let latestResult = null;
 
-
-const messages = [
-  {
-    minimum: 0,
-    text: "Impossible  💀😭 Is janam toh kya, agle janam mein bhi koi chance nahi! 😂💔"
-  },
-  {
-    minimum: 10,
-    text: "Kuch toh gadbad hai Daya 😂 Dil ka connection abhi weak signal pe hai!"
-  },
-  {
-    minimum: 20,
-    text: "Abhi toh kahaani shuru hui hai 😏 Thoda time do, picture abhi baaki hai!"
-  },
-  {
-    minimum: 30,
-    text: "Baat ban sakti hai 😜 Bas thodi flirting aur thoda effort chahiye!"
-  },
-  {
-    minimum: 40,
-    text: "Cute si chemistry hai ❤️ Ab dekhte hain pehle blush kaun karta hai!"
-  },
-  {
-    minimum: 50,
-    text: "50-50 ka chakkar hai 😅 Dil bhi confused hai, dimaag bhi!"
-  },
-  {
-    minimum: 60,
-    text: "Oho! 👀 Kuch toh chal raha hai boss! Nazar na lage 🧿❤️"
-  },
-  {
-    minimum: 70,
-    text: "Strong connection hai jaan! 🫶 Ab bas ek cute si date ho jaaye!"
-  },
-  {
-    minimum: 75,
-    text: "Dil ki frequency match ho rahi hai 📶💕 Lagta hai kuch special hai!"
-  },
-  {
-    minimum: 80,
-    text: "Arey waah! 😍 Chemistry toh full power mein hai, bas nazar na lage!"
-  },
-  {
-    minimum: 85,
-    text: "Ek dusre ki smile ki wajah banne wale lagte ho 🥹❤️"
-  },
-  {
-    minimum: 90,
-    text: "Soulmate wali vibes aa rahi hain! 🫂❤️ Ek tum, ek main, aur dher saari memories!"
-  },
-  {
-    minimum: 95,
-    text: "Itna strong connection? Wi-Fi bhi sharma jaaye! 📶❤️😂"
-  },
-  {
-    minimum: 98,
-    text: "Haiii! 🥹💗 Itna pyaar? Nazar utaaro koi! 🧿 Made for each other vibes!♾️"
-  },
-  {
-    minimum: 100,
-    text: "100% ISHQ! 💍❤️ Tum dono ki jodi ekdum Rab Ne Bana Di Jodi! 🧿♾️"
-  }
-];
+  const messages = [
+    {
+      minimum: 0,
+      text: "Impossible  💀😭 Is janam toh kya, agle janam mein bhi koi chance nahi! 😂💔",
+    },
+    {
+      minimum: 10,
+      text: "Kuch toh gadbad hai Daya 😂 Dil ka connection abhi weak signal pe hai!",
+    },
+    {
+      minimum: 20,
+      text: "Abhi toh kahaani shuru hui hai 😏 Thoda time do, picture abhi baaki hai!",
+    },
+    {
+      minimum: 30,
+      text: "Baat ban sakti hai 😜 Bas thodi flirting aur thoda effort chahiye!",
+    },
+    {
+      minimum: 40,
+      text: "Cute si chemistry hai ❤️ Ab dekhte hain pehle blush kaun karta hai!",
+    },
+    {
+      minimum: 50,
+      text: "50-50 ka chakkar hai 😅 Dil bhi confused hai, dimaag bhi!",
+    },
+    {
+      minimum: 60,
+      text: "Oho! 👀 Kuch toh chal raha hai boss! Nazar na lage 🧿❤️",
+    },
+    {
+      minimum: 70,
+      text: "Strong connection hai jaan! 🫶 Ab bas ek cute si date ho jaaye!",
+    },
+    {
+      minimum: 75,
+      text: "Dil ki frequency match ho rahi hai 📶💕 Lagta hai kuch special hai!",
+    },
+    {
+      minimum: 80,
+      text: "Arey waah! 😍 Chemistry toh full power mein hai, bas nazar na lage!",
+    },
+    {
+      minimum: 85,
+      text: "Ek dusre ki smile ki wajah banne wale lagte ho 🥹❤️",
+    },
+    {
+      minimum: 90,
+      text: "Soulmate wali vibes aa rahi hain! 🫂❤️ Ek tum, ek main, aur dher saari memories!",
+    },
+    {
+      minimum: 95,
+      text: "Itna strong connection? Wi-Fi bhi sharma jaaye! 📶❤️😂",
+    },
+    {
+      minimum: 98,
+      text: "Haiii! 🥹💗 Itna pyaar? Nazar utaaro koi! 🧿 Made for each other vibes!♾️",
+    },
+    {
+      minimum: 100,
+      text: "100% ISHQ! 💍❤️ Tum dono ki jodi ekdum Rab Ne Bana Di Jodi! 🧿♾️",
+    },
+  ];
 
   function getCompatibilityScore(firstName, secondName) {
     const normalizeName = (name) =>
       name.normalize("NFKC").trim().replace(/\s+/gu, " ").toLowerCase();
-    const normalizedNames = [normalizeName(firstName), normalizeName(secondName)]
-      .sort();
+    const normalizedNames = [
+      normalizeName(firstName),
+      normalizeName(secondName),
+    ].sort();
     const [first, second] = normalizedNames;
 
     if (first === "anjali" && second === "ranjan") return 98;
-    if (normalizedNames.includes("anjali") || normalizedNames.includes("ranjan")) {
+    if (
+      normalizedNames.includes("anjali") ||
+      normalizedNames.includes("ranjan")
+    ) {
       return 0;
     }
 
@@ -923,7 +923,14 @@ const messages = [
     context.restore();
   }
 
-  function drawWrappedText(context, text, centerX, startY, maxWidth, lineHeight) {
+  function drawWrappedText(
+    context,
+    text,
+    centerX,
+    startY,
+    maxWidth,
+    lineHeight,
+  ) {
     const words = text.split(/\s+/u);
     let line = "";
     let y = startY;
@@ -950,21 +957,36 @@ const messages = [
     const context = canvas.getContext("2d");
 
     if (!context) {
-      exportStatus.textContent = "Could not create the result image in this browser.";
-      console.error("Canvas 2D context is unavailable for the love result export.");
+      exportStatus.textContent =
+        "Could not create the result image in this browser.";
+      console.error(
+        "Canvas 2D context is unavailable for the love result export.",
+      );
       return;
     }
 
     const { firstName, secondName, score, message: resultMessage } = resultData;
     const centerX = canvas.width / 2;
-    const background = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+    const background = context.createLinearGradient(
+      0,
+      0,
+      canvas.width,
+      canvas.height,
+    );
     background.addColorStop(0, "#2a050b");
     background.addColorStop(0.52, "#120508");
     background.addColorStop(1, "#090204");
     context.fillStyle = background;
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    const glow = context.createRadialGradient(centerX, 360, 20, centerX, 360, 720);
+    const glow = context.createRadialGradient(
+      centerX,
+      360,
+      20,
+      centerX,
+      360,
+      720,
+    );
     glow.addColorStop(0, "rgba(159, 36, 67, 0.42)");
     glow.addColorStop(1, "rgba(159, 36, 67, 0)");
     context.fillStyle = glow;
@@ -976,7 +998,14 @@ const messages = [
     context.stroke();
     context.strokeStyle = "rgba(240, 168, 182, 0.2)";
     context.lineWidth = 1;
-    drawRoundedRect(context, 62, 62, canvas.width - 124, canvas.height - 124, 32);
+    drawRoundedRect(
+      context,
+      62,
+      62,
+      canvas.width - 124,
+      canvas.height - 124,
+      32,
+    );
     context.stroke();
 
     context.save();
@@ -1026,7 +1055,12 @@ const messages = [
     drawRoundedRect(context, barX, barY, barWidth, barHeight, barHeight / 2);
     context.fill();
     if (score > 0) {
-      const barGradient = context.createLinearGradient(barX, 0, barX + barWidth, 0);
+      const barGradient = context.createLinearGradient(
+        barX,
+        0,
+        barX + barWidth,
+        0,
+      );
       barGradient.addColorStop(0, "#be3154");
       barGradient.addColorStop(0.72, "#e5778f");
       barGradient.addColorStop(1, "#ecc94b");
@@ -1056,7 +1090,11 @@ const messages = [
 
     context.fillStyle = "#f6e05e";
     context.font = '600 22px "Plus Jakarta Sans", sans-serif';
-    context.fillText("A PLAYFUL READING · JUST FOR FUN", centerX, Math.max(1255, messageEndY + 95));
+    context.fillText(
+      "A PLAYFUL READING · JUST FOR FUN",
+      centerX,
+      Math.max(1255, messageEndY + 95),
+    );
     context.fillStyle = "rgba(247, 206, 213, 0.74)";
     context.font = '400 20px "Plus Jakarta Sans", sans-serif';
     context.fillText("Made with love, not science.", centerX, 1320);
@@ -1088,12 +1126,18 @@ const messages = [
       return;
     }
 
+    const shouldExport = window.confirm(
+      `Save this love result as an image?\n\n${latestResult.firstName} + ${latestResult.secondName}: ${latestResult.score}%`,
+    );
+    if (!shouldExport) return;
+
     exportStatus.textContent = "Preparing your image…";
     await document.fonts.ready;
     const blob = await renderLoveResultImage(latestResult);
 
     if (!blob) {
-      exportStatus.textContent = "Could not create the result image. Please try again.";
+      exportStatus.textContent =
+        "Could not create the result image. Please try again.";
       console.error("The browser could not encode the love result as a PNG.");
       return;
     }
@@ -1124,7 +1168,9 @@ const messages = [
     if (!form.reportValidity()) return;
 
     const score = getCompatibilityScore(firstName, secondName);
-    const reading = [...messages].reverse().find((item) => score >= item.minimum);
+    const reading = [...messages]
+      .reverse()
+      .find((item) => score >= item.minimum);
     const animationDuration = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches
@@ -1167,3 +1213,133 @@ const messages = [
 startTogetherCountdown();
 startLoveMeter();
 renderMemoryBox();
+
+// (() => {
+//   const canvas = document.querySelector(".cursor-trail");
+//   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+//   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+//   if (!canvas || !finePointer.matches) return;
+
+//   const ctx = canvas.getContext("2d");
+//   if (!ctx) return;
+
+//   // Romantic pink + rose-gold theme
+//   const COLORS = [
+//     [255, 105, 180], // Hot pink
+//     [255, 182, 193], // Light pink
+//     [255, 228, 235], // Soft blush
+//     [255, 215, 170], // Rose gold
+//   ];
+
+//   const LIFE = 550;
+//   const MAX_POINTS = 55;
+
+//   let points = [];
+//   let frame = 0;
+//   let width = 0;
+//   let height = 0;
+
+//   function resize() {
+//     const ratio = Math.min(window.devicePixelRatio || 1, 2);
+
+//     width = window.innerWidth;
+//     height = window.innerHeight;
+
+//     canvas.width = Math.round(width * ratio);
+//     canvas.height = Math.round(height * ratio);
+//     canvas.style.width = `${width}px`;
+//     canvas.style.height = `${height}px`;
+
+//     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+//   }
+
+//   function clear() {
+//     ctx.clearRect(0, 0, width, height);
+//   }
+
+//   function draw() {
+//     const now = performance.now();
+
+//     points = points.filter((point) => now - point.time < LIFE);
+
+//     clear();
+
+//     // Smooth, glowing trail
+//     for (let i = 1; i < points.length; i++) {
+//       const from = points[i - 1];
+//       const to = points[i];
+
+//       const life = Math.max(0, 1 - (now - to.time) / LIFE);
+//       const color = COLORS[to.colorIndex];
+
+//       ctx.save();
+//       ctx.lineCap = "round";
+//       ctx.lineJoin = "round";
+//       ctx.shadowBlur = 12 * life;
+//       ctx.shadowColor = `rgba(${color.join(",")}, 0.6)`;
+//       ctx.strokeStyle = `rgba(${color.join(",")}, ${life * 0.7})`;
+//       ctx.lineWidth = 0.8 + life * 5;
+
+//       ctx.beginPath();
+//       ctx.moveTo(from.x, from.y);
+//       ctx.lineTo(to.x, to.y);
+//       ctx.stroke();
+//       ctx.restore();
+
+//       // Tiny sparkle at selected trail points
+//       if (i % 4 === 0 && life > 0.25) {
+//         ctx.save();
+//         ctx.globalAlpha = life;
+//         ctx.fillStyle = "#fff0f5";
+//         ctx.shadowBlur = 8 * life;
+//         ctx.shadowColor = "#ff69b4";
+//         ctx.beginPath();
+//         ctx.arc(to.x, to.y, 1.2 + life, 0, Math.PI * 2);
+//         ctx.fill();
+//         ctx.restore();
+//       }
+//     }
+
+//     frame = points.length > 1 ? requestAnimationFrame(draw) : 0;
+//   }
+
+//   function handleMove(event) {
+//     if (event.pointerType !== "mouse" || reduceMotion.matches) {
+//       return;
+//     }
+
+//     const colorIndex = Math.floor(Math.random() * COLORS.length);
+
+//     points.push({
+//       x: event.clientX,
+//       y: event.clientY,
+//       time: performance.now(),
+//       colorIndex,
+//     });
+
+//     if (points.length > MAX_POINTS) points.shift();
+
+//     if (!frame) frame = requestAnimationFrame(draw);
+//   }
+
+//   function handleMotionChange() {
+//     if (reduceMotion.matches) {
+//       points = [];
+
+//       if (frame) cancelAnimationFrame(frame);
+//       frame = 0;
+
+//       clear();
+//     }
+//   }
+
+//   window.addEventListener("pointermove", handleMove, {
+//     passive: true,
+//   });
+
+//   window.addEventListener("resize", resize);
+//   reduceMotion.addEventListener("change", handleMotionChange);
+
+//   resize();
+// })();

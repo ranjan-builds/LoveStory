@@ -69,7 +69,7 @@
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/gh/iamashruu/cursorly.js@latest/dist/cursorly.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/iamashruu/cursorly.js@latest/dist/cursorly.min.js"></script> -->
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -3272,6 +3272,19 @@
       </footer>
     </div>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://unpkg.com/cursor-effects@latest/dist/browser.js"></script>
+    <script>
+      window.addEventListener("load", () => {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          return;
+        }
+
+        new cursoreffects.fairyDustCursor({
+          colors: ["#FF69B4", "#FFC0CB", "#FFFFFF", "#FFD7A8"],
+          fairySymbol: "♥",
+        });
+      });
+    </script>
     <script src="script.js"></script>
   </body>
 </html>
