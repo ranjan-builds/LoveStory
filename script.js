@@ -458,7 +458,7 @@ function revealMoreConversations() {
   // A fresh page load ALWAYS asks for the password again.
   // Only a SHA-256 digest is embedded for client-side verification.
   // Set to true to skip the password during development.
-  let DEVELOPER_MODE = true
+  let DEVELOPER_MODE = false
   const PASSWORD_SHA256 =
     "0890930cbc82a905bd28dec28ba7db90a3e9bec2231003288497fc943ed1e99f";
   const gate = document.getElementById("passwordGate");
