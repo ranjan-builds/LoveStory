@@ -4,7 +4,7 @@ let isScootyAnimating = false;
 let scootyAnimationFrame = null;
 
 const cursor = Cursorly.init({
-  cursor: 10, // Index of the cursor icon (default: 0)
+  cursor: 0, // Index of the cursor icon (default: 0)
   effect: { name: "sparkle", color: "snow" }, // Effect name and color are required
 });
 
@@ -67,7 +67,7 @@ document.getElementById("ambientAudio").addEventListener("ended", () => {
 particlesJS("snow-particles", {
   particles: {
     number: {
-      value: 140,
+      value: 90,
       density: {
         enable: true,
         value_area: 900,
@@ -462,7 +462,7 @@ function revealMoreConversations() {
   // No password, login state, or unlock flag is written to browser storage.
   // A fresh page load ALWAYS asks for the password again.
   // Only a SHA-256 digest is embedded for client-side verification.
-  const DEVELOPER_MODE = false; // Set to true to skip the password during development.
+  // Set to true to skip the password during development.
   const PASSWORD_SHA256 =
     "0890930cbc82a905bd28dec28ba7db90a3e9bec2231003288497fc943ed1e99f";
   const gate = document.getElementById("passwordGate");
