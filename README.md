@@ -30,6 +30,7 @@ The app is primarily static and can be opened directly in a browser, or served l
 
 - Responsive romantic layout
 - Interactive chapter flow
+- Optional chapter voice guide that plays a recording when each chapter is reached
 - Memory gallery with filters
 - Photo and video viewing modal
 - Audio player support
@@ -66,6 +67,15 @@ You can personalize the site by editing:
 - `script.js` for interactive logic and story behavior
 - asset files in the root or `memories/` folder for images and media
 - colors/fonts in the inline Tailwind configuration and CSS blocks in `index.html`
+
+### Chapter voice recordings
+
+To use the optional voice guide, add one WAV recording per chapter to the
+`myVoice/` folder in the project root. Name them `Chapter1.wav`,
+`Chapter2.wav`, and so on through `Chapter13.wav`, then turn on **Voice off**
+in the chapter navigation. All configured recordings are preloaded when the
+page opens, and the matching recording plays as each chapter becomes active
+while scrolling.
 
 ## Notes
 

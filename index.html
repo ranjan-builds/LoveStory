@@ -369,104 +369,212 @@
       <!-- NAVIGATION HEADER (Visible after scrolling or opening) -->
       <header
         id="mainNav"
-        class="sticky top-0 z-40 bg-velvet/90 backdrop-blur-md border-b border-burgundy-900/60 transition-all duration-300"
+        class="story-nav sticky top-0 z-40 bg-velvet/90 backdrop-blur-md border-b border-burgundy-900/60"
       >
-        <div
-          class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between"
-        >
-          <div class="flex items-center gap-3">
+        <div class="story-nav-inner max-w-6xl mx-auto px-4">
+          <div class="story-nav-heading">
             <a
               href="#heroSection"
-              class="font-serif text-xl font-bold gold-gradient-text tracking-wide"
+              class="story-nav-brand font-serif text-xl font-bold gold-gradient-text tracking-wide"
               >Our Diary</a
             >
-            <span class="hidden sm:inline-block text-xs text-burgundy-400/40"
-              >|</span
+            <span class="story-nav-current" aria-live="polite">
+              <span class="story-nav-current-label">Now exploring</span>
+              <span
+                id="currentChapterIndicator"
+                class="text-burgundy-100 font-semibold"
+                >Chapter 1: The Beginning</span
+              >
+            </span>
+            <button
+              id="chapterVoiceToggle"
+              class="chapter-voice-toggle"
+              type="button"
+              aria-pressed="false"
+              aria-label="Turn chapter voice on"
+              title="Add myVoice/Chapter1.wav through Chapter13.wav"
+              onclick="toggleChapterVoice()"
             >
-            <span
-              id="currentChapterIndicator"
-              class="hidden sm:inline-block text-xs text-burgundy-300 font-medium"
-              >Chapter 1: The Beginning</span
-            >
+              <i class="fa-solid fa-volume-xmark" aria-hidden="true"></i>
+              <span id="chapterVoiceToggleText">Voice off</span>
+            </button>
           </div>
 
-          <!-- Navigation Tabs Slider -->
-          <div
-            class="flex items-center gap-1 overflow-x-auto py-1 max-w-xs md:max-w-md lg:max-w-xl no-scrollbar"
+          <nav
+            id="chapterNav"
+            class="chapter-nav"
+            aria-label="Story chapters"
           >
-            <button
-              onclick="scrollToChapter('ch1')"
-              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
-            >
-              1. Questions
-            </button>
-            <button
-              onclick="scrollToChapter('ch2')"
-              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
-            >
-              2. 17 Aug PDF
-            </button>
-            <button
-              onclick="scrollToChapter('ch3')"
-              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
-            >
-              3. Apology
-            </button>
-            <button
-              onclick="scrollToChapter('ch4')"
-              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
-            >
-              4. 20 Aug
-            </button>
-            <button
-              onclick="scrollToChapter('ch5')"
-              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
-            >
-              5. Meeting Plans
-            </button>
-            <button
-              onclick="scrollToChapter('ch6')"
-              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
-            >
-              6. 9 Sept Meeting
-            </button>
-            <button
-              onclick="scrollToChapter('ch7')"
-              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
-            >
-              7. Closer
-            </button>
-            <button
-              onclick="scrollToChapter('ch8')"
-              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
-            >
-              8. Doubts
-            </button>
-            <button
-              onclick="scrollToChapter('ch9')"
-              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
-            >
-              9. Letter
-            </button>
-            <button
-              onclick="scrollToChapter('ch10')"
-              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
-            >
-              10. Future
-            </button>
-            <button
-              onclick="scrollToChapter('ch11')"
-              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
-            >
-              11. Conversations
-            </button>
-            <button
-              onclick="scrollToChapter('ch12')"
-              class="nav-btn px-3 py-1 rounded-full text-xs font-medium text-burgundy-300 hover:text-white hover:bg-burgundy-900/50 whitespace-nowrap transition-all"
-            >
-              12. Memory Box
-            </button>
-          </div>
+            <div class="chapter-nav-track">
+              <button
+                type="button"
+                class="nav-btn is-active"
+                data-chapter="ch1"
+                data-voice-src="myVoice/Chapter1.wav"
+                aria-controls="ch1"
+                aria-label="Chapter 1: The Beginning"
+                aria-current="location"
+                onclick="scrollToChapter('ch1')"
+              >
+                <span class="nav-btn-number">01</span>
+                <span class="nav-btn-label">Questions</span>
+              </button>
+              <button
+                type="button"
+                class="nav-btn"
+                data-chapter="ch2"
+                data-voice-src="myVoice/Chapter2.wav"
+                aria-controls="ch2"
+                aria-label="Chapter 2: 17 August PDF"
+                onclick="scrollToChapter('ch2')"
+              >
+                <span class="nav-btn-number">02</span>
+                <span class="nav-btn-label">17 Aug PDF</span>
+              </button>
+              <button
+                type="button"
+                class="nav-btn"
+                data-chapter="ch3"
+                data-voice-src="myVoice/Chapter3.wav"
+                aria-controls="ch3"
+                aria-label="Chapter 3: Her Apology"
+                onclick="scrollToChapter('ch3')"
+              >
+                <span class="nav-btn-number">03</span>
+                <span class="nav-btn-label">Apology</span>
+              </button>
+              <button
+                type="button"
+                class="nav-btn"
+                data-chapter="ch4"
+                data-voice-src="myVoice/Chapter4.wav"
+                aria-controls="ch4"
+                aria-label="Chapter 4: 20 August"
+                onclick="scrollToChapter('ch4')"
+              >
+                <span class="nav-btn-number">04</span>
+                <span class="nav-btn-label">20 Aug</span>
+              </button>
+              <button
+                type="button"
+                class="nav-btn"
+                data-chapter="ch5"
+                data-voice-src="myVoice/Chapter5.wav"
+                aria-controls="ch5"
+                aria-label="Chapter 5: Meeting Plans"
+                onclick="scrollToChapter('ch5')"
+              >
+                <span class="nav-btn-number">05</span>
+                <span class="nav-btn-label">Meeting Plans</span>
+              </button>
+              <button
+                type="button"
+                class="nav-btn"
+                data-chapter="ch6"
+                data-voice-src="myVoice/Chapter6.wav"
+                aria-controls="ch6"
+                aria-label="Chapter 6: 9 September Meeting"
+                onclick="scrollToChapter('ch6')"
+              >
+                <span class="nav-btn-number">06</span>
+                <span class="nav-btn-label">9 Sept Meeting</span>
+              </button>
+              <button
+                type="button"
+                class="nav-btn"
+                data-chapter="ch7"
+                data-voice-src="myVoice/Chapter7.wav"
+                aria-controls="ch7"
+                aria-label="Chapter 7: Growing Closer"
+                onclick="scrollToChapter('ch7')"
+              >
+                <span class="nav-btn-number">07</span>
+                <span class="nav-btn-label">Closer</span>
+              </button>
+              <button
+                type="button"
+                class="nav-btn"
+                data-chapter="ch8"
+                data-voice-src="myVoice/Chapter8.wav"
+                aria-controls="ch8"
+                aria-label="Chapter 8: Doubts and Questions"
+                onclick="scrollToChapter('ch8')"
+              >
+                <span class="nav-btn-number">08</span>
+                <span class="nav-btn-label">Doubts</span>
+              </button>
+              <button
+                type="button"
+                class="nav-btn"
+                data-chapter="ch9"
+                data-voice-src="myVoice/Chapter9.wav"
+                aria-controls="ch9"
+                aria-label="Chapter 9: Love Letter"
+                onclick="scrollToChapter('ch9')"
+              >
+                <span class="nav-btn-number">09</span>
+                <span class="nav-btn-label">Letter</span>
+              </button>
+              <button
+                type="button"
+                class="nav-btn"
+                data-chapter="ch10"
+                data-voice-src="myVoice/Chapter10.wav"
+                aria-controls="ch10"
+                aria-label="Chapter 10: An Unwritten Future"
+                onclick="scrollToChapter('ch10')"
+              >
+                <span class="nav-btn-number">10</span>
+                <span class="nav-btn-label">Future</span>
+              </button>
+              <button
+                type="button"
+                class="nav-btn"
+                data-chapter="ch11"
+                data-voice-src="myVoice/Chapter11.wav"
+                aria-controls="ch11"
+                aria-label="Chapter 11: Our Conversations"
+                onclick="scrollToChapter('ch11')"
+              >
+                <span class="nav-btn-number">11</span>
+                <span class="nav-btn-label">Chats</span>
+              </button>
+              <button
+                type="button"
+                class="nav-btn"
+                data-chapter="ch12"
+                data-voice-src="myVoice/Chapter12.wav"
+                aria-controls="ch12"
+                aria-label="Chapter 12: The Memory Box"
+                onclick="scrollToChapter('ch12')"
+              >
+                <span class="nav-btn-number">12</span>
+                <span class="nav-btn-label">Memory Box</span>
+              </button>
+              <button
+                type="button"
+                class="nav-btn"
+                data-chapter="ch13"
+                data-voice-src="myVoice/Chapter13.wav"
+                aria-controls="ch13"
+                aria-label="Chapter 13: Connecting the Dots"
+                onclick="scrollToChapter('ch13')"
+              >
+                <span class="nav-btn-number">13</span>
+                <span class="nav-btn-label">The Bigger Picture</span>
+              </button>
+            </div>
+            <span class="chapter-nav-hint" aria-hidden="true">
+              Swipe to explore chapters
+              <i class="fa-solid fa-arrow-right"></i>
+            </span>
+          </nav>
+          <p
+            id="chapterVoiceStatus"
+            class="chapter-voice-status"
+            aria-live="polite"
+            hidden
+          ></p>
         </div>
         <!-- Dynamic Reading Progress Bar -->
         <div class="w-full bg-burgundy-950 h-0.5">
@@ -1382,92 +1490,162 @@
           <div class="w-12 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
         </div>
 
-        <!-- Interactive Canvas Journey Experience -->
-        <div
-          class="glass-card rounded-3xl p-6 md:p-8 space-y-6 border-gold-500/30 relative overflow-hidden shadow-2xl"
-        >
-          <div
-            class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-burgundy-800/60 pb-4"
-          >
-            <div>
-              <h3 class="font-serif font-bold text-xl text-gold-200">
-                Interactive Memory Map: Korba ➔ Champa ➔ Nagargda
-              </h3>
-              <p class="text-xs text-burgundy-300">
-                Click controls below to animate our ride through scenic nature
-              </p>
-            </div>
-            <button
-              id="scootyAnimBtn"
-              onclick="toggleScootyAnimation()"
-              class="px-4 py-2 rounded-xl bg-burgundy-800 hover:bg-burgundy-700 text-gold-300 text-xs font-semibold flex items-center gap-2 border border-gold-500/30 transition-all shadow-lg"
-            >
-              <i class="fa-solid fa-motorcycle text-base"></i>
-              <span id="scootyBtnText">Start Journey Animation</span>
-            </button>
+        <div class="day-scrapbook glass-card">
+          <div class="day-scrapbook-heading">
+            <span class="day-scrapbook-date">
+              <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+              09 · 09 · 2026
+            </span>
+            <h3>A Day Told in Three Moments</h3>
+            <p>
+              Not a route on a map, but the little moments that made the day
+              ours.
+            </p>
           </div>
 
-          <!-- Canvas Visual Simulation -->
-          <div
-            class="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden bg-burgundy-950 border border-burgundy-800 shadow-inner"
-          >
-            <canvas id="journeyCanvas" class="w-full h-full block"></canvas>
+          <div class="memory-ride">
+            <div class="memory-ride-heading">
+              <div>
+                <span class="memory-ride-kicker">
+                  <i class="fa-solid fa-route" aria-hidden="true"></i>
+                  Our ride together
+                </span>
+                <p id="memoryRideStatus" aria-live="polite">
+                  From Korba to Champa, then on together to Nagargda.
+                </p>
+              </div>
+              <button
+                id="memoryRideButton"
+                class="memory-ride-button"
+                type="button"
+                aria-label="Play the scooty ride from Korba to Champa and Nagargda"
+                onclick="playMemoryRide()"
+              >
+                <i class="fa-solid fa-motorcycle" aria-hidden="true"></i>
+                <span id="memoryRideButtonText">Take the ride</span>
+              </button>
+            </div>
 
-            <!-- Overlay Badge -->
             <div
-              class="absolute top-4 left-4 bg-burgundy-950/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-gold-500/20 text-[11px] text-gold-300 font-medium"
+              id="memoryRideScene"
+              class="memory-ride-scene"
+              role="img"
+              aria-label="Illustrated journey from Korba through Champa to Nagargda"
             >
-              <i class="fa-solid fa-location-dot text-red-400 mr-1.5"></i>
-              <span id="locationLabel">Korba to Champa Route</span>
+              <svg
+                class="memory-ride-road"
+                viewBox="0 0 1000 220"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <path
+                  class="memory-ride-road-shadow"
+                  d="M80 150 C185 30 315 30 490 105 S765 190 890 135"
+                />
+                <path
+                  id="memoryRidePath"
+                  class="memory-ride-road-line"
+                  d="M80 150 C185 30 315 30 490 105 S765 190 890 135"
+                />
+              </svg>
+
+              <span class="memory-ride-stop memory-ride-stop-korba">
+                <span class="memory-ride-stop-dot">
+                  <i class="fa-solid fa-train" aria-hidden="true"></i>
+                </span>
+                <span class="memory-ride-stop-name">Korba</span>
+                <span class="memory-ride-stop-note">The journey begins</span>
+              </span>
+              <span class="memory-ride-stop memory-ride-stop-champa">
+                <span class="memory-ride-stop-dot">
+                  <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                </span>
+                <span class="memory-ride-stop-name">Champa</span>
+                <span class="memory-ride-stop-note">Together at last</span>
+              </span>
+              <span class="memory-ride-stop memory-ride-stop-nagargda">
+                <span class="memory-ride-stop-dot">
+                  <i class="fa-solid fa-water" aria-hidden="true"></i>
+                </span>
+                <span class="memory-ride-stop-name">Nagargda</span>
+                <span class="memory-ride-stop-note">Our day by the water</span>
+              </span>
+
+              <span class="memory-ride-scooty" aria-hidden="true">
+                <i class="fa-solid fa-motorcycle"></i>
+                <span class="memory-ride-heart">♥</span>
+              </span>
+              <span class="memory-ride-spark memory-ride-spark-one" aria-hidden="true">✦</span>
+              <span class="memory-ride-spark memory-ride-spark-two" aria-hidden="true">✦</span>
             </div>
           </div>
 
-          <!-- Memory Log Scrapbook Cards -->
-          <div class="grid md:grid-cols-3 gap-4 pt-2">
-            <div
-              class="p-4 rounded-xl bg-burgundy-900/40 border border-burgundy-800 space-y-2"
-            >
-              <div
-                class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
-              >
-                <i class="fa-solid fa-route"></i> The Journey
-              </div>
-              <p class="text-xs text-burgundy-200 leading-relaxed">
-                She travelled all the way from Korba to Champa. Seeing her
-                arrive was a wave of pure happiness. I parked my bike, and we
-                embarked together on her scooty.
-              </p>
-            </div>
+          <div class="day-scrapbook-content">
+            <ol class="day-storyline">
+              <li class="day-story-moment">
+                <span class="day-story-marker" aria-hidden="true">
+                  <i class="fa-solid fa-train"></i>
+                </span>
+                <div>
+                  <span class="day-story-place">Korba</span>
+                  <h4>The anticipation</h4>
+                  <p>
+                    She travelled all the way from Korba. Seeing her arrive
+                    turned all that waiting into pure happiness.
+                  </p>
+                </div>
+              </li>
+              <li class="day-story-moment">
+                <span class="day-story-marker" aria-hidden="true">
+                  <i class="fa-solid fa-hand-holding-heart"></i>
+                </span>
+                <div>
+                  <span class="day-story-place">Champa Station</span>
+                  <h4>Finally, together</h4>
+                  <p>
+                    I parked my bike, and we set off together on her scooty.
+                    The journey became a memory of its own.
+                  </p>
+                </div>
+              </li>
+              <li class="day-story-moment">
+                <span class="day-story-marker" aria-hidden="true">
+                  <i class="fa-solid fa-water"></i>
+                </span>
+                <div>
+                  <span class="day-story-place">Nagargda Waterfall</span>
+                  <h4>A little peace by the water</h4>
+                  <p>
+                    Green hills, flowing water, and unhurried time together.
+                    Sometimes the simplest moments stay the longest.
+                  </p>
+                </div>
+              </li>
+            </ol>
 
-            <div
-              class="p-4 rounded-xl bg-burgundy-900/40 border border-burgundy-800 space-y-2"
-            >
-              <div
-                class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
-              >
-                <i class="fa-solid fa-water"></i> Nagargda Waterfall
-              </div>
-              <p class="text-xs text-burgundy-200 leading-relaxed">
-                Surrounded by lush greenery, flowing water, and soft ambient
-                breeze. We spent peaceful, untroubled time listening to the
-                waterfall and sharing smiles.
-              </p>
-            </div>
-
-            <div
-              class="p-4 rounded-xl bg-burgundy-900/40 border border-burgundy-800 space-y-2"
-            >
-              <div
-                class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
-              >
-                <i class="fa-solid fa-camera"></i> Digital Memory Card
-              </div>
-              <p class="text-xs text-burgundy-200 leading-relaxed">
-                No camera trick or exaggerated story can match the simple warmth
-                of sitting by the water together on 9 September 2026.
-              </p>
-            </div>
+            <figure class="day-scrapbook-photo">
+              <img
+                src="./memories/images/nagardahill.png"
+                alt="The green hills and flowing water at Nagargda"
+                loading="lazy"
+              />
+              <figcaption>
+                <span class="day-photo-pin" aria-hidden="true">
+                  <i class="fa-solid fa-location-dot"></i>
+                </span>
+                <span>
+                  <strong>Nagargda</strong>
+                  <small>A place from our first meeting</small>
+                </span>
+              </figcaption>
+              <span class="day-photo-stamp" aria-hidden="true">OUR DAY</span>
+            </figure>
           </div>
+
+          <p class="day-scrapbook-note">
+            <i class="fa-solid fa-heart" aria-hidden="true"></i>
+            9 September 2026 — a day we got to turn messages into a memory.
+          </p>
         </div>
       </section>
 
@@ -3146,6 +3324,307 @@
         </div>
       </section>
 
+      <!-- CHAPTER 13: CONNECTING THE DOTS -->
+      <section
+        id="ch13"
+        class="connecting-chapter py-24 px-4 max-w-6xl mx-auto w-full relative overflow-hidden border-t border-burgundy-900/40"
+      >
+        <div class="relative z-10 max-w-5xl mx-auto">
+          <div class="text-center space-y-4 mb-10 md:mb-12">
+            <span
+              class="text-xs uppercase tracking-[0.3em] text-gold-400 font-semibold"
+            >
+              Chapter 13 · The Final Chapter
+            </span>
+            <h2
+              class="text-4xl md:text-6xl font-serif font-bold gold-gradient-text"
+            >
+              Connecting the Dots
+            </h2>
+            <p
+              class="max-w-2xl mx-auto text-sm md:text-base text-burgundy-200/80 leading-relaxed"
+            >
+              Each moment is one part of the story. Follow the arrows to see how
+              the beginning, the hard parts, and the little things connect.
+            </p>
+            <div class="w-16 h-0.5 bg-gold-500 mx-auto rounded-full"></div>
+          </div>
+
+          <div class="connecting-map">
+            <svg
+              class="connecting-route"
+              viewBox="0 0 1000 600"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <defs>
+                <marker
+                  id="storyArrow"
+                  markerWidth="8"
+                  markerHeight="8"
+                  refX="6"
+                  refY="4"
+                  orient="auto"
+                  markerUnits="userSpaceOnUse"
+                >
+                  <path d="M1 1 L7 4 L1 7" />
+                </marker>
+              </defs>
+              <path d="M245 90 H255" />
+              <path d="M495 90 H505" />
+              <path d="M745 90 H755" />
+              <path d="M990 90 H998 V290 H990" />
+              <path d="M755 290 H745" />
+              <path d="M505 290 H495" />
+              <path d="M255 290 H245" />
+              <path d="M10 290 H2 V490 H10" />
+              <path d="M245 490 H255" />
+              <path d="M495 490 H505" />
+              <path d="M745 490 H755" />
+            </svg>
+
+            <ol class="connecting-map-grid">
+              <li>
+                <button
+                  type="button"
+                  class="connecting-node"
+                  onclick="scrollToChapter('ch1')"
+                  aria-label="Go to Chapter 1: The Beginning"
+                >
+                  <span class="connecting-node-top">
+                    <span class="connecting-number">01</span>
+                    <i class="fa-solid fa-seedling" aria-hidden="true"></i>
+                  </span>
+                  <span class="connecting-node-title">The beginning</span>
+                  <span class="connecting-node-copy"
+                    >A first chapter, full of questions and possibility.</span
+                  >
+                  <span class="connecting-node-link">Open Chapter 01</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="connecting-node"
+                  onclick="scrollToChapter('ch2')"
+                  aria-label="Go to Chapter 2: 17 August"
+                >
+                  <span class="connecting-node-top">
+                    <span class="connecting-number">02</span>
+                    <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+                  </span>
+                  <span class="connecting-node-title">Words put on paper</span>
+                  <span class="connecting-node-copy"
+                    >A heartfelt message made the feelings harder to ignore.</span
+                  >
+                  <span class="connecting-node-link">Open Chapter 02</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="connecting-node"
+                  onclick="scrollToChapter('ch3')"
+                  aria-label="Go to Chapter 3: Her Apology"
+                >
+                  <span class="connecting-node-top">
+                    <span class="connecting-number">03</span>
+                    <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                  </span>
+                  <span class="connecting-node-title">An apology</span>
+                  <span class="connecting-node-copy"
+                    >A tender moment that helped open the conversation again.</span
+                  >
+                  <span class="connecting-node-link">Open Chapter 03</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="connecting-node"
+                  onclick="scrollToChapter('ch4')"
+                  aria-label="Go to Chapter 4: 20 August"
+                >
+                  <span class="connecting-node-top">
+                    <span class="connecting-number">04</span>
+                    <i class="fa-solid fa-comments" aria-hidden="true"></i>
+                  </span>
+                  <span class="connecting-node-title">Finding a way forward</span>
+                  <span class="connecting-node-copy"
+                    >Honest words brought more understanding between you.</span
+                  >
+                  <span class="connecting-node-link">Open Chapter 04</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="connecting-node"
+                  onclick="scrollToChapter('ch5')"
+                  aria-label="Go to Chapter 5: Meeting Plans"
+                >
+                  <span class="connecting-node-top">
+                    <span class="connecting-number">05</span>
+                    <i class="fa-solid fa-route" aria-hidden="true"></i>
+                  </span>
+                  <span class="connecting-node-title">Making plans</span>
+                  <span class="connecting-node-copy"
+                    >The excitement of finding a chance to meet in person.</span
+                  >
+                  <span class="connecting-node-link">Open Chapter 05</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="connecting-node"
+                  onclick="scrollToChapter('ch6')"
+                  aria-label="Go to Chapter 6: 9 September Meeting"
+                >
+                  <span class="connecting-node-top">
+                    <span class="connecting-number">06</span>
+                    <i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
+                  </span>
+                  <span class="connecting-node-title">The day you met</span>
+                  <span class="connecting-node-copy"
+                    >A real-life memory that gave the story a new shape.</span
+                  >
+                  <span class="connecting-node-link">Open Chapter 06</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="connecting-node"
+                  onclick="scrollToChapter('ch7')"
+                  aria-label="Go to Chapter 7: Growing Closer"
+                >
+                  <span class="connecting-node-top">
+                    <span class="connecting-number">07</span>
+                    <i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i>
+                  </span>
+                  <span class="connecting-node-title">Growing closer</span>
+                  <span class="connecting-node-copy"
+                    >More warmth, trust, and little signs of care.</span
+                  >
+                  <span class="connecting-node-link">Open Chapter 07</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="connecting-node"
+                  onclick="scrollToChapter('ch8')"
+                  aria-label="Go to Chapter 8: Doubts and Questions"
+                >
+                  <span class="connecting-node-top">
+                    <span class="connecting-number">08</span>
+                    <i class="fa-solid fa-cloud" aria-hidden="true"></i>
+                  </span>
+                  <span class="connecting-node-title">Doubts &amp; questions</span>
+                  <span class="connecting-node-copy"
+                    >The uncertain days are part of the picture, too.</span
+                  >
+                  <span class="connecting-node-link">Open Chapter 08</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="connecting-node"
+                  onclick="scrollToChapter('ch9')"
+                  aria-label="Go to Chapter 9: Love Letter"
+                >
+                  <span class="connecting-node-top">
+                    <span class="connecting-number">09</span>
+                    <i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i>
+                  </span>
+                  <span class="connecting-node-title">A letter from the heart</span>
+                  <span class="connecting-node-copy"
+                    >A chance to say what matters, with care and hope.</span
+                  >
+                  <span class="connecting-node-link">Open Chapter 09</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="connecting-node"
+                  onclick="scrollToChapter('ch10')"
+                  aria-label="Go to Chapter 10: An Unwritten Future"
+                >
+                  <span class="connecting-node-top">
+                    <span class="connecting-number">10</span>
+                    <i class="fa-solid fa-infinity" aria-hidden="true"></i>
+                  </span>
+                  <span class="connecting-node-title">An unwritten future</span>
+                  <span class="connecting-node-copy"
+                    >The next pages are still yours to write.</span
+                  >
+                  <span class="connecting-node-link">Open Chapter 10</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="connecting-node"
+                  onclick="scrollToChapter('ch11')"
+                  aria-label="Go to Chapter 11: Our Conversations"
+                >
+                  <span class="connecting-node-top">
+                    <span class="connecting-number">11</span>
+                    <i class="fa-solid fa-message" aria-hidden="true"></i>
+                  </span>
+                  <span class="connecting-node-title">Everyday conversations</span>
+                  <span class="connecting-node-copy"
+                    >Small exchanges that became part of your story.</span
+                  >
+                  <span class="connecting-node-link">Open Chapter 11</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="connecting-node"
+                  onclick="scrollToChapter('ch12')"
+                  aria-label="Go to Chapter 12: The Memory Box"
+                >
+                  <span class="connecting-node-top">
+                    <span class="connecting-number">12</span>
+                    <i class="fa-solid fa-box-open" aria-hidden="true"></i>
+                  </span>
+                  <span class="connecting-node-title">Memories to keep</span>
+                  <span class="connecting-node-copy"
+                    >The photos, places, and keepsakes gathered along the way.</span
+                  >
+                  <span class="connecting-node-link">Open Chapter 12</span>
+                </button>
+              </li>
+            </ol>
+          </div>
+
+          <div class="connecting-summary glass-card rounded-3xl p-6 md:p-9 mt-10">
+            <span class="connecting-summary-icon" aria-hidden="true">
+              <i class="fa-solid fa-heart"></i>
+            </span>
+            <div>
+              <p
+                class="text-xs uppercase tracking-[0.25em] text-gold-400 font-semibold mb-2"
+              >
+                The bigger picture
+              </p>
+              <p class="font-serif text-xl md:text-2xl text-burgundy-100 leading-relaxed">
+                The moments may look separate at first. Follow the line and they
+                become a story of <span class="text-blush-300">care</span>,
+                <span class="text-blush-300">effort</span>, honest
+                <span class="text-blush-300">conversations</span>, and finding
+                your way through uncertainty together.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- =========================================================
      MEMORY VIEWER
 ========================================================= -->
@@ -3169,107 +3648,131 @@
       </div>
 
       <!-- FOOTER -->
-      <footer
-        class="relative z-20 py-10 px-5 sm:py-12 border-t border-burgundy-900/40 bg-velvet/60 backdrop-blur-sm"
-      >
-        <div class="max-w-2xl mx-auto text-center">
-          <!-- Decorative Heart Divider -->
-          <div class="flex items-center justify-center gap-3 mb-4">
-            <span class="h-px w-10 sm:w-16 bg-burgundy-700/60"></span>
-            <i class="fa-solid fa-heart text-gold-400/70 text-xs"></i>
-            <span class="h-px w-10 sm:w-16 bg-burgundy-700/60"></span>
-          </div>
+   <footer class="relative z-20 py-12 px-5 sm:py-16 border-t border-burgundy-900/40 bg-velvet/60 backdrop-blur-sm">
+  <div class="max-w-5xl mx-auto">
 
-          <!-- Main Footer Message -->
-          <p
-            class="font-serif text-base sm:text-lg text-burgundy-200/80 italic leading-relaxed"
-          >
-            Crafted with love, memories &amp; a little bit of courage.
-          </p>
+    <!-- ===== Top Section: Two-Column Layout ===== -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-8 items-center">
 
-          <!-- Couple Signature -->
-          <p
-            class="mt-2 text-[10px] sm:text-xs text-burgundy-400/60 tracking-[0.18em] uppercase"
-          >
-            Ranjan <span class="text-gold-400/60">♥</span> Anjali
-          </p>
-
-          <!-- Story Closing Line -->
-          <p class="mt-5 text-[9px] sm:text-[10px] text-burgundy-500/50">
-            Our Unwritten Story · Still being written
-          </p>
-
-          <!-- Developer Credit -->
-          <div class="mt-7 pt-5 border-t border-burgundy-900/30">
-            <p
-              class="text-[9px] sm:text-[10px] uppercase tracking-[0.25em] text-burgundy-400/60"
-            >
-              Designed &amp; Developed by
-            </p>
-
-            <!-- Developer Portfolio Link -->
-            <a
-              href="https://ranjan-builds.github.io/Profile/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Visit Ranjan Builds developer portfolio"
-              class="group inline-flex items-center justify-center gap-2 mt-3 text-sm text-burgundy-200/80 hover:text-gold-400 transition-all duration-300"
-            >
-              <i
-                class="fa-solid fa-code text-gold-400/70 group-hover:text-gold-400 transition-colors duration-300"
-              ></i>
-              <span class="font-medium tracking-wide">Ranjan Builds</span>
-              <i
-                class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-50 group-hover:opacity-100 transition-opacity duration-300"
-              ></i>
-            </a>
-
-            <!-- Developer Tagline -->
-            <p
-              class="mt-2 text-[9px] sm:text-[10px] text-burgundy-500/60 tracking-wide"
-            >
-              <i class="fa-solid fa-heart text-[8px] text-burgundy-400/70"></i>
-              Built with code, crafted with emotion.
-            </p>
-
-            <!-- Visitor Counter -->
-            <div class="mt-6 pt-4 border-t border-burgundy-900/20">
-              <p
-                class="mb-3 text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-burgundy-400/60"
-              >
-                <i class="fa-solid fa-eye text-gold-400/70 mr-1"></i>
-                Visitors to Our Story
-              </p>
-
-              <a
-                href="https://www.hitwebcounter.com/word-counter"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Visitor Counter"
-                class="inline-flex flex-col items-center gap-2 opacity-80 hover:opacity-100 transition-opacity duration-300"
-              >
-                <img
-                  src="https://www.hitwebcounter.com/counter/counter.php?page=21524113&amp;style=0040&amp;nbdigits=4&amp;type=page"
-                  alt="Visitor Counter"
-                  decoding="async"
-                  loading="lazy"
-                  style="border: 0; max-width: 100%; height: auto"
-                />
-              </a>
-
-              <p class="mt-2">
-                <a
-                  href="https://www.hitwebcounter.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-[10px] text-burgundy-500/60 hover:text-gold-400 transition-colors duration-300"
-                >
-                </a>
-              </p>
-            </div>
-          </div>
+      <!-- LEFT: Brand / Message -->
+      <div class="text-center md:text-left">
+        <!-- Decorative Heart Divider -->
+        <div class="flex items-center justify-center md:justify-start gap-3 mb-4">
+          <span class="h-px w-10 sm:w-14 bg-burgundy-700/60"></span>
+          <i class="fa-solid fa-heart text-gold-400/70 text-xs"></i>
+          <span class="h-px w-10 sm:w-14 bg-burgundy-700/60"></span>
         </div>
-      </footer>
+
+        <!-- Main Footer Message -->
+        <p class="font-serif text-lg sm:text-xl text-burgundy-200/90 italic leading-relaxed">
+          Crafted with love, memories &amp; a little bit of courage.
+        </p>
+
+        <!-- Couple Signature -->
+        <p class="mt-3 text-[10px] sm:text-xs text-burgundy-400/70 tracking-[0.18em] uppercase">
+          Ranjan <span class="text-gold-400/60">♥</span> Anjali
+        </p>
+
+        <!-- Story Closing Line -->
+        <p class="mt-4 text-[9px] sm:text-[10px] text-burgundy-500/50">
+          Our Unwritten Story · Still being written
+        </p>
+      </div>
+
+      <!-- RIGHT: Connect / Developer Links -->
+      <div class="text-center md:text-right">
+        <p class="text-[9px] sm:text-[10px] uppercase tracking-[0.25em] text-burgundy-400/60 mb-4">
+          Designed &amp; Developed by
+        </p>
+
+        <!-- Developer Portfolio Link -->
+        <a
+          href="https://ranjan-builds.github.io/Profile/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Visit Ranjan Builds developer portfolio"
+          class="group inline-flex items-center justify-center md:justify-end gap-2 text-sm text-burgundy-200/90 hover:text-gold-400 transition-all duration-300"
+        >
+          <i class="fa-solid fa-code text-gold-400/70 group-hover:text-gold-400 transition-colors duration-300"></i>
+          <span class="font-medium tracking-wide">Ranjan Builds</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-50 group-hover:opacity-100 transition-opacity duration-300"></i>
+        </a>
+
+        <!-- Tagline -->
+        <p class="mt-2 text-[9px] sm:text-[10px] text-burgundy-500/60 tracking-wide">
+          <i class="fa-solid fa-heart text-[8px] text-burgundy-400/70"></i>
+          Built with code, crafted with emotion.
+        </p>
+
+        <!-- Contact Links (stacked neatly) -->
+        <div class="mt-5 flex flex-col items-center md:items-end gap-2.5 text-[10px] sm:text-xs">
+          <a
+            href="mailto:ranjan.sandbox@gmail.com"
+            class="inline-flex items-center gap-2 text-burgundy-400/80 hover:text-gold-400 transition-colors duration-300 group"
+            aria-label="Send email to Ranjan"
+          >
+            <i class="fa-regular fa-envelope text-gold-400/60 group-hover:text-gold-400"></i>
+            <span>ranjan.sandbox@gmail.com</span>
+          </a>
+
+          <a
+            href="https://github.com/ranjan-builds"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 text-burgundy-400/80 hover:text-gold-400 transition-colors duration-300 group"
+            aria-label="Visit Ranjan's GitHub profile"
+          >
+            <i class="fa-brands fa-github text-gold-400/60 group-hover:text-gold-400"></i>
+            <span>github.com/ranjan-builds</span>
+            <i class="fa-solid fa-arrow-up-right-from-square text-[8px] opacity-40 group-hover:opacity-100"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== Bottom Section: Visitor Counter ===== -->
+    <div class="mt-10 pt-6 border-t border-burgundy-900/30">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+
+        <!-- Visitor Label -->
+        <p class="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-burgundy-400/60 flex items-center gap-2">
+          <i class="fa-solid fa-eye text-gold-400/70"></i>
+          Visitors to Our Story
+        </p>
+
+        <!-- Counter -->
+        <a
+          href="https://www.hitwebcounter.com/word-counter"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Visitor Counter"
+          class="opacity-80 hover:opacity-100 transition-opacity duration-300"
+        >
+          <img
+            src="https://www.hitwebcounter.com/counter/counter.php?page=21524113&style=0040&nbdigits=4&type=page"
+            alt="Visitor Counter"
+            decoding="async"
+            loading="lazy"
+            style="border: 0; max-width: 100%; height: auto"
+          />
+        </a>
+
+        <!-- Attribution (subtle) -->
+        <a
+          href="https://www.hitwebcounter.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-[9px] text-burgundy-500/40 hover:text-gold-400/70 transition-colors duration-300"
+        >
+          hitwebcounter.com
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+</footer>
     </div>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://unpkg.com/cursor-effects@latest/dist/browser.js"></script>

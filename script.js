@@ -1,7 +1,5 @@
 // Global App State
 let isAudioPlaying = false;
-let isScootyAnimating = false;
-let scootyAnimationFrame = null;
 
 const playlist = [
   { title: "The song that reminds me of you", file: "candy.mp3" },
@@ -62,7 +60,7 @@ document.getElementById("ambientAudio").addEventListener("ended", () => {
 particlesJS("snow-particles", {
   particles: {
     number: {
-      value: 90,
+      value: 50,
       density: {
         enable: true,
         value_area: 900,
@@ -179,55 +177,223 @@ function openEnvelope() {
 
 function scrollToChapter(chapterId) {
   const target = document.getElementById(chapterId);
-  if (target) {
-    target.scrollIntoView({ behavior: "smooth" });
-  }
+  if (!target) return;
+
+  const nav = document.getElementById("mainNav");
+  const navOffset = nav ? nav.getBoundingClientRect().height : 0;
+  const top = target.getBoundingClientRect().top + window.scrollY - navOffset - 12;
+  const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ? "auto"
+    : "smooth";
+  window.scrollTo({ top, behavior });
 }
 
-// Scroll Progress Bar & Navigation Indicator update
-window.addEventListener("scroll", () => {
-  const winScroll =
-    document.body.scrollTop || document.documentElement.scrollTop;
+const chapterNavButtons = Array.from(
+  document.querySelectorAll("#chapterNav [data-chapter]"),
+);
+let chapterVoiceEnabled = false;
+let activeStoryChapterButton = null;
+let requestedVoiceChapterId = null;
+const chapterTitleAudios = new Map();
+
+function setChapterVoiceStatus(message) {
+  const status = document.getElementById("chapterVoiceStatus");
+  if (!status) return;
+  status.textContent = message;
+  status.hidden = false;
+}
+
+chapterNavButtons.forEach((button) => {
+  const source = button.dataset.voiceSrc;
+  if (!source) return;
+
+  const audio = new Audio(source);
+  audio.preload = "auto";
+  audio.addEventListener("error", () => {
+    if (
+      !chapterVoiceEnabled ||
+      !activeStoryChapterButton ||
+      requestedVoiceChapterId !== button.dataset.chapter
+    ) {
+      return;
+    }
+    setChapterVoiceStatus(
+      `Couldn't load ${source}. Check that the recording exists in the myVoice folder.`,
+    );
+  });
+  chapterTitleAudios.set(button.dataset.chapter, audio);
+  audio.load();
+});
+
+function playChapterVoice(button) {
+  if (!button || !button.dataset.voiceSrc) return;
+
+  const audio = chapterTitleAudios.get(button.dataset.chapter);
+  if (!audio) {
+    setChapterVoiceStatus(
+      `No voice recording is configured for ${button.getAttribute("aria-label")}.`,
+    );
+    return;
+  }
+
+  requestedVoiceChapterId = button.dataset.chapter;
+  chapterTitleAudios.forEach((chapterAudio) => {
+    if (chapterAudio === audio) return;
+    chapterAudio.pause();
+    chapterAudio.currentTime = 0;
+  });
+  audio.pause();
+  audio.currentTime = 0;
+  setChapterVoiceStatus(
+    `Playing voice title for ${button.getAttribute("aria-label")}.`,
+  );
+
+  audio.play().catch(() => {
+    if (
+      !chapterVoiceEnabled ||
+      requestedVoiceChapterId !== button.dataset.chapter
+    ) {
+      return;
+    }
+    setChapterVoiceStatus(
+      `Couldn't play ${button.dataset.voiceSrc}. Check that the recording exists and is a supported audio file.`,
+    );
+  });
+}
+
+function toggleChapterVoice() {
+  chapterVoiceEnabled = !chapterVoiceEnabled;
+  const toggle = document.getElementById("chapterVoiceToggle");
+  const toggleText = document.getElementById("chapterVoiceToggleText");
+  const icon = toggle && toggle.querySelector("i");
+  if (!toggle || !toggleText || !icon) return;
+
+  toggle.setAttribute("aria-pressed", String(chapterVoiceEnabled));
+  toggle.setAttribute(
+    "aria-label",
+    chapterVoiceEnabled ? "Turn chapter voice off" : "Turn chapter voice on",
+  );
+  toggle.classList.toggle("is-enabled", chapterVoiceEnabled);
+  toggleText.textContent = chapterVoiceEnabled ? "Voice on" : "Voice off";
+  icon.className = chapterVoiceEnabled
+    ? "fa-solid fa-volume-high"
+    : "fa-solid fa-volume-xmark";
+
+  if (chapterVoiceEnabled) {
+    if (activeStoryChapterButton) {
+      playChapterVoice(activeStoryChapterButton);
+    } else {
+      setChapterVoiceStatus(
+        "Voice guide on. Add Chapter5.wav through Chapter13.wav to the myVoice folder as you record them.",
+      );
+    }
+    return;
+  }
+
+  chapterTitleAudios.forEach((audio) => {
+    audio.pause();
+    audio.currentTime = 0;
+  });
+  requestedVoiceChapterId = null;
+  setChapterVoiceStatus("Chapter voice is off.");
+}
+
+function updateStoryNavigation() {
+  const winScroll = window.scrollY;
   const height =
     document.documentElement.scrollHeight -
     document.documentElement.clientHeight;
-  const scrolled = (winScroll / height) * 100;
-  document.getElementById("progressBar").style.width = scrolled + "%";
+  const progressBar = document.getElementById("progressBar");
+  if (progressBar) {
+    const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+    progressBar.style.width = `${Math.min(100, Math.max(0, scrolled))}%`;
+  }
 
-  // Active Chapter Detection
-  const chapters = [
-    "ch1",
-    "ch2",
-    "ch3",
-    "ch4",
-    "ch5",
-    "ch6",
-    "ch7",
-    "ch8",
-    "ch9",
-    "ch10",
-  ];
-  const names = [
-    "Chapter 1: The Beginning",
-    "Chapter 2: 17 Aug PDF",
-    "Chapter 3: Her Apology",
-    "Chapter 4: 20 August",
-    "Chapter 5: Meeting Plans",
-    "Chapter 6: 9 Sept Meeting",
-    "Chapter 7: Growing Closer",
-    "Chapter 8: Doubts & Questions",
-    "Chapter 9: Love Letter",
-    "Chapter 10: Unwritten Future",
-  ];
+  const nav = document.getElementById("mainNav");
+  const activeThreshold = (nav ? nav.getBoundingClientRect().height : 0) + 32;
+  let activeButton = null;
+  chapterNavButtons.forEach((button) => {
+    const chapter = document.getElementById(button.dataset.chapter);
+    if (chapter && chapter.getBoundingClientRect().top <= activeThreshold) {
+      activeButton = button;
+    }
+  });
 
-  for (let i = chapters.length - 1; i >= 0; i--) {
-    const el = document.getElementById(chapters[i]);
-    if (el && el.getBoundingClientRect().top <= 200) {
-      document.getElementById("currentChapterIndicator").innerText = names[i];
-      break;
+  if (!activeButton && winScroll > 0) {
+    activeButton = chapterNavButtons[0] || null;
+  }
+  if (!activeButton) {
+    activeStoryChapterButton = null;
+    if (chapterVoiceEnabled) {
+      chapterTitleAudios.forEach((audio) => audio.pause());
+      requestedVoiceChapterId = null;
+      setChapterVoiceStatus(
+        "Voice guide on. Scroll to a chapter to hear its title.",
+      );
+    }
+    return;
+  }
+
+  const chapterChanged = activeStoryChapterButton !== activeButton;
+  activeStoryChapterButton = activeButton;
+
+  const currentIndicator = document.getElementById("currentChapterIndicator");
+  if (currentIndicator) {
+    currentIndicator.textContent = activeButton.getAttribute("aria-label");
+  }
+
+  const wasAlreadyActive =
+    activeButton.getAttribute("aria-current") === "location";
+  chapterNavButtons.forEach((button) => {
+    const isActive = button === activeButton;
+    button.classList.toggle("is-active", isActive);
+    if (isActive) {
+      button.setAttribute("aria-current", "location");
+    } else {
+      button.removeAttribute("aria-current");
+    }
+  });
+
+  if (chapterChanged && chapterVoiceEnabled) {
+    playChapterVoice(activeButton);
+  }
+
+  if (!wasAlreadyActive) {
+    const track = document.querySelector(".chapter-nav-track");
+    const trackRect = track && track.getBoundingClientRect();
+    const buttonRect = activeButton.getBoundingClientRect();
+    if (
+      track &&
+      trackRect &&
+      (buttonRect.left < trackRect.left || buttonRect.right > trackRect.right)
+    ) {
+      const offset =
+        buttonRect.left +
+        buttonRect.width / 2 -
+        (trackRect.left + trackRect.width / 2);
+      const behavior = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches
+        ? "auto"
+        : "smooth";
+      track.scrollBy({ left: offset, behavior });
     }
   }
-});
+}
+
+let storyNavigationFrame = null;
+window.addEventListener(
+  "scroll",
+  () => {
+    if (storyNavigationFrame !== null) return;
+    storyNavigationFrame = window.requestAnimationFrame(() => {
+      updateStoryNavigation();
+      storyNavigationFrame = null;
+    });
+  },
+  { passive: true },
+);
+updateStoryNavigation();
 
 function togglePdfSummary() {
   const excerpts = document.getElementById("pdfExcerpts");
@@ -269,107 +435,114 @@ function flipCard(cardEl) {
   inner.classList.toggle("rotate-y-180");
 }
 
-const jCanvas = document.getElementById("journeyCanvas");
-const jCtx = jCanvas.getContext("2d");
-let scootyProgress = 0;
+let memoryRideFrame = null;
 
-function renderJourneyCanvas() {
-  jCanvas.width = jCanvas.offsetWidth;
-  jCanvas.height = jCanvas.offsetHeight;
+function positionMemoryScooty(progress) {
+  const scene = document.getElementById("memoryRideScene");
+  const road = scene?.querySelector(".memory-ride-road");
+  const path = document.getElementById("memoryRidePath");
+  const scooty = scene?.querySelector(".memory-ride-scooty");
 
-  const w = jCanvas.width;
-  const h = jCanvas.height;
-
-  // Background Scenic Gradient
-  const skyGrad = jCtx.createLinearGradient(0, 0, 0, h);
-  skyGrad.addColorStop(0, "#1a050d");
-  skyGrad.addColorStop(0.6, "#380a14");
-  skyGrad.addColorStop(1, "#0e0306");
-  jCtx.fillStyle = skyGrad;
-  jCtx.fillRect(0, 0, w, h);
-
-  // Winding Road path
-  jCtx.beginPath();
-  jCtx.moveTo(40, h / 2);
-  jCtx.bezierCurveTo(w * 0.3, h * 0.2, w * 0.6, h * 0.8, w - 50, h / 2);
-  jCtx.strokeStyle = "rgba(212, 175, 55, 0.4)";
-  jCtx.lineWidth = 12;
-  jCtx.stroke();
-
-  // Location Nodes (Korba & Nagargda Waterfall)
-  // Node 1: Korba
-  jCtx.fillStyle = "#be3154";
-  jCtx.beginPath();
-  jCtx.arc(40, h / 2, 8, 0, Math.PI * 2);
-  jCtx.fill();
-  jCtx.fillStyle = "#fbe5e8";
-  jCtx.font = "10px Plus Jakarta Sans";
-  jCtx.fillText("Korba", 25, h / 2 - 15);
-
-  // Node 2: Champa
-  jCtx.fillStyle = "#d4af37";
-  jCtx.beginPath();
-  jCtx.arc(w * 0.45, h * 0.52, 6, 0, Math.PI * 2);
-  jCtx.fill();
-  jCtx.fillStyle = "#fbe5e8";
-  jCtx.fillText("Champa", w * 0.45 - 18, h * 0.52 - 12);
-
-  // Node 3: Nagargda Waterfall
-  jCtx.fillStyle = "#38bdf8";
-  jCtx.beginPath();
-  jCtx.arc(w - 50, h / 2, 10, 0, Math.PI * 2);
-  jCtx.fill();
-  jCtx.fillStyle = "#38bdf8";
-  jCtx.fillText("Nagargda Waterfall", w - 90, h / 2 - 18);
-
-  // Calculate Scooty Position along Curve
-  const t = scootyProgress;
-  const px =
-    (1 - t) * (1 - t) * 40 + 2 * (1 - t) * t * (w * 0.5) + t * t * (w - 50);
-  const py =
-    (1 - t) * (1 - t) * (h / 2) + 2 * (1 - t) * t * (h * 0.7) + t * t * (h / 2);
-
-  // Draw Scooty Icon / Marker
-  jCtx.fillStyle = "#f6e05e";
-  jCtx.shadowColor = "#d4af37";
-  jCtx.shadowBlur = 10;
-  jCtx.beginPath();
-  jCtx.arc(px, py, 7, 0, Math.PI * 2);
-  jCtx.fill();
-  jCtx.shadowBlur = 0;
-
-  // Update Label text depending on position
-  const locLabel = document.getElementById("locationLabel");
-  if (t < 0.4) {
-    locLabel.innerText = "Departing Korba towards Champa...";
-  } else if (t < 0.8) {
-    locLabel.innerText = "Riding together on scooty through scenic greenery...";
-  } else {
-    locLabel.innerText = "Arrived at Nagargda Waterfall (9 Sept Memory)";
+  if (!scene || !road || !path || !scooty) {
+    console.error("The scooty ride scene is missing its road path or marker.");
+    return false;
   }
+
+  const pathLength = path.getTotalLength();
+  const distance = pathLength * progress;
+  const matrix = road.getScreenCTM();
+  if (!matrix) {
+    console.error("The scooty ride road has no screen position.");
+    return false;
+  }
+  const point = path.getPointAtLength(distance);
+  const screenPoint = new DOMPoint(point.x, point.y).matrixTransform(matrix);
+  const before = path.getPointAtLength(Math.max(0, distance - 2)).matrixTransform(
+    matrix,
+  );
+  const after = path
+    .getPointAtLength(Math.min(pathLength, distance + 2))
+    .matrixTransform(matrix);
+  const sceneBounds = scene.getBoundingClientRect();
+  scooty.style.left = `${screenPoint.x - sceneBounds.left}px`;
+  scooty.style.top = `${screenPoint.y - sceneBounds.top}px`;
+  const angle = (Math.atan2(after.y - before.y, after.x - before.x) * 180) / Math.PI;
+  scooty.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+  return true;
 }
 
-function toggleScootyAnimation() {
-  isScootyAnimating = !isScootyAnimating;
-  const btnText = document.getElementById("scootyBtnText");
+function playMemoryRide() {
+  const scene = document.getElementById("memoryRideScene");
+  const button = document.getElementById("memoryRideButton");
+  const buttonText = document.getElementById("memoryRideButtonText");
+  const status = document.getElementById("memoryRideStatus");
+  if (!scene || !button || !buttonText || !status) return;
 
-  if (isScootyAnimating) {
-    btnText.innerText = "Pause Journey";
-    function loop() {
-      scootyProgress += 0.003;
-      if (scootyProgress > 1) scootyProgress = 0;
-      renderJourneyCanvas();
-      if (isScootyAnimating) {
-        scootyAnimationFrame = requestAnimationFrame(loop);
-      }
+  scene.classList.remove("is-riding", "has-arrived");
+  if (memoryRideFrame !== null) {
+    window.cancelAnimationFrame(memoryRideFrame);
+    memoryRideFrame = null;
+  }
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (!positionMemoryScooty(1)) return;
+    scene.classList.add("has-arrived");
+    buttonText.textContent = "Journey remembered";
+    status.textContent =
+      "Korba to Champa, then together on her scooty to Nagargda.";
+    return;
+  }
+
+  if (!positionMemoryScooty(0)) return;
+  scene.classList.add("is-riding");
+  button.disabled = true;
+  buttonText.textContent = "Riding together...";
+  status.textContent = "Leaving Korba behind, on our way to Champa.";
+
+  const duration = 5200;
+  let startTime = null;
+  let announcedChampa = false;
+
+  function rideFrame(timestamp) {
+    if (startTime === null) startTime = timestamp;
+    const progress = Math.min((timestamp - startTime) / duration, 1);
+    if (!positionMemoryScooty(progress)) {
+      scene.classList.remove("is-riding");
+      button.disabled = false;
+      buttonText.textContent = "Try the ride again";
+      status.textContent = "The ride could not start. Please try again.";
+      memoryRideFrame = null;
+      return;
     }
-    loop();
-  } else {
-    btnText.innerText = "Resume Journey Animation";
-    cancelAnimationFrame(scootyAnimationFrame);
+
+    if (progress >= 0.48 && !announcedChampa) {
+      announcedChampa = true;
+      status.textContent =
+        "Together at Champa, then off on her scooty toward Nagargda.";
+    }
+
+    if (progress < 1) {
+      memoryRideFrame = window.requestAnimationFrame(rideFrame);
+      return;
+    }
+
+    scene.classList.remove("is-riding");
+    scene.classList.add("has-arrived");
+    button.disabled = false;
+    buttonText.textContent = "Ride again";
+    status.textContent =
+      "We made it to Nagargda — and found a memory to keep.";
+    memoryRideFrame = null;
   }
+
+  memoryRideFrame = window.requestAnimationFrame(rideFrame);
 }
-renderJourneyCanvas();
+
+window.addEventListener("resize", () => {
+  const scene = document.getElementById("memoryRideScene");
+  if (!scene || scene.classList.contains("is-riding")) return;
+  positionMemoryScooty(scene.classList.contains("has-arrived") ? 1 : 0);
+});
 
 const endingText =
   "Our story is still being written. We don't know what tomorrow holds, but every honest conversation, every effort, every shared smile, and every moment of understanding becomes a part of our journey. Perhaps the most beautiful part of our story is not knowing exactly how it ends, but discovering how we choose to write it together.";
@@ -458,7 +631,7 @@ function revealMoreConversations() {
   // A fresh page load ALWAYS asks for the password again.
   // Only a SHA-256 digest is embedded for client-side verification.
   // Set to true to skip the password during development.
-  let DEVELOPER_MODE = false
+  let DEVELOPER_MODE = false;
   const PASSWORD_SHA256 =
     "0890930cbc82a905bd28dec28ba7db90a3e9bec2231003288497fc943ed1e99f";
   const gate = document.getElementById("passwordGate");
@@ -536,13 +709,14 @@ function revealMoreConversations() {
          ========================================================= */
 
 const memories = [
-  // {
-  //   type: "image",
-  //   title: "Our Togather Photo",
-  //   date: "9 September 2026",
-  //   file: "./memories/images/we.jpg",
-  //   caption: "The day we finally went to devriside road trip.",
-  // },
+  {
+    type: "image",
+    title: "Connecting the dots",
+    date: "19 October 2026",
+    file: "./memories/images/dots.png",
+    caption:
+      "When we connect all the dots, it shows a story of real connection, affection, and effort from both sides. but with uncertainty",
+  },
 
   {
     type: "place",
