@@ -64,9 +64,34 @@ http://localhost:8000
 You can personalize the site by editing:
 
 - `index.html` for text, chapters, and content layout
-- `script.js` for interactive logic and story behavior
+- `script.js` for interactive logic, story behavior, and the `timelineEvents` array
 - asset files in the root or `memories/` folder for images and media
 - colors/fonts in the inline Tailwind configuration and CSS blocks in `index.html`
+
+### Adding a timeline event
+
+Add another object to the `timelineEvents` array in `script.js`. Each event
+supports `day`, `month`, `dateLabel`, `badge`, `badgeIcon`, `badgeClasses`,
+`icon`, `glowClass`, `title`, `description`, and `quote`. Add a `route` with a
+`title` and `stops` array for a journey, or a `highlights` array for detail
+cards; both are optional. Timeline cards alternate sides automatically. For
+example:
+
+```js
+{
+  day: "14",
+  month: "February",
+  dateLabel: "A special day",
+  badge: "Our Anniversary",
+  badgeIcon: "fa-heart",
+  badgeClasses: "border-gold-500/25 bg-gold-500/10 text-gold-200",
+  icon: "fa-heart",
+  glowClass: "bg-gold-500/10",
+  title: "Another Beautiful Memory",
+  description: "Add the story of this day here.",
+  quote: "A favorite line to remember.",
+}
+```
 
 ### Chapter voice recordings
 

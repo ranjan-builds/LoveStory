@@ -743,6 +743,14 @@ const memories = [
     maps: "https://maps.app.goo.gl/ppBJu3ZgcFYHVLWK6",
   },
   {
+    type: "place",
+    title: "I came to Korba to meet you",
+    date: "04 November 2026",
+    file: "./memories/images/ghantaGhar.png",
+    location: "Korba, Chhattisgarh",
+    maps: "https://maps.app.goo.gl/t563BNdjJUj7mQS66",
+  },
+  {
     type: "audio",
     title: "The Song That Reminds Me of You",
     date: "Our Song",
@@ -777,14 +785,14 @@ const memories = [
     date: "2026",
     file: "memories\\videos\\HerMood.mp4",
   },
-  {
-    type: "file",
-    title: "A Letter for the Future",
-    date: "14 October 2026",
-    file: "memories\\doc\\futureLetter.pdf",
-    caption:
-      "Jab tum ready feel karo tab padhna. Turant reply dene ki koi zaroorat nahi hai.",
-  },
+  // {
+  //   type: "file",
+  //   title: "A Letter for the Future",
+  //   date: "14 October 2026",
+  //   file: "memories\\doc\\futureLetter.pdf",
+  //   caption:
+  //     "Jab tum ready feel karo tab padhna. Turant reply dene ki koi zaroorat nahi hai.",
+  // },
 ];
 
 const memoryMeta = {
@@ -905,6 +913,200 @@ function closeMemoryViewer() {
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeMemoryViewer();
 });
+
+const timelineEvents = [
+  {
+    day: "09",
+    month: "September",
+    dateLabel: "The beginning",
+    badge: "First Meeting",
+    badgeIcon: "fa-sparkles",
+    badgeClasses:
+      "border-gold-500/25 bg-gold-500/10 text-gold-200",
+    icon: "fa-location-dot",
+    glowClass: "bg-gold-500/10 group-hover:bg-gold-500/20",
+    title: "Nagarda — Where It All Began",
+    description:
+      "You travelled from Korba to Champa station and continued towards Nagarda, nearly 55 km away, just to meet me. Knowing you came all that way made our first meeting feel even more special. It was more than a meeting; it was the beginning of a memory I will always treasure.",
+    route: {
+      title: "Your journey to me",
+      stops: [
+        { label: "Korba", icon: "fa-circle-dot" },
+        { label: "Champa Station", icon: "fa-train" },
+        { label: "Nagarda", icon: "fa-heart", highlight: true },
+      ],
+    },
+    quote:
+      "Of all the places we could have been, that day, I am glad our paths led us to each other.",
+  },
+  {
+    day: "09",
+    month: "October",
+    dateLabel: "A new memory",
+    badge: "Together Again",
+    badgeIcon: "fa-house",
+    badgeClasses:
+      "border-emerald-400/20 bg-emerald-400/5 text-emerald-200",
+    icon: "fa-house-heart",
+    glowClass: "bg-rose-500/10",
+    title: "A Little Closer to Home",
+    description:
+      "On 9 October, we met again at my home. This time, everything felt quieter, warmer, and more familiar. Having you there made an ordinary place feel special. It was another little chapter in our story, filled with moments I wanted to hold on to.",
+    highlights: [
+      {
+        icon: "fa-house-heart",
+        title: "A Familiar Place",
+        description: "Made special by you.",
+      },
+      {
+        icon: "fa-heart",
+        title: "Another Memory",
+        description: "A moment to cherish.",
+      },
+    ],
+    quote:
+      "Some places become special not because of where they are, but because of who is beside you.",
+  },
+  {
+  day: "04",
+  month: "November",
+  dateLabel: "A Day to Remember",
+  badge: "Me at korba",
+  badgeIcon: "fa-map-marker-alt",
+  badgeClasses:
+    "border-emerald-400/20 bg-emerald-400/5 text-emerald-200",
+  icon: "fa-heart",
+  glowClass: "bg-rose-500/10",
+  title: "A Journey Worth Remembering",
+  description:
+    "On 4 November, I travelled to Korba to meet you. Together, we visited Bhavani Temple, Ram Mandir, Darri Dam, and Duma Dih, where we spent some beautiful moments together. After a memorable day, I headed home with a heart full of happiness and memories.",
+  highlights: [
+    {
+      icon: "fa-route",
+      title: "A Journey for You",
+      description: "Travelled all the way to Korba just to see you.",
+    },
+    {
+      icon: "fa-landmark",
+      title: "Little Adventures",
+      description: "Bhavani Temple, Ram Mandir and Darri Dam.",
+    },
+ 
+ 
+  ],
+  quote:
+    "I travelled miles just to see her, but the moments we spent together made every mile worth it.",
+},
+];
+
+function renderTimeline() {
+  const timelineItems = document.getElementById("timelineItems");
+  if (!timelineItems) return;
+
+  timelineItems.innerHTML = timelineEvents
+    .map((event, index) => {
+      const cardOnLeft = index % 2 === 1;
+      const dateSide = cardOnLeft
+        ? "hidden self-center pl-10 text-left md:block"
+        : "hidden self-center pr-10 text-right md:block";
+      const cardSide = cardOnLeft
+        ? "col-start-2 row-start-1 min-w-0 md:col-start-1 md:pr-10"
+        : "col-start-2 row-start-1 min-w-0 md:col-start-3 md:pl-10";
+      const dateAlignment = cardOnLeft ? "md:text-left" : "md:text-right";
+      const stops = event.route?.stops || [];
+
+      const routeMarkup = event.route
+        ? `
+          <div class="mt-6 rounded-2xl border border-burgundy-700/50 bg-black/15 p-4">
+            <p class="mb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold-400/90">
+              ${escapeMemoryText(event.route.title)}
+            </p>
+            <div class="flex flex-wrap items-center gap-x-2 gap-y-3 text-xs text-burgundy-100 sm:gap-x-3">
+              ${stops
+                .map(
+                  (stop, stopIndex) => `
+                    ${stopIndex > 0 ? '<i class="fa-solid fa-arrow-right text-[10px] text-gold-500/60" aria-hidden="true"></i>' : ""}
+                    <span class="inline-flex items-center gap-1.5${stop.highlight ? " text-gold-200" : ""}">
+                      <i class="fa-solid ${escapeMemoryText(stop.icon)} text-gold-400" aria-hidden="true"></i>
+                      ${escapeMemoryText(stop.label)}
+                    </span>
+                  `,
+                )
+                .join("")}
+            </div>
+          </div>`
+        : "";
+      const highlightsMarkup = event.highlights?.length
+        ? `
+          <div class="mt-6 grid grid-cols-2 gap-3">
+            ${event.highlights
+              .map(
+                (highlight) => `
+                  <div class="rounded-2xl border border-burgundy-700/50 bg-black/15 p-3 sm:p-4">
+                    <i class="fa-solid ${escapeMemoryText(highlight.icon)} mb-3 text-lg text-gold-400" aria-hidden="true"></i>
+                    <p class="text-xs font-semibold text-gold-200 sm:text-sm">${escapeMemoryText(highlight.title)}</p>
+                    <p class="mt-1 text-[11px] leading-5 text-burgundy-300">${escapeMemoryText(highlight.description)}</p>
+                  </div>
+                `,
+              )
+              .join("")}
+          </div>`
+        : "";
+
+      return `
+        <article class="relative grid grid-cols-[40px_minmax(0,1fr)] items-start gap-3 sm:grid-cols-[48px_minmax(0,1fr)] sm:gap-5 md:grid-cols-[1fr_72px_1fr] md:gap-0">
+          <div class="${dateSide}">
+            <span class="text-xs font-semibold uppercase tracking-[0.25em] text-gold-400 ${dateAlignment}">
+              ${escapeMemoryText(event.dateLabel)}
+            </span>
+            <p class="mt-3 font-serif text-3xl font-bold text-gold-200">
+              ${escapeMemoryText(event.day)}
+            </p>
+            <p class="mt-1 text-sm text-burgundy-300">${escapeMemoryText(event.month)}</p>
+          </div>
+
+          <div class="relative z-10 col-start-1 row-start-1 flex justify-center md:col-start-2">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full border border-gold-300/70 bg-[#351019] text-gold-300 shadow-[0_0_0_6px_rgba(214,165,95,0.07),0_0_25px_rgba(214,165,95,0.22)] sm:h-12 sm:w-12">
+              <i class="fa-solid ${escapeMemoryText(event.icon)} text-sm sm:text-base" aria-hidden="true"></i>
+            </div>
+          </div>
+
+          <div class="${cardSide}">
+            <div class="group relative overflow-hidden rounded-3xl border border-gold-500/20 bg-gradient-to-br from-burgundy-900/90 to-[#17070d]/95 p-5 shadow-[0_12px_45px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-1 hover:border-gold-400/50 sm:p-7">
+              <div class="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full ${escapeMemoryText(event.glowClass)} blur-3xl transition" aria-hidden="true"></div>
+              <div class="relative">
+                <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+                  <span class="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] ${escapeMemoryText(event.badgeClasses)}">
+                    <i class="fa-solid ${escapeMemoryText(event.badgeIcon)}" aria-hidden="true"></i>
+                    ${escapeMemoryText(event.badge)}
+                  </span>
+                  <span class="font-serif text-sm italic text-burgundy-300 md:hidden">
+                    ${escapeMemoryText(event.day)} ${escapeMemoryText(event.month)}
+                  </span>
+                </div>
+
+                <h3 class="font-serif text-xl font-bold leading-snug text-gold-200 sm:text-2xl">
+                  ${escapeMemoryText(event.title)}
+                </h3>
+                <p class="mt-4 text-sm leading-7 text-burgundy-100/90 sm:text-base">
+                  ${escapeMemoryText(event.description)}
+                </p>
+                ${routeMarkup}
+                ${highlightsMarkup}
+
+                <div class="mt-6 flex items-start gap-3 border-t border-gold-500/10 pt-5">
+                  <i class="fa-solid fa-quote-left mt-1 text-gold-500/70" aria-hidden="true"></i>
+                  <p class="font-serif text-sm italic leading-6 text-gold-100/90">
+                    "${escapeMemoryText(event.quote)}"
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>`;
+    })
+    .join("");
+}
 
 function startTogetherCountdown() {
   const countdown = document.getElementById("togetherCountdown");
@@ -1384,6 +1586,7 @@ function startLoveMeter() {
   );
 }
 
+renderTimeline();
 startTogetherCountdown();
 startLoveMeter();
 renderMemoryBox();
