@@ -181,7 +181,8 @@ function scrollToChapter(chapterId) {
 
   const nav = document.getElementById("mainNav");
   const navOffset = nav ? nav.getBoundingClientRect().height : 0;
-  const top = target.getBoundingClientRect().top + window.scrollY - navOffset - 12;
+  const top =
+    target.getBoundingClientRect().top + window.scrollY - navOffset - 12;
   const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ? "auto"
     : "smooth";
@@ -371,9 +372,8 @@ function updateStoryNavigation() {
         buttonRect.left +
         buttonRect.width / 2 -
         (trackRect.left + trackRect.width / 2);
-      const behavior = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches
+      const behavior = window.matchMedia("(prefers-reduced-motion: reduce)")
+        .matches
         ? "auto"
         : "smooth";
       track.scrollBy({ left: offset, behavior });
@@ -457,16 +457,17 @@ function positionMemoryScooty(progress) {
   }
   const point = path.getPointAtLength(distance);
   const screenPoint = new DOMPoint(point.x, point.y).matrixTransform(matrix);
-  const before = path.getPointAtLength(Math.max(0, distance - 2)).matrixTransform(
-    matrix,
-  );
+  const before = path
+    .getPointAtLength(Math.max(0, distance - 2))
+    .matrixTransform(matrix);
   const after = path
     .getPointAtLength(Math.min(pathLength, distance + 2))
     .matrixTransform(matrix);
   const sceneBounds = scene.getBoundingClientRect();
   scooty.style.left = `${screenPoint.x - sceneBounds.left}px`;
   scooty.style.top = `${screenPoint.y - sceneBounds.top}px`;
-  const angle = (Math.atan2(after.y - before.y, after.x - before.x) * 180) / Math.PI;
+  const angle =
+    (Math.atan2(after.y - before.y, after.x - before.x) * 180) / Math.PI;
   scooty.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
   return true;
 }
@@ -530,8 +531,7 @@ function playMemoryRide() {
     scene.classList.add("has-arrived");
     button.disabled = false;
     buttonText.textContent = "Ride again";
-    status.textContent =
-      "We made it to Nagargda — and found a memory to keep.";
+    status.textContent = "We made it to Nagargda — and found a memory to keep.";
     memoryRideFrame = null;
   }
 
@@ -631,7 +631,7 @@ function revealMoreConversations() {
   // A fresh page load ALWAYS asks for the password again.
   // Only a SHA-256 digest is embedded for client-side verification.
   // Set to true to skip the password during development.
-  let DEVELOPER_MODE = false;
+  let DEVELOPER_MODE = true;
   const PASSWORD_SHA256 =
     "0890930cbc82a905bd28dec28ba7db90a3e9bec2231003288497fc943ed1e99f";
   const gate = document.getElementById("passwordGate");
@@ -705,17 +705,47 @@ function revealMoreConversations() {
 /* =========================================================
          MEMORY BOX DATA
          Add/edit memories here. The UI is generated automatically.
-         Supported types: image, place, audio, file, video, note
+         Supported types: image, place, audio, file, video, link, note
          ========================================================= */
 
 const memories = [
+  // {
+  //   type: "image",
+  //   title: "Connecting the dots",
+  //   date: "19 October 2026",
+  //   file: "./memories/images/dots.png",
+  //   caption:
+  //     "When we connect all the dots, it shows a story of real connection, affection, and effort from both sides. but with uncertainty",
+  // },
   {
     type: "image",
-    title: "Connecting the dots",
-    date: "19 October 2026",
-    file: "./memories/images/dots.png",
+    title: "Remember this",
+    date: "9 November 2026",
+    file: "./memories/images/proof.png",
+    caption: "For this reason, I'll try to rebuild my trust.",
+  },
+  {
+    type: "image",
+    title: "This chat reminds me of something",
+    date: "9 November 2026",
+    file: "./memories/images/doubt.png",
     caption:
-      "When we connect all the dots, it shows a story of real connection, affection, and effort from both sides. but with uncertainty",
+      "I think that, according to you, you were wrong in your past relationship and still have feelings for someone. Is that right?",
+  },
+  {
+    type: "link",
+    date: "28 October 2026",
+    url: "https://ranjan-builds.github.io/files/",
+  },
+  {
+    type: "link",
+    date: "6 July 2026",
+    url: "https://ranjan-builds.github.io/Candy/",
+  },
+  {
+    type: "link",
+    date: "8 November 2026",
+    url: "https://ranjan-builds.github.io/Sorry/",
   },
 
   {
@@ -736,7 +766,7 @@ const memories = [
   },
   {
     type: "place",
-    title: "You came my home to meet me when i was not well",
+    title: "You came to my home to see me when I wasn't well",
     date: "9 October 2026",
     file: "./memories/images/myHome.jpg",
     location: "Gaud, Chhattisgarh",
@@ -744,8 +774,8 @@ const memories = [
   },
   {
     type: "place",
-    title: "I came to Korba to meet you",
-    date: "04 November 2026",
+    title: "I came to Korba to see you",
+    date: "4 November 2026",
     file: "./memories/images/ghantaGhar.png",
     location: "Korba, Chhattisgarh",
     maps: "https://maps.app.goo.gl/t563BNdjJUj7mQS66",
@@ -781,18 +811,34 @@ const memories = [
   // },
   {
     type: "video",
-    title: "Her Mood swings be like ☝️ Meri mood swing wali cute si ladki",
+    title: "Her mood swings be like ☝️ Meri mood-swing wali cute si ladki",
     date: "2026",
     file: "memories\\videos\\HerMood.mp4",
   },
-  // {
-  //   type: "file",
-  //   title: "A Letter for the Future",
-  //   date: "14 October 2026",
-  //   file: "memories\\doc\\futureLetter.pdf",
-  //   caption:
-  //     "Jab tum ready feel karo tab padhna. Turant reply dene ki koi zaroorat nahi hai.",
-  // },
+  {
+    type: "file",
+    title: "You sent me your feelings in a 15-page document",
+    date: "29 October 2026",
+    file: "https://pdfhost.io/v/q8dtuPVRcB_UnluckyInLove",
+    caption:
+      "Mujhe sach me nahi pata thi ki tum itna pyaar aur dard mere liye mehsoos kar rahi ho. Tumhari har baat, har jazba, har ehsaas mere dil ko chhoo gaya. ❤️",
+  },
+  {
+    type: "file",
+    title: "Mai tumhare actions se Bahut hurt ho chuka tha",
+    date: "6 July 2026",
+    file: "https://pdfhost.io/v/HbEvjf3smL_Candy_The_Lesson_Not_the_Loss",
+    caption:
+      "Maine ye lines apne dil ke dard se likhi thi jab tum pahle mere saath galat kr rahi thi",
+  },
+  {
+    type: "file",
+    title: "Tumne mujhe ye bheja tha",
+    date: "26 November 2025",
+    file: "https://pdfhost.io/v/s5NbXzKJdj_From_Anjali",
+    caption:
+      "Sayd tum mere liye pahle kuch feel karti thi, aur phir tumhare feelings change ho gaye.",
+  },
 ];
 
 const memoryMeta = {
@@ -801,6 +847,7 @@ const memoryMeta = {
   audio: { icon: "fa-music", label: "Song" },
   file: { icon: "fa-file", label: "Little Thing" },
   video: { icon: "fa-video", label: "Video" },
+  link: { icon: "fa-link", label: "Website" },
   note: { icon: "fa-note-sticky", label: "Note" },
 };
 
@@ -826,6 +873,19 @@ function memoryLabel(type) {
   return memoryMeta[type]?.label || "Memory";
 }
 
+function getMemoryWebUrl(value) {
+  try {
+    const url = new URL(String(value || ""));
+    return url.protocol === "http:" || url.protocol === "https:"
+      ? url.href
+      : "";
+  } catch {
+    return "";
+  }
+}
+
+let activeMemoryFilter = "all";
+
 function renderMemoryBox() {
   const grid = document.getElementById("memoryGrid");
   const empty = document.getElementById("memoryEmpty");
@@ -833,17 +893,57 @@ function renderMemoryBox() {
 
   grid.innerHTML = "";
 
-  if (!memories.length) {
+  const visibleMemories = memories
+    .map((memory, index) => ({ memory, index }))
+    .filter(
+      ({ memory }) =>
+        activeMemoryFilter === "all" ||
+        (memory.type || "note") === activeMemoryFilter,
+    );
+  const count = document.getElementById("memoryCount");
+  const emptyTitle = document.getElementById("memoryEmptyTitle");
+  const emptyText = document.getElementById("memoryEmptyText");
+
+  if (count) {
+    const amount = visibleMemories.length;
+    const label = memoryLabel(activeMemoryFilter).toLowerCase();
+    count.textContent =
+      activeMemoryFilter === "all"
+        ? `${amount} memories`
+        : `${amount} ${label} ${amount === 1 ? "memory" : "memories"}`;
+  }
+
+  if (!visibleMemories.length) {
     empty.classList.remove("hidden");
+    if (emptyTitle) {
+      emptyTitle.textContent =
+        activeMemoryFilter === "all"
+          ? "The box is still waiting"
+          : `No ${memoryLabel(activeMemoryFilter).toLowerCase()} memories yet`;
+    }
+    if (emptyText) {
+      emptyText.textContent =
+        activeMemoryFilter === "all"
+          ? "Add the first memory whenever it happens."
+          : "Add one to the memories array whenever you are ready.";
+    }
     return;
   }
   empty.classList.add("hidden");
 
-  memories.forEach((memory, index) => {
+  visibleMemories.forEach(({ memory, index }) => {
     const type = memory.type || "note";
-    const title = escapeMemoryText(memory.title || "Untitled Memory");
+    const linkUrl = type === "link" ? getMemoryWebUrl(memory.url) : "";
+    const hostname = linkUrl ? new URL(linkUrl).hostname : "";
+    const title = escapeMemoryText(
+      memory.preview?.title || memory.title || hostname || "Untitled Memory",
+    );
     const date = escapeMemoryText(memory.date || "");
-    const caption = escapeMemoryText(memory.caption || "");
+    const caption = escapeMemoryText(
+      type === "link"
+        ? memory.preview?.description || memory.caption || ""
+        : memory.caption || "",
+    );
     const file = escapeMemoryText(memory.file || "");
     const location = escapeMemoryText(memory.location || "");
 
@@ -865,6 +965,14 @@ function renderMemoryBox() {
       action = `<audio class="memory-audio" controls preload="none"><source src="${file}" type="audio/mpeg">Your browser does not support audio.</audio>`;
     } else if (type === "video") {
       media = `<video class="memory-video" controls preload="metadata"><source src="${file}" type="video/mp4">Your browser does not support video.</video>`;
+    } else if (type === "link") {
+      const imageUrl = getMemoryWebUrl(memory.preview?.image);
+      media = imageUrl
+        ? `<div class="memory-link-media"><img class="memory-card-media" src="${escapeMemoryText(imageUrl)}" alt="${title}" loading="lazy" onerror="this.classList.add('hidden'); this.nextElementSibling?.classList.remove('hidden')"><span class="memory-link-placeholder hidden"><i class="fa-solid fa-link"></i></span></div>`
+        : `<div class="memory-link-media"><span class="memory-link-placeholder"><i class="fa-solid fa-link"></i></span></div>`;
+      action = linkUrl
+        ? `<a class="memory-card-button block text-center" href="${escapeMemoryText(linkUrl)}" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visit website</a>`
+        : `<p class="memory-card-caption">Add a valid http:// or https:// URL to this memory.</p>`;
     } else if (type === "file") {
       media = `<div class="memory-file-icon"><i class="fa-solid fa-file-lines"></i></div>`;
       action = `<a class="memory-card-button block text-center" href="${file}" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open file</a>`;
@@ -874,8 +982,110 @@ function renderMemoryBox() {
 
     const card = document.createElement("article");
     card.className = "memory-card";
-    card.innerHTML = `${media}<div class="memory-card-body"><span class="memory-card-type"><i class="fa-solid ${memoryIcon(type)}"></i>${memoryLabel(type)}</span><h3 class="memory-card-title">${title}</h3>${date ? `<span class="memory-card-date">${date}</span>` : ""}${location ? `<p class="memory-card-caption"><i class="fa-solid fa-location-dot text-gold-400 mr-1"></i>${location}</p>` : ""}${caption && type !== "note" ? `<p class="memory-card-caption">${caption}</p>` : ""}${action}</div>`;
+    card.dataset.memoryIndex = String(index);
+    card.innerHTML = `${media}<div class="memory-card-body"><span class="memory-card-type"><i class="fa-solid ${memoryIcon(type)}"></i>${memoryLabel(type)}</span><h3 class="memory-card-title">${title}</h3>${date ? `<span class="memory-card-date">${date}</span>` : ""}${location ? `<p class="memory-card-caption"><i class="fa-solid fa-location-dot text-gold-400 mr-1"></i>${location}</p>` : ""}${type === "link" ? `<p class="memory-card-caption memory-link-description">${escapeMemoryText(memory.previewError ? "Website preview unavailable. You can still visit the link." : memory.preview?.description || memory.caption || "Loading website details…")}</p>` : caption && type !== "note" ? `<p class="memory-card-caption">${caption}</p>` : ""}${action}</div>`;
     grid.appendChild(card);
+  });
+}
+
+function updateMemoryLinkCard(index, memory) {
+  const card = document.querySelector(
+    `#memoryGrid [data-memory-index="${index}"]`,
+  );
+  if (!card) return;
+
+  const url = getMemoryWebUrl(memory.url);
+  const title =
+    memory.preview?.title ||
+    memory.title ||
+    (url ? new URL(url).hostname : "Website");
+  const description =
+    memory.preview?.description ||
+    memory.caption ||
+    (memory.previewError
+      ? "Website preview unavailable. You can still visit the link."
+      : "No description available for this website.");
+  const titleElement = card.querySelector(".memory-card-title");
+  const descriptionElement = card.querySelector(".memory-link-description");
+
+  if (titleElement) titleElement.textContent = title;
+  if (descriptionElement) descriptionElement.textContent = description;
+
+  const imageUrl = getMemoryWebUrl(memory.preview?.image);
+  const media = card.querySelector(".memory-link-media");
+  if (!imageUrl || !media || media.querySelector("img")) return;
+
+  const image = document.createElement("img");
+  image.className = "memory-card-media";
+  image.src = imageUrl;
+  image.alt = title;
+  image.loading = "lazy";
+  image.addEventListener("error", () => {
+    image.classList.add("hidden");
+    media.querySelector(".memory-link-placeholder")?.classList.remove("hidden");
+  });
+  media.querySelector(".memory-link-placeholder")?.classList.add("hidden");
+  media.prepend(image);
+}
+
+async function loadMemoryLinkPreviews() {
+  await Promise.all(
+    memories.map(async (memory, index) => {
+      if (memory.type !== "link") return;
+
+      const url = getMemoryWebUrl(memory.url);
+      if (!url) {
+        memory.previewError = true;
+        updateMemoryLinkCard(index, memory);
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `https://api.microlink.io?url=${encodeURIComponent(url)}`,
+        );
+        if (!response.ok) {
+          throw new Error(`Microlink returned HTTP ${response.status}`);
+        }
+
+        const result = await response.json();
+        if (result.status !== "success" || !result.data) {
+          throw new Error(
+            result.message || "Microlink could not read this URL",
+          );
+        }
+
+        memory.preview = {
+          title: result.data.title || "",
+          description: result.data.description || "",
+          image: result.data.image?.url || "",
+        };
+        updateMemoryLinkCard(index, memory);
+      } catch (error) {
+        memory.previewError = true;
+        updateMemoryLinkCard(index, memory);
+        console.error(`Could not load the website preview for ${url}.`, error);
+      }
+    }),
+  );
+}
+
+function initMemoryFilters() {
+  const filters = document.getElementById("memoryFilters");
+  if (!filters) return;
+
+  filters.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const button = event.target.closest("[data-memory-filter]");
+    if (!button || !filters.contains(button)) return;
+
+    activeMemoryFilter = button.getAttribute("data-memory-filter") || "all";
+    filters.querySelectorAll("[data-memory-filter]").forEach((filter) => {
+      const selected = filter === button;
+      filter.classList.toggle("active", selected);
+      filter.setAttribute("aria-pressed", String(selected));
+    });
+    renderMemoryBox();
   });
 }
 
@@ -921,19 +1131,18 @@ const timelineEvents = [
     dateLabel: "The beginning",
     badge: "First Meeting",
     badgeIcon: "fa-sparkles",
-    badgeClasses:
-      "border-gold-500/25 bg-gold-500/10 text-gold-200",
+    badgeClasses: "border-gold-500/25 bg-gold-500/10 text-gold-200",
     icon: "fa-location-dot",
     glowClass: "bg-gold-500/10 group-hover:bg-gold-500/20",
-    title: "Nagarda — Where It All Began",
+    title: "Nagargda — Where It All Began",
     description:
-      "You travelled from Korba to Champa station and continued towards Nagarda, nearly 55 km away, just to meet me. Knowing you came all that way made our first meeting feel even more special. It was more than a meeting; it was the beginning of a memory I will always treasure.",
+      "You travelled from Korba to Champa Station and continued towards Nagargda, nearly 55 km away, just to meet me. Knowing you came all that way made our first meeting feel even more special. It was more than a meeting; it was the beginning of a memory I will always treasure.",
     route: {
       title: "Your journey to me",
       stops: [
         { label: "Korba", icon: "fa-circle-dot" },
         { label: "Champa Station", icon: "fa-train" },
-        { label: "Nagarda", icon: "fa-heart", highlight: true },
+        { label: "Nagargda", icon: "fa-heart", highlight: true },
       ],
     },
     quote:
@@ -945,13 +1154,12 @@ const timelineEvents = [
     dateLabel: "A new memory",
     badge: "Together Again",
     badgeIcon: "fa-house",
-    badgeClasses:
-      "border-emerald-400/20 bg-emerald-400/5 text-emerald-200",
+    badgeClasses: "border-emerald-400/20 bg-emerald-400/5 text-emerald-200",
     icon: "fa-house-heart",
     glowClass: "bg-rose-500/10",
     title: "A Little Closer to Home",
     description:
-      "On 9 October, we met again at my home. This time, everything felt quieter, warmer, and more familiar. Having you there made an ordinary place feel special. It was another little chapter in our story, filled with moments I wanted to hold on to.",
+      "On 9 October 2026, we met again at my home. This time, everything felt quieter, warmer, and more familiar. Having you there made an ordinary place feel special. It was another little chapter in our story, filled with moments I wanted to hold on to.",
     highlights: [
       {
         icon: "fa-house-heart",
@@ -968,35 +1176,32 @@ const timelineEvents = [
       "Some places become special not because of where they are, but because of who is beside you.",
   },
   {
-  day: "04",
-  month: "November",
-  dateLabel: "A Day to Remember",
-  badge: "Me at korba",
-  badgeIcon: "fa-map-marker-alt",
-  badgeClasses:
-    "border-emerald-400/20 bg-emerald-400/5 text-emerald-200",
-  icon: "fa-heart",
-  glowClass: "bg-rose-500/10",
-  title: "A Journey Worth Remembering",
-  description:
-    "On 4 November, I travelled to Korba to meet you. Together, we visited Bhavani Temple, Ram Mandir, Darri Dam, and Duma Dih, where we spent some beautiful moments together. After a memorable day, I headed home with a heart full of happiness and memories.",
-  highlights: [
-    {
-      icon: "fa-route",
-      title: "A Journey for You",
-      description: "Travelled all the way to Korba just to see you.",
-    },
-    {
-      icon: "fa-landmark",
-      title: "Little Adventures",
-      description: "Bhavani Temple, Ram Mandir and Darri Dam.",
-    },
- 
- 
-  ],
-  quote:
-    "I travelled miles just to see her, but the moments we spent together made every mile worth it.",
-},
+    day: "04",
+    month: "November",
+    dateLabel: "A Day to Remember",
+    badge: "My trip to Korba",
+    badgeIcon: "fa-map-marker-alt",
+    badgeClasses: "border-emerald-400/20 bg-emerald-400/5 text-emerald-200",
+    icon: "fa-heart",
+    glowClass: "bg-rose-500/10",
+    title: "A Journey Worth Remembering",
+    description:
+      "On 4 November 2026, I travelled to Korba to meet you. Together, we visited Bhavani Temple, Ram Mandir, Darri Dam, and Duma Dih, where we spent some beautiful moments together. After a memorable day, I headed home with a heart full of happiness and memories.",
+    highlights: [
+      {
+        icon: "fa-route",
+        title: "A Journey for You",
+        description: "Travelled all the way to Korba just to see you.",
+      },
+      {
+        icon: "fa-landmark",
+        title: "Little Adventures",
+        description: "Bhavani Temple, Ram Mandir and Darri Dam.",
+      },
+    ],
+    quote:
+      "I travelled miles just to see you, but the moments we shared made every mile worthwhile.",
+  },
 ];
 
 function renderTimeline() {
@@ -1589,7 +1794,9 @@ function startLoveMeter() {
 renderTimeline();
 startTogetherCountdown();
 startLoveMeter();
+initMemoryFilters();
 renderMemoryBox();
+loadMemoryLinkPreviews();
 
 // (() => {
 //   const canvas = document.querySelector(".cursor-trail");

@@ -93,6 +93,27 @@ example:
 }
 ```
 
+### Website memories
+
+Add a website to the `memories` array in `script.js` with `type: "link"` and a
+public `http://` or `https://` URL. The Websites filter shows these entries;
+Microlink fetches the page title, description, and Open Graph image when the
+diary loads.
+
+```js
+{
+  type: "link",
+  title: "A page we love",
+  date: "9 November 2026",
+  url: "https://example.com",
+  caption: "Optional note to show if the page has no description.",
+},
+```
+
+Link previews require an internet connection and send each saved URL to
+Microlink's public API. If a preview cannot be fetched, the website link remains
+available to open directly.
+
 ### Chapter voice recordings
 
 To use the optional voice guide, add one WAV recording per chapter to the

@@ -1781,6 +1781,36 @@ body.site-locked > *:not(#passwordGate) {
   border-bottom: 1px solid rgba(212, 175, 55, 0.1);
 }
 
+.memory-link-media {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(212, 175, 55, 0.13),
+      transparent 35%
+    ),
+    linear-gradient(145deg, rgba(74, 14, 23, 0.92), rgba(18, 5, 8, 0.95));
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.memory-link-media .memory-card-media {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
+.memory-link-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #d4af37;
+  font-size: 2.25rem;
+}
+
 .memory-video {
   border: 0;
 }
@@ -2246,6 +2276,7 @@ input:focus-visible,
 @media (min-width: 768px) {
   .memory-card-media,
   .memory-video,
+  .memory-link-media,
   .memory-place-media,
   .memory-file-icon,
   .memory-note {
@@ -2296,6 +2327,7 @@ input:focus-visible,
 
   .memory-card-media,
   .memory-video,
+  .memory-link-media,
   .memory-place-media,
   .memory-file-icon,
   .memory-note {
